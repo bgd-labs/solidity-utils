@@ -1,3 +1,3 @@
-# BGD labs solidity utils
+# BGD Labs Solidity utils
 
 Common contracts we use almost everywhere
