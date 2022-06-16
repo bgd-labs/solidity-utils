@@ -6,6 +6,6 @@ import {
 } from '../contracts/transparent-proxy/interfaces/IInitializableAdminUpgradeabilityProxyFactory.sol';
 
 library Rinkeby {
-  IInitializableAdminUpgradeabilityProxyFactory TRANSPARENT_PROXY_FACTORY =
-    0xdb2aba599d0749ba7aec651601d3158c8fd21b8d;
+  IInitializableAdminUpgradeabilityProxyFactory constant TRANSPARENT_PROXY_FACTORY =
+    IInitializableAdminUpgradeabilityProxyFactory(0x9f01009e9D1164c45d749FEBb70A1Fe00077246E);
 }
