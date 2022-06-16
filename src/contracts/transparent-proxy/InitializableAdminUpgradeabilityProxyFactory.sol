@@ -13,10 +13,11 @@ contract InitializableAdminUpgradeabilityProxyFactory is
     address logic,
     address admin,
     bytes calldata data
-  ) external {
+  ) external returns (address) {
     InitializableAdminUpgradeabilityProxy proxy = new InitializableAdminUpgradeabilityProxy();
     proxy.initialize(logic, admin, data);
 
     emit ProxyCreated(address(proxy), logic, admin);
+    return address(proxy);
   }
 }
