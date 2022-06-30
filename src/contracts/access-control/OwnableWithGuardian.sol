@@ -16,6 +16,16 @@ abstract contract OwnableWithGuardian is Ownable, IWithGuardian {
     _updateGuardian(newGuardian);
   }
 
+  modifier onlyGuardian() {
+    _checkGuardian();
+    _;
+  }
+
+  modifier onlyOwnerOrGuardian() {
+    require(_msgSender() == owner() || _msgSender() == guardian(), 'ONLY_BY_OWNER_OR_GUARDIAN');
+    _;
+  }
+
   /**
    * @dev method to update the guardian
    * @param newGuardian the new guardian address
@@ -28,15 +38,5 @@ abstract contract OwnableWithGuardian is Ownable, IWithGuardian {
 
   function _checkGuardian() internal view {
     require(guardian() == _msgSender(), 'ONLY_BY_GUARDIAN');
-  }
-
-  modifier onlyGuardian() {
-    _checkGuardian();
-    _;
-  }
-
-  modifier onlyOwnerOrGuardian() {
-    require(_msgSender() == owner() || _msgSender() == guardian(), 'ONLY_BY_OWNER_OR_GUARDIAN');
-    _;
   }
 }
