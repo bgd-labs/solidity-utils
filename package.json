@@ -1,0 +1,29 @@
+{
+  "name": "solidity-utils",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "tests"
+  },
+  "scripts": {
+    "prettier": "prettier --write 'src/contracts/**/*.sol'",
+    "prettier:tests": "prettier --write 'tests/**/*.sol'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bgd-labs/solidity-utils.git"
+  },
+  "keywords": [],
+  "author": "bgd-labs",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bgd-labs/solidity-utils/issues"
+  },
+  "homepage": "https://github.com/bgd-labs/solidity-utils#readme",
+  "devDependencies": {
+    "prettier": "^2.7.1",
+    "prettier-plugin-solidity": "^1.0.0-beta.19"
+  }
+}
