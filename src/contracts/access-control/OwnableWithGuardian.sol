@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import {IWithGuardian} from './interfaces/IWithGuardian.sol';
-import {Ownable} from '../../lib/openzeppelin-contracts/contracts/access/Ownable.sol';
+import {Ownable} from '../oz-common/Ownable.sol';
 
 abstract contract OwnableWithGuardian is Ownable, IWithGuardian {
   address private _guardian;
