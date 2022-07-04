@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity >=0.7.0;
 
-import {
-  IInitializableAdminUpgradeabilityProxyFactory
-} from './interfaces/IInitializableAdminUpgradeabilityProxyFactory.sol';
+import {IInitializableAdminUpgradeabilityProxyFactory} from './interfaces/IInitializableAdminUpgradeabilityProxyFactory.sol';
 import {InitializableAdminUpgradeabilityProxy} from './InitializableAdminUpgradeabilityProxy.sol';
 
 contract InitializableAdminUpgradeabilityProxyFactory is
@@ -13,7 +11,7 @@ contract InitializableAdminUpgradeabilityProxyFactory is
     address logic,
     address admin,
     bytes calldata data
-  ) external returns (address) {
+  ) external override returns (address) {
     InitializableAdminUpgradeabilityProxy proxy = new InitializableAdminUpgradeabilityProxy();
     proxy.initialize(logic, admin, data);
 
