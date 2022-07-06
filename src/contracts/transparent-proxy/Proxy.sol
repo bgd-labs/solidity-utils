@@ -1,36 +1,26 @@
-// SPDX-License-Identifier: agpl-3.0
-pragma solidity >=0.7.0;
+// SPDX-License-Identifier: MIT
+// OpenZeppelin Contracts (last updated v4.6.0) (proxy/Proxy.sol)
+// From commit https://github.com/OpenZeppelin/openzeppelin-contracts/commit/8b778fa20d6d76340c5fac1ed66c80273f05b95a
+
+pragma solidity ^0.8.0;
 
 /**
- * @title Proxy
- * @dev Implements delegation of calls to other contracts, with proper
- * forwarding of return values and bubbling of failures.
- * It defines a fallback function that delegates all calls to the address
- * returned by the abstract _implementation() internal function.
+ * @dev This abstract contract provides a fallback function that delegates all calls to another contract using the EVM
+ * instruction `delegatecall`. We refer to the second contract as the _implementation_ behind the proxy, and it has to
+ * be specified by overriding the virtual {_implementation} function.
+ *
+ * Additionally, delegation to the implementation can be triggered manually through the {_fallback} function, or to a
+ * different contract through the {_delegate} function.
+ *
+ * The success and return data of the delegated call will be returned back to the caller of the proxy.
  */
 abstract contract Proxy {
   /**
-   * @dev Fallback function.
-   * Will run if no other function in the contract matches the call data.
-   * Implemented entirely in `_fallback`.
+   * @dev Delegates the current call to `implementation`.
+   *
+   * This function does not return to its internal call site, it will return directly to the external caller.
    */
-  fallback() external payable {
-    _fallback();
-  }
-
-  /**
-   * @return The Address of the implementation.
-   */
-  function _implementation() internal view virtual returns (address);
-
-  /**
-   * @dev Delegates execution to an implementation contract.
-   * This is a low level function that doesn't return to its internal call site.
-   * It will return to the external caller whatever the implementation returns.
-   * @param implementation Address to delegate.
-   */
-  function _delegate(address implementation) internal {
-    //solium-disable-next-line
+  function _delegate(address implementation) internal virtual {
     assembly {
       // Copy msg.data. We take full control of memory in this inline assembly
       // block because it will not return to Solidity code. We overwrite the
@@ -56,18 +46,42 @@ abstract contract Proxy {
   }
 
   /**
-   * @dev Function that is run as the first thing in the fallback function.
-   * Can be redefined in derived contracts to add functionality.
-   * Redefinitions must call super._willFallback().
+   * @dev This is a virtual function that should be overridden so it returns the address to which the fallback function
+   * and {_fallback} should delegate.
    */
-  function _willFallback() internal virtual {}
+  function _implementation() internal view virtual returns (address);
 
   /**
-   * @dev fallback implementation.
-   * Extracted to enable manual triggering.
+   * @dev Delegates the current call to the address returned by `_implementation()`.
+   *
+   * This function does not return to its internal call site, it will return directly to the external caller.
    */
-  function _fallback() internal {
-    _willFallback();
+  function _fallback() internal virtual {
+    _beforeFallback();
     _delegate(_implementation());
   }
+
+  /**
+   * @dev Fallback function that delegates calls to the address returned by `_implementation()`. Will run if no other
+   * function in the contract matches the call data.
+   */
+  fallback() external payable virtual {
+    _fallback();
+  }
+
+  /**
+   * @dev Fallback function that delegates calls to the address returned by `_implementation()`. Will run if call data
+   * is empty.
+   */
+  receive() external payable virtual {
+    _fallback();
+  }
+
+  /**
+   * @dev Hook that is called before falling back to the implementation. Can happen as part of a manual `_fallback`
+   * call, or as part of the Solidity `fallback` or `receive` functions.
+   *
+   * If overridden should call `super._beforeFallback()`.
+   */
+  function _beforeFallback() internal virtual {}
 }

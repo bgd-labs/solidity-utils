@@ -2,14 +2,12 @@
 pragma solidity ^0.8.0;
 
 import {Script} from '../lib/forge-std/src/Script.sol';
-import {
-  InitializableAdminUpgradeabilityProxyFactory
-} from '../src/contracts/transparent-proxy/InitializableAdminUpgradeabilityProxyFactory.sol';
+import {TransparentProxyFactory} from '../src/contracts/transparent-proxy/TransparentProxyFactory.sol';
 
 contract Deploy is Script {
   function run() external {
     vm.startBroadcast();
-    new InitializableAdminUpgradeabilityProxyFactory();
+    new TransparentProxyFactory();
     vm.stopBroadcast();
   }
 }
