@@ -71,6 +71,4 @@ contract TransparentProxyFactory is ITransparentProxyFactory {
 
     return address(uint160(uint256(hash)));
   }
-
-  // TODO add "prediction" of CREATE
 }
