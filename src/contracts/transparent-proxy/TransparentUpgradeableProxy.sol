@@ -1,6 +1,12 @@
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts (last updated v4.7.0) (proxy/transparent/TransparentUpgradeableProxy.sol)
-// From commit https://github.com/OpenZeppelin/openzeppelin-contracts/commit/8b778fa20d6d76340c5fac1ed66c80273f05b95a
+
+/**
+ * @dev OpenZeppelin Contracts (last updated v4.7.0) (proxy/utils/Initializable.sol)
+ * From https://github.com/OpenZeppelin/openzeppelin-contracts/tree/8b778fa20d6d76340c5fac1ed66c80273f05b95a
+ *
+ * BGD Labs adaptations:
+ * - Linting
+ */
 
 pragma solidity ^0.8.0;
 
