@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
+import {IOwnable} from './interfaces/IOwnable.sol';
 import {ITransparentProxyFactory} from './interfaces/ITransparentProxyFactory.sol';
 import {TransparentUpgradeableProxy} from './TransparentUpgradeableProxy.sol';
+import {ProxyAdmin} from './ProxyAdmin.sol';
 
 /**
  * @title TransparentProxyFactory
@@ -23,6 +25,22 @@ contract TransparentProxyFactory is ITransparentProxyFactory {
 
     emit ProxyCreated(proxy, logic, admin);
     return proxy;
+  }
+
+  /// @inheritdoc ITransparentProxyFactory
+  function createDeterministicWithProxyAdmin(
+    address logic,
+    address proxyOwner,
+    bytes calldata data,
+    bytes32 salt
+  ) external returns (address, address) {
+    address proxyAdmin = address(new ProxyAdmin());
+    IOwnable(proxyAdmin).transferOwnership(proxyOwner);
+
+    address proxy = address(new TransparentUpgradeableProxy{salt: salt}(logic, proxyAdmin, data));
+
+    emit ProxyDeterministicCreatedWithOwner(proxy, logic, proxyAdmin, proxyOwner, salt);
+    return (proxy, proxyAdmin);
   }
 
   /// @inheritdoc ITransparentProxyFactory
