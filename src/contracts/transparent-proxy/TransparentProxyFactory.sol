@@ -32,9 +32,10 @@ contract TransparentProxyFactory is ITransparentProxyFactory {
     address logic,
     address proxyOwner,
     bytes calldata data,
-    bytes32 salt
+    bytes32 salt,
+    bytes32 adminSalt
   ) external returns (address, address) {
-    address proxyAdmin = address(new ProxyAdmin());
+    address proxyAdmin = address(new ProxyAdmin{salt: adminSalt}());
     IOwnable(proxyAdmin).transferOwnership(proxyOwner);
 
     address proxy = address(new TransparentUpgradeableProxy{salt: salt}(logic, proxyAdmin, data));
@@ -54,6 +55,30 @@ contract TransparentProxyFactory is ITransparentProxyFactory {
 
     emit ProxyDeterministicCreated(proxy, logic, admin, salt);
     return proxy;
+  }
+
+  /// @inheritdoc ITransparentProxyFactory
+  function predictCreateDeterministicWithDeterministicProxyAdmin(
+    address logic,
+    bytes calldata data,
+    bytes32 adminSalt,
+    bytes32 salt
+  ) public view returns (address, address) {
+    address proxyAdmin = _predictCreate2Address(
+      address(this),
+      adminSalt,
+      type(ProxyAdmin).creationCode,
+      abi.encode()
+    );
+
+    address proxy = _predictCreate2Address(
+      address(this),
+      salt,
+      type(TransparentUpgradeableProxy).creationCode,
+      abi.encode(logic, proxyAdmin, data)
+    );
+
+    return (proxy, proxyAdmin);
   }
 
   /// @inheritdoc ITransparentProxyFactory

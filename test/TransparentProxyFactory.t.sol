@@ -48,19 +48,21 @@ contract TestTransparentProxyFactory is Test {
       address(mockImpl),
       address(2),
       data,
-      bytes32(uint256(1))
+      bytes32(uint256(1)),
+      bytes32(uint256(2))
     );
 
-    address predictedAddress1 = factory.predictCreateDeterministic(
+    (address predictedProxy, address predictedProxyAdmin) = factory.predictCreateDeterministicWithDeterministicProxyAdmin(
       address(mockImpl),
-      proxyAdmin,
       data,
+      bytes32(uint256(2)),
       bytes32(uint256(1))
     );
 
     address proxyOwner = IOwnable(proxyAdmin).owner();
 
-    assertEq(predictedAddress1, proxy1);
+    assertEq(predictedProxy, proxy1);
+    assertEq(predictedProxyAdmin, proxyAdmin);
     assertEq(MockImpl(proxy1).getFoo(), FOO);
     assertEq(proxyOwner, address(2));
 

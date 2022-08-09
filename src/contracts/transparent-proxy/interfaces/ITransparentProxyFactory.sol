@@ -50,6 +50,7 @@ interface ITransparentProxyFactory {
    *             E.g. `abi.encodeWithSelector(mockImpl.initialize.selector, 2)`
    *             for an `initialize` function being `function initialize(uint256 foo) external initializer;`
    * @param salt Value to be used in the address calculation, to be chosen by the account calling this function
+   * @param adminSalt Value to be used in the proxyAdmin address calculation, to be chosen by the account calling this function
    * @return (address, address) The address of the proxy deployed, and of the proxyAdmin deployed and used as admin of
    * the deployed proxy.
    **/
@@ -57,7 +58,8 @@ interface ITransparentProxyFactory {
     address logic,
     address proxyOwner,
     bytes memory data,
-    bytes32 salt
+    bytes32 salt,
+    bytes32 adminSalt
   ) external returns (address, address);
 
   /**
@@ -76,4 +78,22 @@ interface ITransparentProxyFactory {
     bytes calldata data,
     bytes32 salt
   ) external view returns (address);
+
+  /**
+   * @notice Pre-calculates and return the address on which `createDeterministicWithProxyAdmin` will deploy a proxy with
+   * a Pre-calculated proxy admin
+   * @param logic The address of the implementation contract
+   * @param data abi encoded call to the function with `initializer` (or `reinitializer`) modifier.
+   *             E.g. `abi.encodeWithSelector(mockImpl.initialize.selector, 2)`
+   *             for an `initialize` function being `function initialize(uint256 foo) external initializer;`
+   * @param adminSalt Value to be used in the proxyAdmin calculation, to be chosen by the account calling this function
+   * @param salt Value to be used in the address calculation, to be chosen by the account calling this function
+   * @return (address, address) The pre-calculated proxy address and proxyAdmin address.
+   **/
+  function predictCreateDeterministicWithDeterministicProxyAdmin(
+    address logic,
+    bytes calldata data,
+    bytes32 adminSalt,
+    bytes32 salt
+  ) external view returns (address, address);
 }
