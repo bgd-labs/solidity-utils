@@ -28,20 +28,14 @@ contract TransparentProxyFactory is ITransparentProxyFactory {
   }
 
   /// @inheritdoc ITransparentProxyFactory
-  function createDeterministicWithProxyAdmin(
-    address logic,
-    address proxyOwner,
-    bytes calldata data,
-    bytes32 salt,
-    bytes32 adminSalt
-  ) external returns (address, address) {
-    address proxyAdmin = address(new ProxyAdmin{salt: adminSalt}());
-    IOwnable(proxyAdmin).transferOwnership(proxyOwner);
+  function createProxyAdmin(
+    address adminOwner
+  ) external returns (address) {
+    address proxyAdmin = address(new ProxyAdmin());
+    IOwnable(proxyAdmin).transferOwnership(adminOwner);
 
-    address proxy = address(new TransparentUpgradeableProxy{salt: salt}(logic, proxyAdmin, data));
-
-    emit ProxyDeterministicCreatedWithOwner(proxy, logic, proxyAdmin, proxyOwner, salt);
-    return (proxy, proxyAdmin);
+    emit ProxyAdminCreated(proxyAdmin, adminOwner);
+    return proxyAdmin;
   }
 
   /// @inheritdoc ITransparentProxyFactory
@@ -58,27 +52,15 @@ contract TransparentProxyFactory is ITransparentProxyFactory {
   }
 
   /// @inheritdoc ITransparentProxyFactory
-  function predictCreateDeterministicWithDeterministicProxyAdmin(
-    address logic,
-    bytes calldata data,
-    bytes32 adminSalt,
+  function createDeterministicProxyAdmin(
+    address adminOwner,
     bytes32 salt
-  ) public view returns (address, address) {
-    address proxyAdmin = _predictCreate2Address(
-      address(this),
-      adminSalt,
-      type(ProxyAdmin).creationCode,
-      abi.encode()
-    );
+  ) external returns (address) {
+    address proxyAdmin = address(new ProxyAdmin{salt: salt}());
+    IOwnable(proxyAdmin).transferOwnership(adminOwner);
 
-    address proxy = _predictCreate2Address(
-      address(this),
-      salt,
-      type(TransparentUpgradeableProxy).creationCode,
-      abi.encode(logic, proxyAdmin, data)
-    );
-
-    return (proxy, proxyAdmin);
+    emit ProxyAdminDeterministicCreated(proxyAdmin, adminOwner, salt);
+    return proxyAdmin;
   }
 
   /// @inheritdoc ITransparentProxyFactory
@@ -95,6 +77,19 @@ contract TransparentProxyFactory is ITransparentProxyFactory {
         type(TransparentUpgradeableProxy).creationCode,
         abi.encode(logic, admin, data)
       );
+  }
+
+  /// @inheritdoc ITransparentProxyFactory
+  function predictCreateDeterministicProxyAdmin(
+    bytes32 salt
+  ) public view returns (address) {
+    return
+    _predictCreate2Address(
+      address(this),
+      salt,
+      type(ProxyAdmin).creationCode,
+      abi.encode()
+    );
   }
 
   function _predictCreate2Address(
