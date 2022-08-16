@@ -2,10 +2,10 @@
 pragma solidity >=0.8.0;
 
 interface ITransparentProxyFactory {
-  event ProxyCreated(address proxy, address logic, address indexed proxyAdmin);
+  event ProxyCreated(address proxy, address indexed logic, address indexed proxyAdmin);
   event ProxyAdminCreated(address proxyAdmin, address indexed adminOwner);
-  event ProxyDeterministicCreated(address proxy, address logic, address indexed admin, bytes32 salt);
-  event ProxyAdminDeterministicCreated(address proxyAdmin, address indexed adminOwner, bytes32 salt);
+  event ProxyDeterministicCreated(address proxy, address indexed logic, address indexed admin, bytes32 indexed salt);
+  event ProxyAdminDeterministicCreated(address proxyAdmin, address indexed adminOwner, bytes32 indexed salt);
 
   /**
    * @notice Creates a transparent proxy instance, doing the first initialization in construction
