@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
+import {IOwnable} from './interfaces/IOwnable.sol';
 import {ITransparentProxyFactory} from './interfaces/ITransparentProxyFactory.sol';
 import {TransparentUpgradeableProxy} from './TransparentUpgradeableProxy.sol';
+import {ProxyAdmin} from './ProxyAdmin.sol';
 
 /**
  * @title TransparentProxyFactory
@@ -26,6 +28,17 @@ contract TransparentProxyFactory is ITransparentProxyFactory {
   }
 
   /// @inheritdoc ITransparentProxyFactory
+  function createProxyAdmin(
+    address adminOwner
+  ) external returns (address) {
+    address proxyAdmin = address(new ProxyAdmin());
+    IOwnable(proxyAdmin).transferOwnership(adminOwner);
+
+    emit ProxyAdminCreated(proxyAdmin, adminOwner);
+    return proxyAdmin;
+  }
+
+  /// @inheritdoc ITransparentProxyFactory
   function createDeterministic(
     address logic,
     address admin,
@@ -36,6 +49,18 @@ contract TransparentProxyFactory is ITransparentProxyFactory {
 
     emit ProxyDeterministicCreated(proxy, logic, admin, salt);
     return proxy;
+  }
+
+  /// @inheritdoc ITransparentProxyFactory
+  function createDeterministicProxyAdmin(
+    address adminOwner,
+    bytes32 salt
+  ) external returns (address) {
+    address proxyAdmin = address(new ProxyAdmin{salt: salt}());
+    IOwnable(proxyAdmin).transferOwnership(adminOwner);
+
+    emit ProxyAdminDeterministicCreated(proxyAdmin, adminOwner, salt);
+    return proxyAdmin;
   }
 
   /// @inheritdoc ITransparentProxyFactory
@@ -52,6 +77,19 @@ contract TransparentProxyFactory is ITransparentProxyFactory {
         type(TransparentUpgradeableProxy).creationCode,
         abi.encode(logic, admin, data)
       );
+  }
+
+  /// @inheritdoc ITransparentProxyFactory
+  function predictCreateDeterministicProxyAdmin(
+    bytes32 salt
+  ) public view returns (address) {
+    return
+    _predictCreate2Address(
+      address(this),
+      salt,
+      type(ProxyAdmin).creationCode,
+      abi.encode()
+    );
   }
 
   function _predictCreate2Address(
