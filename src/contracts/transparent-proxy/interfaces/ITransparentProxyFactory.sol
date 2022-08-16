@@ -11,7 +11,7 @@ interface ITransparentProxyFactory {
    * @notice Creates a transparent proxy instance, doing the first initialization in construction
    * @dev Version using CREATE
    * @param logic The address of the implementation contract
-   * @param admin The admin of the proxy. Highly recommended to pass the address of a ProxyAdmin
+   * @param admin The admin of the proxy.
    * @param data abi encoded call to the function with `initializer` (or `reinitializer`) modifier.
    *             E.g. `abi.encodeWithSelector(mockImpl.initialize.selector, 2)`
    *             for an `initialize` function being `function initialize(uint256 foo) external initializer;`
@@ -54,7 +54,7 @@ interface ITransparentProxyFactory {
   /**
    * @notice Deterministically create a proxy admin instance and transfers ownership to provided owner.
    * @dev Version using CREATE2, so deterministic
-   * @param adminOwner The owner of the ProxyAdmin deployed. Highly recommended to pass the address of an Executor
+   * @param adminOwner The owner of the ProxyAdmin deployed.
    * @param salt Value to be used in the address calculation, to be chosen by the account calling this function
    * @return address The address of the proxy admin deployed
    **/
