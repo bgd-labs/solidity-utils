@@ -8,6 +8,10 @@ interface IEmergencyConsumer {
    */
   event CLEmergencyOracleUpdated(address indexed newChainlinkEmergencyOracle);
 
+  /**
+  */
+  event EmergencySolved(int256 emergencyCount);
+
   /// @dev method that returns the last emergency solved
   function emergencyCount() external view returns (int256);
 

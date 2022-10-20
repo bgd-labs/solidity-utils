@@ -42,7 +42,7 @@ contract EmergencyConsumer is Ownable, IEmergencyConsumer {
   * @dev method that marks the emergency as resolved
   */
   function _solveEmergency() internal onlyInEmergency {
-    emergencyCount++;
+    emit EmergencySolved(emergencyCount++);
   }
 
   /**

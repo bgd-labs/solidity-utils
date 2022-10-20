@@ -21,6 +21,7 @@ contract EmergencyConsumerTest is Test {
   MockConsumer public mockConsumer;
 
   event CLEmergencyOracleUpdated(address indexed newChainlinkEmergencyOracle);
+  event EmergencySolved(int256 emergencyCount);
 
   function setUp() public {
     emergencyConsumer = new EmergencyConsumer(CL_EMERGENCY_ORACLE);
@@ -79,6 +80,8 @@ contract EmergencyConsumerTest is Test {
     address(CL_EMERGENCY_ORACLE),
     abi.encodeWithSelector(ICLEmergencyOracle.latestRoundData.selector)
     );
+    vm.expectEmit(false, false, false, true);
+    emit EmergencySolved(int256(0));
     mockConsumer.testEmergencyMethod();
 
     assertEq(mockConsumer.emergencyCount(), int256(1));
