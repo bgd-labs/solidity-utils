@@ -2,39 +2,20 @@
 pragma solidity ^0.8.0;
 
 import 'forge-std/Test.sol';
-import {Ownable} from '../src/contracts/oz-common/Ownable.sol';
 import {EmergencyConsumer} from '../src/contracts/emergency/EmergencyConsumer.sol';
 import {IEmergencyConsumer} from '../src/contracts/emergency/interfaces/IEmergencyConsumer.sol';
 import {ICLEmergencyOracle} from '../src/contracts/emergency/interfaces/ICLEmergencyOracle.sol';
 
-contract MockConsumer is EmergencyConsumer, Ownable {
-  constructor(address oracle, address owner) EmergencyConsumer(oracle) {
-    _transferOwnership(owner);
-  }
-
-  function testEmergencyMethod() external onlyInEmergency {
-
-  }
-
-  function updateCLEmergencyOracle(address newChainlinkEmergencyOracle) onlyOwner external override {
-    _updateCLEmergencyOracle(newChainlinkEmergencyOracle);
-  }
-}
-
 contract EmergencyConsumerTest is Test, EmergencyConsumer {
-  address public constant OWNER = address(123);
   address public constant CL_EMERGENCY_ORACLE = address(1234);
-
-  IEmergencyConsumer public emergencyConsumer;
-  MockConsumer public mockConsumer;
 
   constructor() EmergencyConsumer(CL_EMERGENCY_ORACLE) {}
 
-  function setUp() public {
-    mockConsumer = new MockConsumer(CL_EMERGENCY_ORACLE, OWNER);
-  }
+  function setUp() public {}
 
   function updateCLEmergencyOracle(address newChainlinkEmergencyOracle) external override {}
+
+  function emergencyMethod() public onlyInEmergency {}
 
   function testGetEmergencyCount() public {
     assertEq(emergencyCount, int256(0));
@@ -44,35 +25,14 @@ contract EmergencyConsumerTest is Test, EmergencyConsumer {
     assertEq(chainlinkEmergencyOracle, CL_EMERGENCY_ORACLE);
   }
 
-  function testUpdateCLEmergencyOracleInernal() public {
+  function testUpdateCLEmergencyOracleInternal() public {
     address newChainlinkEmergencyOracle = address(1234);
 
     vm.expectEmit(true, false, false, true);
-    emit CLEmergencyOracleUpdated( newChainlinkEmergencyOracle);
+    emit CLEmergencyOracleUpdated(newChainlinkEmergencyOracle);
     _updateCLEmergencyOracle(newChainlinkEmergencyOracle);
 
     assertEq(chainlinkEmergencyOracle, newChainlinkEmergencyOracle);
-  }
-
-  function testUpdateCLEmergencyOracle() public {
-    address newChainlinkEmergencyOracle = address(1234);
-
-    hoax(OWNER);
-    vm.expectEmit(true, false, false, true);
-    emit CLEmergencyOracleUpdated( newChainlinkEmergencyOracle);
-    mockConsumer.updateCLEmergencyOracle(newChainlinkEmergencyOracle);
-
-    assertEq(mockConsumer.chainlinkEmergencyOracle(), newChainlinkEmergencyOracle);
-  }
-
-  function testUpdateCLEmergencyOracleWhenNotOwner() public {
-    address newChainlinkEmergencyOracle = address(1234);
-
-    vm.expectRevert(bytes('Ownable: caller is not the owner'));
-    mockConsumer.updateCLEmergencyOracle(newChainlinkEmergencyOracle);
-
-    assertEq(mockConsumer.chainlinkEmergencyOracle(), CL_EMERGENCY_ORACLE);
-
   }
 
   function testEmergency() public {
@@ -82,8 +42,7 @@ contract EmergencyConsumerTest is Test, EmergencyConsumer {
     uint256 updatedAt = 0;
     uint80 answeredInRound = uint80(0);
 
-
-    assertEq(mockConsumer.emergencyCount(), int256(0));
+    assertEq(emergencyCount, int256(0));
 
     vm.mockCall(
       address(CL_EMERGENCY_ORACLE),
@@ -91,14 +50,13 @@ contract EmergencyConsumerTest is Test, EmergencyConsumer {
       abi.encode(roundId, answer, startedAt, updatedAt, answeredInRound)
     );
     vm.expectCall(
-    address(CL_EMERGENCY_ORACLE),
-    abi.encodeWithSelector(ICLEmergencyOracle.latestRoundData.selector)
+      address(CL_EMERGENCY_ORACLE),
+      abi.encodeWithSelector(ICLEmergencyOracle.latestRoundData.selector)
     );
     vm.expectEmit(false, false, false, true);
     emit EmergencySolved(int256(0));
-    mockConsumer.testEmergencyMethod();
+    emergencyMethod();
 
-    assertEq(mockConsumer.emergencyCount(), int256(1));
+    assertEq(emergencyCount, int256(1));
   }
-
 }
