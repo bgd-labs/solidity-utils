@@ -13,7 +13,7 @@ contract EmergencyConsumerTest is Test, EmergencyConsumer {
 
   function setUp() public {}
 
-  function validateEmergencyAdmin() internal override {}
+  function _validateEmergencyAdmin() internal override {}
 
   function emergencyMethod() public onlyInEmergency {}
 
