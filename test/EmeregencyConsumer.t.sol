@@ -7,14 +7,22 @@ import {EmergencyConsumer} from '../src/contracts/emergency/EmergencyConsumer.so
 import {IEmergencyConsumer} from '../src/contracts/emergency/interfaces/IEmergencyConsumer.sol';
 import {ICLEmergencyOracle} from '../src/contracts/emergency/interfaces/ICLEmergencyOracle.sol';
 
-contract MockConsumer is EmergencyConsumer {
-  constructor(address oracle) EmergencyConsumer(oracle) {}
+contract MockConsumer is EmergencyConsumer, Ownable {
+  constructor(address oracle, address owner) EmergencyConsumer(oracle) {
+    _transferOwnership(owner);
+  }
+
   function testEmergencyMethod() external onlyInEmergency {
-    _solveEmergency();
+
+  }
+
+  function updateCLEmergencyOracle(address newChainlinkEmergencyOracle) onlyOwner external override {
+    _updateCLEmergencyOracle(newChainlinkEmergencyOracle);
   }
 }
 
 contract EmergencyConsumerTest is Test {
+  address public constant OWNER = address(123);
   address public constant CL_EMERGENCY_ORACLE = address(1234);
 
   IEmergencyConsumer public emergencyConsumer;
@@ -25,11 +33,7 @@ contract EmergencyConsumerTest is Test {
 
   function setUp() public {
     emergencyConsumer = new EmergencyConsumer(CL_EMERGENCY_ORACLE);
-    mockConsumer = new MockConsumer(CL_EMERGENCY_ORACLE);
-  }
-
-  function testSetUp() public {
-    assertEq(Ownable(address(emergencyConsumer)).owner(), address(this));
+    mockConsumer = new MockConsumer(CL_EMERGENCY_ORACLE, OWNER);
   }
 
   function testGetEmergencyCount() public {
@@ -43,9 +47,10 @@ contract EmergencyConsumerTest is Test {
   function testUpdateCLEmergencyOracle() public {
     address newChainlinkEmergencyOracle = address(1234);
 
+    hoax(OWNER);
     vm.expectEmit(true, false, false, true);
     emit CLEmergencyOracleUpdated( newChainlinkEmergencyOracle);
-    emergencyConsumer.updateCLEmergencyOracle(newChainlinkEmergencyOracle);
+    mockConsumer.updateCLEmergencyOracle(newChainlinkEmergencyOracle);
 
     assertEq(emergencyConsumer.chainlinkEmergencyOracle(), newChainlinkEmergencyOracle);
 
@@ -53,9 +58,8 @@ contract EmergencyConsumerTest is Test {
   function testUpdateCLEmergencyOracleWhenNotOwner() public {
     address newChainlinkEmergencyOracle = address(1234);
 
-    hoax(address(1258));
     vm.expectRevert(bytes('Ownable: caller is not the owner'));
-    emergencyConsumer.updateCLEmergencyOracle(newChainlinkEmergencyOracle);
+    mockConsumer.updateCLEmergencyOracle(newChainlinkEmergencyOracle);
 
     assertEq(emergencyConsumer.chainlinkEmergencyOracle(), CL_EMERGENCY_ORACLE);
 

@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {Ownable} from '../oz-common/Ownable.sol';
 import {IEmergencyConsumer} from './interfaces/IEmergencyConsumer.sol';
 import {ICLEmergencyOracle} from './interfaces/ICLEmergencyOracle.sol';
 
-contract EmergencyConsumer is Ownable, IEmergencyConsumer {
+contract EmergencyConsumer is IEmergencyConsumer {
   /// @inheritdoc IEmergencyConsumer
   address public chainlinkEmergencyOracle;
 
@@ -21,6 +20,8 @@ contract EmergencyConsumer is Ownable, IEmergencyConsumer {
 
     require(answer > emergencyCount == true, 'NOT_IN_EMERGENCY');
     _;
+
+    emit EmergencySolved(emergencyCount++);
   }
 
   /**
@@ -32,18 +33,8 @@ contract EmergencyConsumer is Ownable, IEmergencyConsumer {
 
   /// @inheritdoc IEmergencyConsumer
   function updateCLEmergencyOracle(address newChainlinkEmergencyOracle)
-  external onlyOwner
-  {
-    _updateCLEmergencyOracle(newChainlinkEmergencyOracle);
-  }
+  external virtual {}
 
-
-  /**
-  * @dev method that marks the emergency as resolved
-  */
-  function _solveEmergency() internal onlyInEmergency {
-    emit EmergencySolved(emergencyCount++);
-  }
 
   /**
    * @dev method to update the chainlink emergency oracle

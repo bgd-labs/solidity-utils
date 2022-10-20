@@ -9,7 +9,9 @@ interface IEmergencyConsumer {
   event CLEmergencyOracleUpdated(address indexed newChainlinkEmergencyOracle);
 
   /**
-  */
+   * @dev emitted when the emergency is solved
+   * @param emergencyCount number of emergencies solved. Used to check if a new emergency is active.
+   */
   event EmergencySolved(int256 emergencyCount);
 
   /// @dev method that returns the last emergency solved
@@ -19,7 +21,8 @@ interface IEmergencyConsumer {
   function chainlinkEmergencyOracle() external view returns (address);
 
   /**
-* @dev method to update the chainlink emergency mode address
+  * @dev method to update the chainlink emergency mode address. This method is virtual
+         as it doesn`t know access control beforehand.
   * @param newChainlinkEmergencyOracle address of the new chainlink emergency mode oracle
   */
   function updateCLEmergencyOracle(address newChainlinkEmergencyOracle) external;
