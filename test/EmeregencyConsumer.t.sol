@@ -21,27 +21,41 @@ contract MockConsumer is EmergencyConsumer, Ownable {
   }
 }
 
-contract EmergencyConsumerTest is Test {
+contract EmergencyConsumerTest is Test, EmergencyConsumer {
   address public constant OWNER = address(123);
   address public constant CL_EMERGENCY_ORACLE = address(1234);
 
   IEmergencyConsumer public emergencyConsumer;
   MockConsumer public mockConsumer;
 
-  event CLEmergencyOracleUpdated(address indexed newChainlinkEmergencyOracle);
-  event EmergencySolved(int256 emergencyCount);
+//  event CLEmergencyOracleUpdated(address indexed newChainlinkEmergencyOracle);
+//  event EmergencySolved(int256 emergencyCount);
+
+  constructor() EmergencyConsumer(CL_EMERGENCY_ORACLE) {}
 
   function setUp() public {
-    emergencyConsumer = new EmergencyConsumer(CL_EMERGENCY_ORACLE);
+//    emergencyConsumer = new EmergencyConsumer(CL_EMERGENCY_ORACLE);
     mockConsumer = new MockConsumer(CL_EMERGENCY_ORACLE, OWNER);
   }
 
+  function updateCLEmergencyOracle(address newChainlinkEmergencyOracle) external override {}
+
   function testGetEmergencyCount() public {
-    assertEq(emergencyConsumer.emergencyCount(), int256(0));
+    assertEq(emergencyCount, int256(0));
   }
 
   function testGetChainlinkEmergencyOracle() public {
-    assertEq(emergencyConsumer.chainlinkEmergencyOracle(), CL_EMERGENCY_ORACLE);
+    assertEq(chainlinkEmergencyOracle, CL_EMERGENCY_ORACLE);
+  }
+
+  function testUpdateCLEmergencyOracleInernal() public {
+    address newChainlinkEmergencyOracle = address(1234);
+
+    vm.expectEmit(true, false, false, true);
+    emit CLEmergencyOracleUpdated( newChainlinkEmergencyOracle);
+    _updateCLEmergencyOracle(newChainlinkEmergencyOracle);
+
+    assertEq(chainlinkEmergencyOracle, newChainlinkEmergencyOracle);
   }
 
   function testUpdateCLEmergencyOracle() public {
@@ -52,16 +66,16 @@ contract EmergencyConsumerTest is Test {
     emit CLEmergencyOracleUpdated( newChainlinkEmergencyOracle);
     mockConsumer.updateCLEmergencyOracle(newChainlinkEmergencyOracle);
 
-    assertEq(emergencyConsumer.chainlinkEmergencyOracle(), newChainlinkEmergencyOracle);
-
+    assertEq(mockConsumer.chainlinkEmergencyOracle(), newChainlinkEmergencyOracle);
   }
+
   function testUpdateCLEmergencyOracleWhenNotOwner() public {
     address newChainlinkEmergencyOracle = address(1234);
 
     vm.expectRevert(bytes('Ownable: caller is not the owner'));
     mockConsumer.updateCLEmergencyOracle(newChainlinkEmergencyOracle);
 
-    assertEq(emergencyConsumer.chainlinkEmergencyOracle(), CL_EMERGENCY_ORACLE);
+    assertEq(mockConsumer.chainlinkEmergencyOracle(), CL_EMERGENCY_ORACLE);
 
   }
 
