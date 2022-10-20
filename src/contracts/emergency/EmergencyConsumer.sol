@@ -30,10 +30,14 @@ abstract contract EmergencyConsumer is IEmergencyConsumer {
     _updateCLEmergencyOracle(newChainlinkEmergencyOracle);
   }
 
-  /// @inheritdoc IEmergencyConsumer
   /// @dev This method is made virtual as it is expected to have access control, but this way it is delegated to implementation.
-  ///      It should call _updateCLEmergencyOracle when implemented
-  function updateCLEmergencyOracle(address newChainlinkEmergencyOracle) external virtual;
+  function validateEmergencyAdmin() internal virtual;
+
+  /// @inheritdoc IEmergencyConsumer
+  function updateCLEmergencyOracle(address newChainlinkEmergencyOracle) external {
+    validateEmergencyAdmin();
+    _updateCLEmergencyOracle(newChainlinkEmergencyOracle);
+  }
 
   /// @inheritdoc IEmergencyConsumer
   function getChainlinkEmergencyOracle() public view returns (address) {
