@@ -28,13 +28,9 @@ contract EmergencyConsumerTest is Test, EmergencyConsumer {
   IEmergencyConsumer public emergencyConsumer;
   MockConsumer public mockConsumer;
 
-//  event CLEmergencyOracleUpdated(address indexed newChainlinkEmergencyOracle);
-//  event EmergencySolved(int256 emergencyCount);
-
   constructor() EmergencyConsumer(CL_EMERGENCY_ORACLE) {}
 
   function setUp() public {
-//    emergencyConsumer = new EmergencyConsumer(CL_EMERGENCY_ORACLE);
     mockConsumer = new MockConsumer(CL_EMERGENCY_ORACLE, OWNER);
   }
 
