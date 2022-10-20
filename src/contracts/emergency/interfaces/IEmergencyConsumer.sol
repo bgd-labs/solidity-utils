@@ -12,13 +12,13 @@ interface IEmergencyConsumer {
    * @dev emitted when the emergency is solved
    * @param emergencyCount number of emergencies solved. Used to check if a new emergency is active.
    */
-  event EmergencySolved(int256 emergencyCount);
+  event EmergencySolved(uint256 emergencyCount);
 
   /// @dev method that returns the last emergency solved
-  function emergencyCount() external view returns (int256);
+  function getEmergencyCount() external view returns (uint256);
 
   /// @dev method that returns the address of the current chainlink emergency oracle
-  function chainlinkEmergencyOracle() external view returns (address);
+  function getChainlinkEmergencyOracle() external view returns (address);
 
   /**
    * @dev method to update the chainlink emergency mode address.

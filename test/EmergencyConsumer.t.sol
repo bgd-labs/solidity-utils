@@ -18,11 +18,11 @@ contract EmergencyConsumerTest is Test, EmergencyConsumer {
   function emergencyMethod() public onlyInEmergency {}
 
   function testGetEmergencyCount() public {
-    assertEq(emergencyCount, int256(0));
+    assertEq(getEmergencyCount(), 0);
   }
 
   function testGetChainlinkEmergencyOracle() public {
-    assertEq(chainlinkEmergencyOracle, CL_EMERGENCY_ORACLE);
+    assertEq(getChainlinkEmergencyOracle(), CL_EMERGENCY_ORACLE);
   }
 
   function testUpdateCLEmergencyOracleInternal() public {
@@ -32,7 +32,7 @@ contract EmergencyConsumerTest is Test, EmergencyConsumer {
     emit CLEmergencyOracleUpdated(newChainlinkEmergencyOracle);
     _updateCLEmergencyOracle(newChainlinkEmergencyOracle);
 
-    assertEq(chainlinkEmergencyOracle, newChainlinkEmergencyOracle);
+    assertEq(_chainlinkEmergencyOracle, newChainlinkEmergencyOracle);
   }
 
   function testEmergency() public {
@@ -42,7 +42,7 @@ contract EmergencyConsumerTest is Test, EmergencyConsumer {
     uint256 updatedAt = 0;
     uint80 answeredInRound = uint80(0);
 
-    assertEq(emergencyCount, int256(0));
+    assertEq(_emergencyCount, 0);
 
     vm.mockCall(
       address(CL_EMERGENCY_ORACLE),
@@ -54,9 +54,9 @@ contract EmergencyConsumerTest is Test, EmergencyConsumer {
       abi.encodeWithSelector(ICLEmergencyOracle.latestRoundData.selector)
     );
     vm.expectEmit(false, false, false, true);
-    emit EmergencySolved(int256(0));
+    emit EmergencySolved(1);
     emergencyMethod();
 
-    assertEq(emergencyCount, int256(1));
+    assertEq(_emergencyCount, 1);
   }
 }

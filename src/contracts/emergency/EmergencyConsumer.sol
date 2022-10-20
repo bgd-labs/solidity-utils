@@ -5,23 +5,22 @@ import {IEmergencyConsumer} from './interfaces/IEmergencyConsumer.sol';
 import {ICLEmergencyOracle} from './interfaces/ICLEmergencyOracle.sol';
 
 abstract contract EmergencyConsumer is IEmergencyConsumer {
-  /// @inheritdoc IEmergencyConsumer
-  address public chainlinkEmergencyOracle;
+  address internal _chainlinkEmergencyOracle;
 
-  /// @inheritdoc IEmergencyConsumer
-  int256 public emergencyCount;
+  uint256 internal _emergencyCount;
 
   /// @dev modifier that checks if the oracle emergency is greater than the last resolved one, and if so
   ///      lets execution pass
   modifier onlyInEmergency() {
-    require(address(chainlinkEmergencyOracle) != address(0), 'CL_EMERGENCY_ORACLE_NOT_SET');
+    require(address(_chainlinkEmergencyOracle) != address(0), 'CL_EMERGENCY_ORACLE_NOT_SET');
 
-    (, int256 answer, , , ) = ICLEmergencyOracle(chainlinkEmergencyOracle).latestRoundData();
+    (, int256 answer, , , ) = ICLEmergencyOracle(_chainlinkEmergencyOracle).latestRoundData();
 
-    require(answer > emergencyCount == true, 'NOT_IN_EMERGENCY');
+    uint256 nextEmergencyCount = ++_emergencyCount;
+    require(answer == int256(nextEmergencyCount), 'NOT_IN_EMERGENCY');
     _;
 
-    emit EmergencySolved(emergencyCount++);
+    emit EmergencySolved(nextEmergencyCount);
   }
 
   /**
@@ -36,12 +35,22 @@ abstract contract EmergencyConsumer is IEmergencyConsumer {
   ///      It should call _updateCLEmergencyOracle when implemented
   function updateCLEmergencyOracle(address newChainlinkEmergencyOracle) external virtual;
 
+  /// @inheritdoc IEmergencyConsumer
+  function getChainlinkEmergencyOracle() public view returns (address) {
+    return _chainlinkEmergencyOracle;
+  }
+
+  /// @inheritdoc IEmergencyConsumer
+  function getEmergencyCount() public view returns (uint256) {
+    return _emergencyCount;
+  }
+
   /**
    * @dev method to update the chainlink emergency oracle
    * @param newChainlinkEmergencyOracle address of the new oracle
    */
   function _updateCLEmergencyOracle(address newChainlinkEmergencyOracle) internal {
-    chainlinkEmergencyOracle = newChainlinkEmergencyOracle;
+    _chainlinkEmergencyOracle = newChainlinkEmergencyOracle;
 
     emit CLEmergencyOracleUpdated(newChainlinkEmergencyOracle);
   }
