@@ -21,10 +21,10 @@ interface IEmergencyConsumer {
   function chainlinkEmergencyOracle() external view returns (address);
 
   /**
-  * @dev method to update the chainlink emergency mode address. This method is virtual
-         as it doesn`t know access control beforehand.
-  * @param newChainlinkEmergencyOracle address of the new chainlink emergency mode oracle
-  */
+   * @dev method to update the chainlink emergency mode address.
+   *      This method is made virtual as it is expected to have access control, but this way it is delegated to implementation.
+   *      It should call _updateCLEmergencyOracle when implemented
+   * @param newChainlinkEmergencyOracle address of the new chainlink emergency mode oracle
+   */
   function updateCLEmergencyOracle(address newChainlinkEmergencyOracle) external;
-
 }

@@ -32,6 +32,8 @@ abstract contract EmergencyConsumer is IEmergencyConsumer {
   }
 
   /// @inheritdoc IEmergencyConsumer
+  /// @dev This method is made virtual as it is expected to have access control, but this way it is delegated to implementation.
+  ///      It should call _updateCLEmergencyOracle when implemented
   function updateCLEmergencyOracle(address newChainlinkEmergencyOracle) external virtual;
 
   /**
