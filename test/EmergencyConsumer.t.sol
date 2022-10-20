@@ -13,7 +13,7 @@ contract EmergencyConsumerTest is Test, EmergencyConsumer {
 
   function setUp() public {}
 
-  function updateCLEmergencyOracle(address newChainlinkEmergencyOracle) external override {}
+  function _validateEmergencyAdmin() internal override {}
 
   function emergencyMethod() public onlyInEmergency {}
 
