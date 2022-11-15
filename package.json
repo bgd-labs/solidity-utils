@@ -1,15 +1,15 @@
 {
-  "name": "solidity-utils",
+  "name": "@bgd-labs/solidity-utils",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Common contracts we use almost everywhere",
   "directories": {
     "lib": "lib",
     "test": "tests"
   },
   "scripts": {
     "prettier": "prettier --write 'src/contracts/**/*.sol'",
-    "prettier:tests": "prettier --write 'tests/**/*.sol'"
+    "prettier:tests": "prettier --write 'tests/**/*.sol'",
+    "ci:publish": "npm publish --access=public"
   },
   "repository": {
     "type": "git",
