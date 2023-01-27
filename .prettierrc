@@ -8,8 +8,21 @@
     {
       "files": "*.sol",
       "options": {
-        "semi": true,
-        "printWidth": 100
+        "printWidth": 100,
+        "tabWidth": 2,
+        "useTabs": false,
+        "singleQuote": true,
+        "bracketSpacing": false
+      }
+    },
+    {
+      "files": "*.ts",
+      "options": {
+        "printWidth": 100,
+        "tabWidth": 2,
+        "useTabs": false,
+        "singleQuote": true,
+        "bracketSpacing": false
       }
     }
   ]

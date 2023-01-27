@@ -67,14 +67,9 @@ contract TestTransparentProxyFactory is Test {
   }
 
   function testCreateDeterministicProxyAdmin() public {
-    address proxyAdmin = factory.createDeterministicProxyAdmin(
-      address(2),
-      bytes32(uint256(2))
-    );
+    address proxyAdmin = factory.createDeterministicProxyAdmin(address(2), bytes32(uint256(2)));
 
-    address predictedProxyAdmin = factory.predictCreateDeterministicProxyAdmin(
-      bytes32(uint256(2))
-    );
+    address predictedProxyAdmin = factory.predictCreateDeterministicProxyAdmin(bytes32(uint256(2)));
 
     address proxyOwner = IOwnable(proxyAdmin).owner();
 
@@ -83,13 +78,9 @@ contract TestTransparentProxyFactory is Test {
   }
 
   function testCreateProxyAdmin() public {
-    address proxyAdmin = factory.createDeterministicProxyAdmin(
-      address(2),
-      bytes32(uint256(2))
-    );
+    address proxyAdmin = factory.createDeterministicProxyAdmin(address(2), bytes32(uint256(2)));
 
     address proxyOwner = IOwnable(proxyAdmin).owner();
     assertEq(proxyOwner, address(2));
   }
-
 }
