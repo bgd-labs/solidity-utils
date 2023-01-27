@@ -7,8 +7,8 @@
     "test": "tests"
   },
   "scripts": {
-    "prettier": "prettier --write 'src/contracts/**/*.sol'",
-    "prettier:tests": "prettier --write 'tests/**/*.sol'",
+    "lint": "prettier ./",
+    "lint:fix": "npm run lint -- --write",
     "ci:publish": "npm publish --access=public"
   },
   "repository": {
@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/bgd-labs/solidity-utils#readme",
   "devDependencies": {
-    "prettier": "^2.7.1",
-    "prettier-plugin-solidity": "^1.0.0-beta.19"
+    "prettier": "^2.8.3",
+    "prettier-plugin-solidity": "^1.1.1"
   }
 }

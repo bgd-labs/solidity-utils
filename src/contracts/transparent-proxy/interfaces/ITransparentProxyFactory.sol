@@ -4,8 +4,17 @@ pragma solidity >=0.8.0;
 interface ITransparentProxyFactory {
   event ProxyCreated(address proxy, address indexed logic, address indexed proxyAdmin);
   event ProxyAdminCreated(address proxyAdmin, address indexed adminOwner);
-  event ProxyDeterministicCreated(address proxy, address indexed logic, address indexed admin, bytes32 indexed salt);
-  event ProxyAdminDeterministicCreated(address proxyAdmin, address indexed adminOwner, bytes32 indexed salt);
+  event ProxyDeterministicCreated(
+    address proxy,
+    address indexed logic,
+    address indexed admin,
+    bytes32 indexed salt
+  );
+  event ProxyAdminDeterministicCreated(
+    address proxyAdmin,
+    address indexed adminOwner,
+    bytes32 indexed salt
+  );
 
   /**
    * @notice Creates a transparent proxy instance, doing the first initialization in construction
@@ -17,11 +26,7 @@ interface ITransparentProxyFactory {
    *             for an `initialize` function being `function initialize(uint256 foo) external initializer;`
    * @return address The address of the proxy deployed
    **/
-  function create(
-    address logic,
-    address admin,
-    bytes memory data
-  ) external returns (address);
+  function create(address logic, address admin, bytes memory data) external returns (address);
 
   /**
    * @notice Creates a proxyAdmin instance, and transfers ownership to provided owner
@@ -29,9 +34,7 @@ interface ITransparentProxyFactory {
    * @param adminOwner The owner of the proxyAdmin deployed.
    * @return address The address of the proxyAdmin deployed
    **/
-  function createProxyAdmin(
-    address adminOwner
-  ) external returns (address);
+  function createProxyAdmin(address adminOwner) external returns (address);
 
   /**
    * @notice Creates a transparent proxy instance, doing the first initialization in construction
@@ -85,9 +88,5 @@ interface ITransparentProxyFactory {
    * @param salt Value to be used in the address calculation, to be chosen by the account calling this function
    * @return address The pre-calculated address
    **/
-  function predictCreateDeterministicProxyAdmin(
-    bytes32 salt
-  ) external view returns (address);
+  function predictCreateDeterministicProxyAdmin(bytes32 salt) external view returns (address);
 }
-
-
