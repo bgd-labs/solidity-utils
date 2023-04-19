@@ -24,19 +24,19 @@ abstract contract EmergencyConsumer is IEmergencyConsumer {
   }
 
   /**
-   * @param newChainlinkEmergencyOracle address of the new chainlink emergency mode oracle
+   * @param chainlinkEmergencyOracle address of the new chainlink emergency mode oracle
    */
-  constructor(address newChainlinkEmergencyOracle) {
-    _updateCLEmergencyOracle(newChainlinkEmergencyOracle);
+  constructor(address chainlinkEmergencyOracle) {
+    _updateCLEmergencyOracle(chainlinkEmergencyOracle);
   }
 
   /// @dev This method is made virtual as it is expected to have access control, but this way it is delegated to implementation.
   function _validateEmergencyAdmin() internal virtual;
 
   /// @inheritdoc IEmergencyConsumer
-  function updateCLEmergencyOracle(address newChainlinkEmergencyOracle) external {
+  function updateCLEmergencyOracle(address chainlinkEmergencyOracle) external {
     _validateEmergencyAdmin();
-    _updateCLEmergencyOracle(newChainlinkEmergencyOracle);
+    _updateCLEmergencyOracle(chainlinkEmergencyOracle);
   }
 
   /// @inheritdoc IEmergencyConsumer
@@ -51,11 +51,11 @@ abstract contract EmergencyConsumer is IEmergencyConsumer {
 
   /**
    * @dev method to update the chainlink emergency oracle
-   * @param newChainlinkEmergencyOracle address of the new oracle
+   * @param chainlinkEmergencyOracle address of the new oracle
    */
-  function _updateCLEmergencyOracle(address newChainlinkEmergencyOracle) internal {
-    _chainlinkEmergencyOracle = newChainlinkEmergencyOracle;
+  function _updateCLEmergencyOracle(address chainlinkEmergencyOracle) internal {
+    _chainlinkEmergencyOracle = chainlinkEmergencyOracle;
 
-    emit CLEmergencyOracleUpdated(newChainlinkEmergencyOracle);
+    emit CLEmergencyOracleUpdated(chainlinkEmergencyOracle);
   }
 }

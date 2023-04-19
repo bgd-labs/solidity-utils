@@ -4,9 +4,9 @@ pragma solidity ^0.8.0;
 interface IEmergencyConsumer {
   /**
    * @dev emitted when chainlink emergency oracle gets updated
-   * @param newChainlinkEmergencyOracle address of the new oracle
+   * @param chainlinkEmergencyOracle address of the new oracle
    */
-  event CLEmergencyOracleUpdated(address indexed newChainlinkEmergencyOracle);
+  event CLEmergencyOracleUpdated(address indexed chainlinkEmergencyOracle);
 
   /**
    * @dev emitted when the emergency is solved
@@ -24,7 +24,7 @@ interface IEmergencyConsumer {
    * @dev method to update the chainlink emergency mode address.
    *      This method is made virtual as it is expected to have access control, but this way it is delegated to implementation.
    *      It should call _updateCLEmergencyOracle when implemented
-   * @param newChainlinkEmergencyOracle address of the new chainlink emergency mode oracle
+   * @param chainlinkEmergencyOracle address of the new chainlink emergency mode oracle
    */
-  function updateCLEmergencyOracle(address newChainlinkEmergencyOracle) external;
+  function updateCLEmergencyOracle(address chainlinkEmergencyOracle) external;
 }
