@@ -25,9 +25,7 @@ contract EmergencyConsumerTest is Test, EmergencyConsumer {
     assertEq(getChainlinkEmergencyOracle(), CL_EMERGENCY_ORACLE);
   }
 
-  function testUpdateCLEmergencyOracleInternal() public {
-    address newChainlinkEmergencyOracle = address(1234);
-
+  function testUpdateCLEmergencyOracleInternal(address newChainlinkEmergencyOracle) public {
     vm.expectEmit(true, false, false, true);
     emit CLEmergencyOracleUpdated(newChainlinkEmergencyOracle);
     _updateCLEmergencyOracle(newChainlinkEmergencyOracle);
