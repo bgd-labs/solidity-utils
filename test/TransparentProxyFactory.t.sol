@@ -16,33 +16,28 @@ contract TestTransparentProxyFactory is Test {
     mockImpl = new MockImpl();
   }
 
-  function testCreateDeterministic() public {
+  function testCreateDeterministic(address admin, bytes32 salt) public {
     uint256 FOO = 2;
 
     bytes memory data = abi.encodeWithSelector(mockImpl.initialize.selector, FOO);
 
     address predictedAddress1 = factory.predictCreateDeterministic(
       address(mockImpl),
-      address(1),
+      admin,
       data,
-      bytes32(uint256(1))
+      salt
     );
 
-    address proxy1 = factory.createDeterministic(
-      address(mockImpl),
-      address(1),
-      data,
-      bytes32(uint256(1))
-    );
+    address proxy1 = factory.createDeterministic(address(mockImpl), admin, data, salt);
 
     assertEq(predictedAddress1, proxy1);
     assertEq(MockImpl(proxy1).getFoo(), FOO);
   }
 
-  function testCreateDeterministicWithDeterministicProxy() public {
-    address deterministicProxyAdmin = factory.predictCreateDeterministicProxyAdmin(
-      bytes32(uint256(2))
-    );
+  function testCreateDeterministicWithDeterministicProxy(bytes32 proxyAdminSalt, bytes32 proxySalt)
+    public
+  {
+    address deterministicProxyAdmin = factory.predictCreateDeterministicProxyAdmin(proxyAdminSalt);
 
     uint256 FOO = 2;
 
@@ -52,35 +47,35 @@ contract TestTransparentProxyFactory is Test {
       address(mockImpl),
       deterministicProxyAdmin,
       data,
-      bytes32(uint256(1))
+      proxySalt
     );
 
     address proxy1 = factory.createDeterministic(
       address(mockImpl),
       deterministicProxyAdmin,
       data,
-      bytes32(uint256(1))
+      proxySalt
     );
 
     assertEq(predictedAddress1, proxy1);
     assertEq(MockImpl(proxy1).getFoo(), FOO);
   }
 
-  function testCreateDeterministicProxyAdmin() public {
-    address proxyAdmin = factory.createDeterministicProxyAdmin(address(2), bytes32(uint256(2)));
+  function testCreateDeterministicProxyAdmin(address proxyAdminOwner, bytes32 proxyAdminSalt)
+    public
+  {
+    address proxyAdmin = factory.createDeterministicProxyAdmin(proxyAdminOwner, proxyAdminSalt);
 
-    address predictedProxyAdmin = factory.predictCreateDeterministicProxyAdmin(bytes32(uint256(2)));
+    address predictedProxyAdmin = factory.predictCreateDeterministicProxyAdmin(proxyAdminSalt);
 
     address proxyOwner = IOwnable(proxyAdmin).owner();
 
     assertEq(predictedProxyAdmin, proxyAdmin);
-    assertEq(proxyOwner, address(2));
+    assertEq(proxyOwner, proxyAdminOwner);
   }
 
-  function testCreateProxyAdmin() public {
-    address proxyAdmin = factory.createDeterministicProxyAdmin(address(2), bytes32(uint256(2)));
-
-    address proxyOwner = IOwnable(proxyAdmin).owner();
-    assertEq(proxyOwner, address(2));
+  function testCreateProxyAdmin(address proxyAdminOwner, bytes32 proxyAdminSalt) public {
+    address proxyAdmin = factory.createDeterministicProxyAdmin(proxyAdminOwner, proxyAdminSalt);
+    assertEq(IOwnable(proxyAdmin).owner(), proxyAdminOwner);
   }
 }

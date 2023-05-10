@@ -18,13 +18,15 @@ contract TestOfOwnableWithGuardian is Test {
     assertEq(withGuardian.guardian(), address(this));
   }
 
-  function testGuardianUpdate() external {
-    withGuardian.updateGuardian(0x0000000000000000000000000000000000000001);
+  function testGuardianUpdate(address guardian) external {
+    withGuardian.updateGuardian(guardian);
   }
 
-  function testGuardianUpdateNoAccess() external {
-    vm.prank(0x0000000000000000000000000000000000000001);
+  function testGuardianUpdateNoAccess(address guardian) external {
+    vm.assume(guardian != address(this));
+
+    vm.prank(guardian);
     vm.expectRevert('ONLY_BY_GUARDIAN');
-    withGuardian.updateGuardian(0x0000000000000000000000000000000000000001);
+    withGuardian.updateGuardian(guardian);
   }
 }
