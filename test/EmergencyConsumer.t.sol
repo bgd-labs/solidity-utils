@@ -35,14 +35,14 @@ contract EmergencyConsumerTest is Test, EmergencyConsumer {
     assertEq(_chainlinkEmergencyOracle, newChainlinkEmergencyOracle);
   }
 
-  function testEmergency() public {
+  function testEmergency(int256 answer, uint256 emergencyCount) public {
+    vm.assume(answer > 0 && uint256(answer) > emergencyCount);
+
     uint80 roundId = uint80(0);
-    int256 answer = int256(1);
     uint256 startedAt = 0;
     uint256 updatedAt = 0;
     uint80 answeredInRound = uint80(0);
-
-    assertEq(_emergencyCount, 0);
+    _emergencyCount = emergencyCount;
 
     vm.mockCall(
       address(CL_EMERGENCY_ORACLE),
@@ -54,9 +54,28 @@ contract EmergencyConsumerTest is Test, EmergencyConsumer {
       abi.encodeWithSelector(ICLEmergencyOracle.latestRoundData.selector)
     );
     vm.expectEmit(false, false, false, true);
-    emit EmergencySolved(1);
+    emit EmergencySolved(uint256(answer));
     emergencyMethod();
 
-    assertEq(_emergencyCount, 1);
+    assertEq(_emergencyCount, uint256(answer));
+  }
+
+  function testRevertIfNotInEmergency(int256 answer, uint256 emergencyCount) public {
+    vm.assume(answer < 0 || emergencyCount >= uint256(answer));
+
+    uint80 roundId = uint80(0);
+    uint256 startedAt = 0;
+    uint256 updatedAt = 0;
+    uint80 answeredInRound = uint80(0);
+
+    _emergencyCount = emergencyCount;
+
+    vm.mockCall(
+      address(CL_EMERGENCY_ORACLE),
+      abi.encodeWithSelector(ICLEmergencyOracle.latestRoundData.selector),
+      abi.encode(roundId, answer, startedAt, updatedAt, answeredInRound)
+    );
+    vm.expectRevert(bytes('NOT_IN_EMERGENCY'));
+    this.emergencyMethod();
   }
 }
