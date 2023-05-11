@@ -15,12 +15,12 @@ abstract contract EmergencyConsumer is IEmergencyConsumer {
     require(address(_chainlinkEmergencyOracle) != address(0), 'CL_EMERGENCY_ORACLE_NOT_SET');
 
     (, int256 answer, , , ) = ICLEmergencyOracle(_chainlinkEmergencyOracle).latestRoundData();
-
-    uint256 nextEmergencyCount = ++_emergencyCount;
-    require(answer == int256(nextEmergencyCount), 'NOT_IN_EMERGENCY');
+    // if there was multiple emergency actions set, we will resolve all of them at once
+    require(answer > 0 && uint256(answer) > _emergencyCount, 'NOT_IN_EMERGENCY');
+    _emergencyCount = uint256(answer);
     _;
 
-    emit EmergencySolved(nextEmergencyCount);
+    emit EmergencySolved(uint256(answer));
   }
 
   /**
