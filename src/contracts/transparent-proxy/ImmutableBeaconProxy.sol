@@ -10,8 +10,8 @@ import {Address} from '../oz-common/Address.sol';
  * The beacon address is immutable. The purpose of it, is to be able to access this proxy via delegatecall
 
  * !!! IMPORTANT CONSIDERATION !!!
- * We expect that that implementation will not have any storage associated,
- * because it will not be accessible via delegatecall, and will not work as expected
+ * We expect that the implementation will not have any storage associated,
+ * because it when accessed via delegatecall, will not work as expected creating dangerous side-effects. Preferable, the implementation should be declared as a library
  */
 contract ImmutableBeaconProxy is Proxy {
   address internal immutable _beacon;
