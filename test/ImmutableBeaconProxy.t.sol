@@ -30,14 +30,14 @@ contract ImmutableBeaconProxyTest is Test {
   }
 
   function testBeaconNotAContract() public {
-    vm.expectRevert(bytes('beacon is not a contract'));
+    vm.expectRevert(bytes('INVALID_BEACON'));
     new ImmutableBeaconProxy(address(1));
   }
 
   function testImplementationNotAContract() public {
     address beacon = address(new BeaconMock(address(1)));
 
-    vm.expectRevert(bytes('beacon implementation is not a contract'));
+    vm.expectRevert(bytes('INVALID_IMPLEMENTATION'));
     new ImmutableBeaconProxy(beacon);
   }
 }

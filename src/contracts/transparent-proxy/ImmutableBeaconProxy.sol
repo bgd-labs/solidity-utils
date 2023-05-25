@@ -17,11 +17,8 @@ contract ImmutableBeaconProxy is Proxy {
   address internal immutable _beacon;
 
   constructor(address beacon) {
-    require(Address.isContract(beacon), 'beacon is not a contract');
-    require(
-      Address.isContract(IBeacon(beacon).implementation()),
-      'beacon implementation is not a contract'
-    );
+    require(Address.isContract(beacon), 'INVALID_BEACON');
+    require(Address.isContract(IBeacon(beacon).implementation()), 'INVALID_IMPLEMENTATION');
 
     // there is no initialization call, because we expect that implementation should have no storage
     _beacon = beacon;
