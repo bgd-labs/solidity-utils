@@ -9,7 +9,7 @@
 
 pragma solidity ^0.8.0;
 
-import './Proxy.sol';
+import '../oz-common/Proxy.sol';
 import './ERC1967Upgrade.sol';
 
 /**

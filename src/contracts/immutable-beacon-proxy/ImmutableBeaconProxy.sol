@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import {IBeacon} from './interfaces/IBeacon.sol';
-import {Proxy} from './Proxy.sol';
+import {Proxy} from '../oz-common/Proxy.sol';
 import {Address} from '../oz-common/Address.sol';
 
 /**
@@ -16,12 +16,15 @@ import {Address} from '../oz-common/Address.sol';
 contract ImmutableBeaconProxy is Proxy {
   address internal immutable _beacon;
 
+  event ImmutableBeaconSet(address indexed beacon);
+
   constructor(address beacon) {
     require(Address.isContract(beacon), 'INVALID_BEACON');
     require(Address.isContract(IBeacon(beacon).implementation()), 'INVALID_IMPLEMENTATION');
 
     // there is no initialization call, because we expect that implementation should have no storage
     _beacon = beacon;
+    emit ImmutableBeaconSet(beacon);
   }
 
   /**

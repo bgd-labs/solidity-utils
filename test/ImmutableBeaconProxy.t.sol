@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 import 'forge-std/Test.sol';
-import {ImmutableBeaconProxy, IBeacon} from '../src/contracts/transparent-proxy/ImmutableBeaconProxy.sol';
+import {ImmutableBeaconProxy, IBeacon} from '../src/contracts/immutable-beacon-proxy/ImmutableBeaconProxy.sol';
 
 contract ImplementationMock {}
 
@@ -22,10 +22,14 @@ contract ImmutableBeaconProxyMock is ImmutableBeaconProxy {
 }
 
 contract ImmutableBeaconProxyTest is Test {
+  event ImmutableBeaconSet(address indexed beacon);
+
   function testResolvesImplementationCorrectly() public {
     address implementation = address(new ImplementationMock());
     address beacon = address(new BeaconMock(implementation));
 
+    vm.expectEmit(true, false, false, true);
+    emit ImmutableBeaconSet(beacon);
     assertEq(implementation, (new ImmutableBeaconProxyMock(beacon)).implementation());
   }
 
