@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.0;
 
-import './interfaces/IBeacon.sol';
+import {IBeacon} from './interfaces/IBeacon.sol';
 import {Ownable} from '../oz-common/Ownable.sol';
 import {Address} from '../oz-common/Address.sol';
 
