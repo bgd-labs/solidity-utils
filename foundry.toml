@@ -1,4 +1,4 @@
-[default]
+[profile.default]
 src = 'src'
 tests = 'tests'
 out = 'out'
