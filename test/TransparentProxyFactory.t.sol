@@ -8,8 +8,8 @@ import {IOwnable} from '../src/contracts/transparent-proxy/interfaces/IOwnable.s
 import {MockImpl} from '../src/mocks/MockImpl.sol';
 
 contract TestTransparentProxyFactory is Test {
-  TransparentProxyFactory factory;
-  MockImpl mockImpl;
+  TransparentProxyFactory internal factory;
+  MockImpl internal mockImpl;
 
   function setUp() public {
     factory = new TransparentProxyFactory();
@@ -17,8 +17,10 @@ contract TestTransparentProxyFactory is Test {
   }
 
   function testCreateDeterministic(address admin, bytes32 salt) public {
-    uint256 FOO = 2;
+    // we know that this is covered at the ERC1967Upgrade
+    vm.assume(admin != address(0));
 
+    uint256 FOO = 2;
     bytes memory data = abi.encodeWithSelector(mockImpl.initialize.selector, FOO);
 
     address predictedAddress1 = factory.predictCreateDeterministic(
@@ -64,6 +66,9 @@ contract TestTransparentProxyFactory is Test {
   function testCreateDeterministicProxyAdmin(address proxyAdminOwner, bytes32 proxyAdminSalt)
     public
   {
+    // we know that this is covered at the ProxyAdmin contract
+    vm.assume(proxyAdminOwner != address(0));
+
     address proxyAdmin = factory.createDeterministicProxyAdmin(proxyAdminOwner, proxyAdminSalt);
 
     address predictedProxyAdmin = factory.predictCreateDeterministicProxyAdmin(proxyAdminSalt);
@@ -75,6 +80,9 @@ contract TestTransparentProxyFactory is Test {
   }
 
   function testCreateProxyAdmin(address proxyAdminOwner, bytes32 proxyAdminSalt) public {
+    // we know that this is covered at the ProxyAdmin contract
+    vm.assume(proxyAdminOwner != address(0));
+
     address proxyAdmin = factory.createDeterministicProxyAdmin(proxyAdminOwner, proxyAdminSalt);
     assertEq(IOwnable(proxyAdmin).owner(), proxyAdminOwner);
   }
