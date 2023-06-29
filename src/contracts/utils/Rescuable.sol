@@ -3,18 +3,10 @@ pragma solidity ^0.8.8;
 
 import {IERC20} from '../oz-common/interfaces/IERC20.sol';
 import {SafeERC20} from '../oz-common/SafeERC20.sol';
+import {IRescuable} from './interfaces/IRescuable.sol';
 
-abstract contract Rescuable {
+abstract contract Rescuable is IRescuable {
   using SafeERC20 for IERC20;
-
-  event ERC20Rescued(
-    address indexed caller,
-    address indexed token,
-    address indexed to,
-    uint256 amount
-  );
-
-  event NativeTokensRescued(address indexed caller, address indexed to, uint256 amount);
 
   modifier onlyRescueGuardian() {
     require(msg.sender == whoCanRescue(), 'ONLY_RESCUE_GUARDIAN');
