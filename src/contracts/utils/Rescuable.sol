@@ -8,7 +8,7 @@ import {IRescuable} from './interfaces/IRescuable.sol';
 /**
  * @title Rescuable
  * @author BGD Labs
- * @notice abstract contract with the methods to rescue tokens from a contract
+ * @notice abstract contract with the methods to rescue tokens (ERC20 and native)  from a contract
  */
 abstract contract Rescuable is IRescuable {
   using SafeERC20 for IERC20;
