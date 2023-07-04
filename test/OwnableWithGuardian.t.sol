@@ -26,7 +26,7 @@ contract TestOfOwnableWithGuardian is Test {
     vm.assume(guardian != address(this));
 
     vm.prank(guardian);
-    vm.expectRevert('ONLY_BY_GUARDIAN');
+    vm.expectRevert('ONLY_BY_OWNER_OR_GUARDIAN');
     withGuardian.updateGuardian(guardian);
   }
 }
