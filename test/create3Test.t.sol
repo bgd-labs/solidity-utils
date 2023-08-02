@@ -78,26 +78,4 @@ contract Create3FactoryTest is Test {
     assertEq(creator.balance, 7 ether);
     assertEq(votingPortal.balance, 3 ether);
   }
-
-  function testCreate3WithProxy() public {
-    MockContract mockContractImpl = new MockContract(
-      address(1),
-      OWNER
-    );
-
-    bytes memory data = abi.encodeWithSelector(MockContract.initialize.selector, address(2), OWNER);
-
-    bytes32 salt = keccak256(bytes('Voting portal eth-avax-2'));
-    // deploy Voting portal
-    address votingPortalProxy = factory.createWithTransparentProxy(
-      address(mockContractImpl),
-      ADMIN,
-      data,
-      salt
-    );
-
-    assertEq(votingPortalProxy, factory.predictAddress(address(this), salt));
-    assertEq(MockContract(votingPortalProxy).getOtherAddress(), address(2));
-    assertEq(Ownable(votingPortalProxy).owner(), OWNER);
-  }
 }

@@ -21,23 +21,6 @@ interface ICreate3Factory {
   ) external payable returns (address);
 
   /**
-   * @notice Creates a transparent proxy instance, doing the first initialization in construction using Create3
-   * @param logic The address of the implementation contract
-   * @param admin The admin of the proxy.
-   * @param data abi encoded call to the function with `initializer` (or `reinitializer`) modifier.
-   *             E.g. `abi.encodeWithSelector(mockImpl.initialize.selector, 2)`
-   *             for an `initialize` function being `function initialize(uint256 foo) external initializer;`
-   * @param salt Value to be used in the address calculation, to be chosen by the account calling this function
-   * @return The address of the proxy deployed
-   **/
-  function createWithTransparentProxy(
-    address logic,
-    address admin,
-    bytes calldata data,
-    bytes32 salt
-  ) external payable returns (address);
-
-  /**
    * @notice Predicts the address of a deployed contract
    * @dev The provided salt is hashed together with the deployer address to generate the final salt
    * @param deployer The deployer account that will call deploy()
