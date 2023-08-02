@@ -109,27 +109,7 @@ library Create3 {
    * @dev The address creation formula is: keccak256(rlp([keccak256(0xff ++ address(this) ++ _salt ++ keccak256(childBytecode))[12:], 0x01]))
    */
   function addressOf(bytes32 _salt) internal view returns (address) {
-    address proxy = address(
-      uint160(
-        uint256(
-          keccak256(
-            abi.encodePacked(
-              hex'ff',
-              address(this),
-              _salt,
-              KECCAK256_PROXY_CHILD_BYTECODE
-            )
-          )
-        )
-      )
-    );
-
-    return
-      address(
-        uint160(
-          uint256(keccak256(abi.encodePacked(hex'd6_94', proxy, hex'01')))
-        )
-      );
+    return addressOfWithCaller(_salt, address(this));
   }
 
   /**
