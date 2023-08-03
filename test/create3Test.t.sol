@@ -9,9 +9,8 @@ contract MockContract is Ownable {
   address public immutable SOME_ADDRESS;
   address internal _someOtherAddress;
 
-  constructor(address someAddress, address owner) {
+  constructor(address someAddress, address owner) Ownable(owner) {
     SOME_ADDRESS = someAddress;
-    _transferOwnership(owner);
   }
 
   function getOtherAddress() external view returns (address) {

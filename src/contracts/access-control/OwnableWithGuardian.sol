@@ -7,7 +7,7 @@ import {Ownable} from '../oz-common/Ownable.sol';
 abstract contract OwnableWithGuardian is Ownable, IWithGuardian {
   address private _guardian;
 
-  constructor() {
+  constructor() Ownable(_msgSender()) {
     _updateGuardian(_msgSender());
   }
 

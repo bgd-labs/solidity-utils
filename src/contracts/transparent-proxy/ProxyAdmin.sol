@@ -18,6 +18,9 @@ import '../oz-common/Ownable.sol';
  * explanation of why you would want to use this see the documentation for {TransparentUpgradeableProxy}.
  */
 contract ProxyAdmin is Ownable {
+
+  constructor() Ownable(msg.sender) {}
+
   /**
    * @dev Returns the current implementation of `proxy`.
    *
