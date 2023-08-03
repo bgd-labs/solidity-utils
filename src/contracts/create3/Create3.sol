@@ -114,7 +114,7 @@ library Create3 {
   }
 
   /**
-   * @notice Computes the resulting address of a contract deployed using deployer and the given `_salt`
+   * @notice Computes the resulting address of a contract deployed using address of pre-deployed factory and the given `_salt`
    * @param salt Salt of the contract creation, resulting address will be derivated from this value only
    * @param preDeployedFactory address of a pre deployed create 3 factory (its the address that will be used to create the proxy)
    * @return address of the deployed contract, reverts on error
