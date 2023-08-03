@@ -4,7 +4,9 @@ pragma solidity ^0.8.0;
 import 'forge-std/Test.sol';
 import {OwnableWithGuardian} from '../src/contracts/access-control/OwnableWithGuardian.sol';
 
-contract ImplOwnableWithGuardian is OwnableWithGuardian {}
+contract ImplOwnableWithGuardian is OwnableWithGuardian {
+  constructor() OwnableWithGuardian(msg.sender, msg.sender) {}
+}
 
 contract TestOfOwnableWithGuardian is Test {
   OwnableWithGuardian public withGuardian;
