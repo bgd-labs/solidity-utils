@@ -25,28 +25,22 @@ contract MockContract is Ownable {
 }
 
 contract Create3FactoryTest is Test {
-  bytes32 public constant CREATE3_FACTORY_SALT =
-    keccak256(bytes('Create3 Factory'));
-  address public constant OWNER = address(123098);
-  address public constant ADMIN = address(1230989);
+  bytes32 public constant CREATE3_FACTORY_SALT = keccak256(bytes('Create3 Factory'));
   ICreate3Factory public factory;
 
   function setUp() public {
     factory = new Create3Factory{salt: CREATE3_FACTORY_SALT}();
   }
 
-  function testCreate3WithoutValue() public {
-    bytes memory encodedParams = abi.encode(
-      address(1),
-      OWNER
-    );
+  function testCreate3WithoutValue(
+    address someAddress,
+    address owner,
+    bytes32 salt
+  ) public {
+    bytes memory encodedParams = abi.encode(someAddress, owner);
     bytes memory code = type(MockContract).creationCode;
-    bytes32 salt = keccak256(bytes('Voting portal eth-avax-2'));
     // deploy Voting portal
-    address votingPortal = factory.create(
-      salt,
-      abi.encodePacked(code, encodedParams)
-    );
+    address votingPortal = factory.create(salt, abi.encodePacked(code, encodedParams));
 
     assertEq(votingPortal, factory.predictAddress(address(this), salt));
     assertEq(
@@ -56,17 +50,18 @@ contract Create3FactoryTest is Test {
         address(factory)
       )
     );
-    assertEq(Ownable(votingPortal).owner(), OWNER);
+    assertEq(MockContract(votingPortal).owner(), owner);
+    assertEq(MockContract(votingPortal).SOME_ADDRESS(), someAddress);
   }
 
-  function testCreate3WithValue() public {
-    bytes memory encodedParams = abi.encode(
-      address(1),
-      OWNER
-    );
+  function testCreate3WithValue(
+    address someAddress,
+    address owner,
+    address creator
+  ) public {
+    bytes memory encodedParams = abi.encode(someAddress, owner);
     bytes memory code = type(MockContract).creationCode;
     bytes32 salt = keccak256(bytes('Voting portal eth-avax-2'));
-    address creator = address(12305178);
     // deploy Voting portal
     hoax(creator, 10 ether);
     address votingPortal = factory.create{value: 3 ether}(
