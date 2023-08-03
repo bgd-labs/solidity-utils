@@ -44,7 +44,7 @@ library Create3 {
 
   /**
    * @notice Returns the size of the code on a given address
-   * @param _addr Address that may or may not contain code
+   * @param addr Address that may or may not contain code
    * @return size of the code on the given `_addr`
    */
   function codeSize(address addr) internal view returns (uint256 size) {
