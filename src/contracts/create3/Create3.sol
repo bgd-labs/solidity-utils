@@ -55,72 +55,74 @@ library Create3 {
 
   /**
    * @notice Creates a new contract with given `_creationCode` and `_salt`
-   * @param _salt Salt of the contract creation, resulting address will be derivated from this value only
-   * @param _creationCode Creation code (constructor) of the contract to be deployed, this value doesn't affect the resulting address
-   * @return addr of the deployed contract, reverts on error
+   * @param salt Salt of the contract creation, resulting address will be derivated from this value only
+   * @param creationCode Creation code (constructor) of the contract to be deployed, this value doesn't affect the resulting address
+   * @return address of the deployed contract, reverts on error
    */
   function create3(
-    bytes32 _salt,
-    bytes memory _creationCode
-  ) internal returns (address addr) {
-    return create3(_salt, _creationCode, 0);
+    bytes32 salt,
+    bytes memory creationCode
+  ) internal returns (address) {
+    return create3(salt, creationCode, 0);
   }
 
   /**
    * @notice Creates a new contract with given `_creationCode` and `_salt`
-   * @param _salt Salt of the contract creation, resulting address will be derivated from this value only
-   * @param _creationCode Creation code (constructor) of the contract to be deployed, this value doesn't affect the resulting address
-   * @param _value In WEI of ETH to be forwarded to child contract
+   * @param salt Salt of the contract creation, resulting address will be derivated from this value only
+   * @param creationCode Creation code (constructor) of the contract to be deployed, this value doesn't affect the resulting address
+   * @param value In WEI of ETH to be forwarded to child contract
    * @return addr of the deployed contract, reverts on error
    */
   function create3(
-    bytes32 _salt,
-    bytes memory _creationCode,
-    uint256 _value
-  ) internal returns (address addr) {
+    bytes32 salt,
+    bytes memory creationCode,
+    uint256 value
+  ) internal returns (address) {
     // Creation code
-    bytes memory creationCode = PROXY_CHILD_BYTECODE;
+    bytes memory proxyCreationCode = PROXY_CHILD_BYTECODE;
 
     // Get target final address
-    addr = addressOf(_salt);
-    if (codeSize(addr) != 0) revert TargetAlreadyExists();
+    address deployedContract = addressOf(salt);
+    if (codeSize(deployedContract) != 0) revert TargetAlreadyExists();
 
     // Create CREATE2 proxy
     address proxy;
     assembly {
       proxy := create2(
-        _value,
-        add(creationCode, 32),
-        mload(creationCode),
-        _salt
+        value,
+        add(proxyCreationCode, 32),
+        mload(proxyCreationCode),
+        salt
       )
     }
     if (proxy == address(0)) revert ErrorCreatingProxy();
 
     // Call proxy with final init code
-    (bool success, ) = proxy.call(_creationCode);
-    if (!success || codeSize(addr) == 0) revert ErrorCreatingContract();
+    (bool success, ) = proxy.call(creationCode);
+    if (!success || codeSize(deployedContract) == 0) revert ErrorCreatingContract();
+    return deployedContract;
   }
 
   /**
    * @notice Computes the resulting address of a contract deployed using address(this) and the given `_salt`
-   * @param _salt Salt of the contract creation, resulting address will be derivated from this value only
-   * @return addr of the deployed contract, reverts on error
+   * @param salt Salt of the contract creation, resulting address will be derivated from this value only
+   * @return address of the deployed contract, reverts on error
    * @dev The address creation formula is: keccak256(rlp([keccak256(0xff ++ address(this) ++ _salt ++ keccak256(childBytecode))[12:], 0x01]))
    */
-  function addressOf(bytes32 _salt) internal view returns (address) {
-    return addressOfWithCaller(_salt, address(this));
+  function addressOf(bytes32 salt) internal view returns (address) {
+    return addressOfWithPreDeployedFactory(salt, address(this));
   }
 
   /**
-   * @notice Computes the resulting address of a contract deployed using address(this) and the given `_salt`
-   * @param _salt Salt of the contract creation, resulting address will be derivated from this value only
-   * @return addr of the deployed contract, reverts on error
+   * @notice Computes the resulting address of a contract deployed using deployer and the given `_salt`
+   * @param salt Salt of the contract creation, resulting address will be derivated from this value only
+   * @param preDeployedFactory address of a pre deployed create 3 factory (its the address that will be used to create the proxy)
+   * @return address of the deployed contract, reverts on error
    * @dev The address creation formula is: keccak256(rlp([keccak256(0xff ++ address(this) ++ _salt ++ keccak256(childBytecode))[12:], 0x01]))
    */
-  function addressOfWithCaller(
-    bytes32 _salt,
-    address caller
+  function addressOfWithPreDeployedFactory(
+    bytes32 salt,
+    address preDeployedFactory
   ) internal pure returns (address) {
     address proxy = address(
       uint160(
@@ -128,8 +130,8 @@ library Create3 {
           keccak256(
             abi.encodePacked(
               hex'ff',
-              caller,
-              _salt,
+              preDeployedFactory,
+              salt,
               KECCAK256_PROXY_CHILD_BYTECODE
             )
           )

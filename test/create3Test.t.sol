@@ -51,7 +51,7 @@ contract Create3FactoryTest is Test {
     assertEq(votingPortal, factory.predictAddress(address(this), salt));
     assertEq(
       votingPortal,
-      Create3.addressOfWithCaller(
+      Create3.addressOfWithPreDeployedFactory(
         keccak256(abi.encodePacked(address(this), salt)),
         address(factory)
       )
