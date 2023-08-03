@@ -47,9 +47,9 @@ library Create3 {
    * @param _addr Address that may or may not contain code
    * @return size of the code on the given `_addr`
    */
-  function codeSize(address _addr) internal view returns (uint256 size) {
+  function codeSize(address addr) internal view returns (uint256 size) {
     assembly {
-      size := extcodesize(_addr)
+      size := extcodesize(addr)
     }
   }
 
