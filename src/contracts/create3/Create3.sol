@@ -118,7 +118,7 @@ library Create3 {
    * @param salt Salt of the contract creation, resulting address will be derivated from this value only
    * @param preDeployedFactory address of a pre deployed create 3 factory (its the address that will be used to create the proxy)
    * @return address of the deployed contract, reverts on error
-   * @dev The address creation formula is: keccak256(rlp([keccak256(0xff ++ address(this) ++ _salt ++ keccak256(childBytecode))[12:], 0x01]))
+   * @dev The address creation formula is: keccak256(rlp([keccak256(0xff ++ address(preDeployedFactory) ++ _salt ++ keccak256(childBytecode))[12:], 0x01]))
    */
   function addressOfWithPreDeployedFactory(
     bytes32 salt,
