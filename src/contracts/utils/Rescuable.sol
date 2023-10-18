@@ -24,14 +24,14 @@ abstract contract Rescuable is IRescuable {
     address erc20Token,
     address to,
     uint256 amount
-  ) external onlyRescueGuardian {
+  ) external virtual onlyRescueGuardian {
     IERC20(erc20Token).safeTransfer(to, amount);
 
     emit ERC20Rescued(msg.sender, erc20Token, to, amount);
   }
 
   /// @inheritdoc IRescuable
-  function emergencyEtherTransfer(address to, uint256 amount) external onlyRescueGuardian {
+  function emergencyEtherTransfer(address to, uint256 amount) external virtual onlyRescueGuardian {
     (bool success, ) = to.call{value: amount}(new bytes(0));
     require(success, 'ETH_TRANSFER_FAIL');
 
