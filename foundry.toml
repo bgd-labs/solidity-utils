@@ -3,7 +3,8 @@ src = 'src'
 tests = 'tests'
 out = 'out'
 libs = ['lib']
-solc = "0.8.14"
+solc = '0.8.14'
+
 remappings = [
 ]
 

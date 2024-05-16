@@ -16,6 +16,15 @@ import {ProxyAdmin} from './ProxyAdmin.sol';
  **/
 contract TransparentProxyFactory is ITransparentProxyFactory {
   /// @inheritdoc ITransparentProxyFactory
+  bytes32 public constant TRANSPARENT_UPGRADABLE_PROXY_INIT_CODE_HASH = 0x010001b9421394647fd6db04c2d0388c1c7eff370f9786ba83623c4578d270e5;
+
+  /// @inheritdoc ITransparentProxyFactory
+  bytes32 public constant PROXY_ADMIN_INIT_CODE_HASH = 0x010000e99453efb92b96e1a6fe700f7b4588620684babbc7ed7240fe180ba191;
+
+  /// @inheritdoc ITransparentProxyFactory
+  bytes32 public constant ZKSYNC_CREATE2_PREFIX = keccak256("zksyncCreate2");
+
+  /// @inheritdoc ITransparentProxyFactory
   function create(address logic, address admin, bytes calldata data) external returns (address) {
     address proxy = address(new TransparentUpgradeableProxy(logic, admin, data));
 
@@ -68,31 +77,32 @@ contract TransparentProxyFactory is ITransparentProxyFactory {
       _predictCreate2Address(
         address(this),
         salt,
-        type(TransparentUpgradeableProxy).creationCode,
+        TRANSPARENT_UPGRADABLE_PROXY_INIT_CODE_HASH,
         abi.encode(logic, admin, data)
       );
   }
 
   /// @inheritdoc ITransparentProxyFactory
   function predictCreateDeterministicProxyAdmin(bytes32 salt) public view returns (address) {
-    return _predictCreate2Address(address(this), salt, type(ProxyAdmin).creationCode, abi.encode());
+    return _predictCreate2Address(address(this), salt, PROXY_ADMIN_INIT_CODE_HASH, abi.encode());
   }
 
   function _predictCreate2Address(
-    address creator,
+    address sender,
     bytes32 salt,
-    bytes memory creationCode,
-    bytes memory contructorArgs
+    bytes32 creationCodeHash,
+    bytes memory constructorInput
   ) internal pure returns (address) {
-    bytes32 hash = keccak256(
-      abi.encodePacked(
-        bytes1(0xff),
-        creator,
+    bytes32 addressHash = keccak256(
+      bytes.concat(
+        ZKSYNC_CREATE2_PREFIX,
+        bytes32(uint256(uint160(sender))),
         salt,
-        keccak256(abi.encodePacked(creationCode, contructorArgs))
+        creationCodeHash,
+        keccak256(constructorInput)
       )
     );
 
-    return address(uint160(uint256(hash)));
+    return address(uint160(uint256(addressHash)));
   }
 }
