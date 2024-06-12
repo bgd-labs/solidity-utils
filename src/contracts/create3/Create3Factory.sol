@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: MIT
 // Modified from https://github.com/lifinance/create3-factory/blob/main/src/CREATE3Factory.sol
+// Modifications consist on:
+//  - removal of named returns
+//  - changed name of getDeployed for predictAddress
+//  - usage of create3 lib by Agustin Aguilar instead of solmate
 pragma solidity ^0.8.0;
 
 import {Create3} from './Create3.sol';
-import {Ownable} from '../oz-common/Ownable.sol';
 import {ICreate3Factory} from './interfaces/ICreate3Factory.sol';
 
 /**

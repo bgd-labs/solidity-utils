@@ -1,5 +1,8 @@
 //SPDX-License-Identifier: Unlicense
 // Modified from https://github.com/0xsequence/create3/blob/5a4a152e6be4e0ecfbbbe546992a5aaa43a4c1b0/contracts/Create3.sol by Agustin Aguilar <aa@horizon.io>
+// Modifications consist on:
+//  - removal of named returns
+//  - moved logic of addressOf method to addressOfWithPreDeployedFactory so that factory address can be abstracted
 pragma solidity ^0.8.0;
 
 /**
