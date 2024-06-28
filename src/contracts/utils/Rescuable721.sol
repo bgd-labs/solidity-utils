@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.8;
 
+import {IRescuable721} from './interfaces/IRescuable721.sol';
+
 interface IERC721 {
   function transferFrom(address from, address to, uint256 tokenId) external;
 }
@@ -10,14 +12,7 @@ interface IERC721 {
  * @author defijesus.eth
  * @notice abstract contract with the methods to rescue ERC721 tokens from a contract
  */
-abstract contract Rescuable721 {
-
-  event ERC721Rescued(
-    address indexed caller,
-    address indexed token,
-    address indexed to,
-    uint256 tokenId
-  );
+abstract contract Rescuable721 is IRescuable721 {
 
   error ONLY_RESCUE_GUARDIAN();
 
@@ -27,6 +22,7 @@ abstract contract Rescuable721 {
     _;
   }
 
+  /// @inheritdoc IRescuable721
   function emergencyTokenTransfer(
     address erc721Token,
     address to,
@@ -37,5 +33,6 @@ abstract contract Rescuable721 {
     emit ERC721Rescued(msg.sender, erc721Token, to, tokenId);
   }
 
+  /// @inheritdoc IRescuable721
   function whoCanRescue() public view virtual returns (address);
 }
