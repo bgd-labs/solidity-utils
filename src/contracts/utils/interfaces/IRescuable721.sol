@@ -27,7 +27,7 @@ interface IRescuable721 {
    * @param to address to send the token
    * @param tokenId of token to rescue
    */
-  function rescue721(address erc721Token, address to, uint256 tokenId) external;
+  function emergency721TokenTransfer(address erc721Token, address to, uint256 tokenId) external;
 }
 
 interface IERC721 {

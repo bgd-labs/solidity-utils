@@ -12,7 +12,7 @@ import {Rescuable} from './Rescuable.sol';
 abstract contract Rescuable721 is Rescuable, IRescuable721 {
 
   /// @inheritdoc IRescuable721
-  function rescue721(
+  function emergency721TokenTransfer(
     address erc721Token,
     address to,
     uint256 tokenId

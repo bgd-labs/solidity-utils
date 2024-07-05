@@ -48,7 +48,7 @@ contract Rescue721Test is Test {
     hoax(ALLOWED);
     vm.expectEmit(true, true, false, true);
     emit ERC721Rescued(ALLOWED, address(testToken), recipient, 1);
-    tokensReceiver.rescue721(address(testToken), recipient, 1);
+    tokensReceiver.emergency721TokenTransfer(address(testToken), recipient, 1);
 
     assertEq(testToken.balanceOf(address(tokensReceiver)), 0);
     assertEq(testToken.balanceOf(address(recipient)), 1);
@@ -65,6 +65,6 @@ contract Rescue721Test is Test {
     address recipient = address(1230123519);
 
     vm.expectRevert();
-    tokensReceiver.rescue721(address(testToken), recipient, 1);
+    tokensReceiver.emergency721TokenTransfer(address(testToken), recipient, 1);
   }
 }
