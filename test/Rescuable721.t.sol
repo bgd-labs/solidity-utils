@@ -35,15 +35,14 @@ contract Rescue721Test is Test {
     tokensReceiver = new MockReceiver721TokensContract(ALLOWED);
   }
 
-  function testEmergencyTokenTransfer() public {
-    address randomWallet = address(1239516);
+  function testFuzzEmergencyTokenTransfer(address randomWallet, address recipient) public {
+    vm.assume(randomWallet != address(0));
+    vm.assume(recipient != address(0));
     testToken.mint(randomWallet, 1);
     hoax(randomWallet);
     testToken.transferFrom(randomWallet, address(tokensReceiver), 1);
 
     assertEq(testToken.balanceOf(address(tokensReceiver)), 1);
-
-    address recipient = address(1230123519);
 
     hoax(ALLOWED);
     vm.expectEmit(true, true, false, true);
@@ -54,15 +53,14 @@ contract Rescue721Test is Test {
     assertEq(testToken.balanceOf(address(recipient)), 1);
   }
 
-  function testEmergencyTokenTransferWhenNotOwner() public {
-    address randomWallet = address(1239516);
+  function testFuzzEmergencyTokenTransferWhenNotOwner(address randomWallet, address recipient) public {
+    vm.assume(randomWallet != address(0));
+    vm.assume(recipient != address(0));
     testToken.mint(randomWallet, 1);
     hoax(randomWallet);
     testToken.transferFrom(randomWallet, address(tokensReceiver), 1);
 
     assertEq(testToken.balanceOf(address(tokensReceiver)), 1);
-
-    address recipient = address(1230123519);
 
     vm.expectRevert();
     tokensReceiver.emergency721TokenTransfer(address(testToken), recipient, 1);
