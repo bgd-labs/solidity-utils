@@ -32,10 +32,22 @@ contract TestOfUpgradableOwnableWithGuardian is Test {
   }
 
   function test_onlyGuardian() external {
+    vm.expectRevert(
+      abi.encodeWithSelector(
+        UpgradableOwnableWithGuardian.OnlyGuardianInvalidCaller.selector,
+        address(this)
+      )
+    );
     ImplOwnableWithGuardian(address(withGuardian)).mock_onlyGuardian();
   }
 
   function test_onlyOwnerOrGuardian() external {
+    vm.expectRevert(
+      abi.encodeWithSelector(
+        UpgradableOwnableWithGuardian.OnlyGuardianOrOwnerInvalidCaller.selector,
+        address(this)
+      )
+    );
     ImplOwnableWithGuardian(address(withGuardian)).mock_onlyOwnerOrGuardian();
   }
 
@@ -53,7 +65,12 @@ contract TestOfUpgradableOwnableWithGuardian is Test {
     vm.assume(newGuardian != owner && newGuardian != guardian);
 
     vm.prank(newGuardian);
-    vm.expectRevert('ONLY_BY_OWNER_OR_GUARDIAN');
+    vm.expectRevert(
+      abi.encodeWithSelector(
+        UpgradableOwnableWithGuardian.OnlyGuardianOrOwnerInvalidCaller.selector,
+        address(this)
+      )
+    );
     withGuardian.updateGuardian(newGuardian);
   }
 }

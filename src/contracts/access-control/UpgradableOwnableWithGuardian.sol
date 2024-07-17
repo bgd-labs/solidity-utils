@@ -25,6 +25,16 @@ abstract contract UpgradableOwnableWithGuardian is OwnableUpgradeable, IWithGuar
   }
 
   /**
+   * @dev The caller account is not authorized to perform an operation.
+   */
+  error OnlyGuardianInvalidCaller(address account);
+
+  /**
+   * @dev The caller account is not authorized to perform an operation.
+   */
+  error OnlyGuardianOrOwnerInvalidCaller(address account);
+
+  /**
    * @dev Initializes the contract setting the address provided by the deployer as the initial owner.
    */
   function __Ownable_With_Guardian_init(address initialGuardian) internal onlyInitializing {
@@ -63,10 +73,11 @@ abstract contract UpgradableOwnableWithGuardian is OwnableUpgradeable, IWithGuar
   }
 
   function _checkGuardian() internal view {
-    require(guardian() == _msgSender(), 'ONLY_BY_GUARDIAN');
+    if (guardian() != _msgSender()) revert OnlyGuardianInvalidCaller(_msgSender());
   }
 
   function _checkOwnerOrGuardian() internal view {
-    require(_msgSender() == owner() || _msgSender() == guardian(), 'ONLY_BY_OWNER_OR_GUARDIAN');
+    if (_msgSender() != owner() && _msgSender() != guardian())
+      revert OnlyGuardianOrOwnerInvalidCaller(_msgSender());
   }
 }
