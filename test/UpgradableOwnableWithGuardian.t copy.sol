@@ -64,7 +64,6 @@ contract TestOfUpgradableOwnableWithGuardian is Test {
   function test_updateGuardian_eoa(address newGuardian) external {
     vm.assume(newGuardian != owner && newGuardian != guardian);
 
-    vm.prank(newGuardian);
     vm.expectRevert(
       abi.encodeWithSelector(
         UpgradableOwnableWithGuardian.OnlyGuardianOrOwnerInvalidCaller.selector,
