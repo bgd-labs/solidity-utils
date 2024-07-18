@@ -16,10 +16,10 @@ import {ProxyAdmin} from './ProxyAdmin.sol';
  **/
 contract TransparentProxyFactory is ITransparentProxyFactory {
   /// @inheritdoc ITransparentProxyFactory
-  bytes32 public constant TRANSPARENT_UPGRADABLE_PROXY_INIT_CODE_HASH = 0x010001a582e065e38c95d4ec6c9229a4d3f4dbc80f9a0e5a4f5e441916a8711a;
+  bytes32 public constant TRANSPARENT_UPGRADABLE_PROXY_INIT_CODE_HASH = 0x010001b73fa7f2c39ea2d9c597a419e15436fc9d3e00e032410072fb94ad95e1;
 
   /// @inheritdoc ITransparentProxyFactory
-  bytes32 public constant PROXY_ADMIN_INIT_CODE_HASH = 0x010000e1d9100f670e623a066ebe76f10276fc5cd0119e0cc60191d920633af8;
+  bytes32 public constant PROXY_ADMIN_INIT_CODE_HASH = 0x010000e7f9a8b61da13fe7e27804d9f641f5f8db05b07df720973af749a01ac1;
 
   /// @inheritdoc ITransparentProxyFactory
   bytes32 public constant ZKSYNC_CREATE2_PREFIX = keccak256("zksyncCreate2");
