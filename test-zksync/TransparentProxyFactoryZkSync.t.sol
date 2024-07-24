@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import {Test} from 'forge-std/Test.sol';
-import {TransparentProxyFactoryZkSync} from "../src-zksync/contracts/transparent-proxy/TransparentProxyFactoryZkSync.sol";
+import {TransparentProxyFactoryZkSync} from '../src-zksync/contracts/transparent-proxy/TransparentProxyFactoryZkSync.sol';
 import {TransparentUpgradeableProxy} from '../src/contracts/transparent-proxy/TransparentUpgradeableProxy.sol';
 import {IOwnable} from '../src/contracts/transparent-proxy/interfaces/IOwnable.sol';
 import {MockImpl} from '../src/mocks/MockImpl.sol';
@@ -47,9 +47,10 @@ contract TestTransparentProxyFactoryZkSync is Test {
     assertEq(MockImpl(proxy1).getFoo(), FOO);
   }
 
-  function testCreateDeterministicWithDeterministicProxy(bytes32 proxyAdminSalt, bytes32 proxySalt)
-    public
-  {
+  function testCreateDeterministicWithDeterministicProxy(
+    bytes32 proxyAdminSalt,
+    bytes32 proxySalt
+  ) public {
     address deterministicProxyAdmin = factory.predictCreateDeterministicProxyAdmin(proxyAdminSalt);
 
     uint256 FOO = 2;
@@ -75,9 +76,10 @@ contract TestTransparentProxyFactoryZkSync is Test {
     assertTrue(predictedAddress1.code.length != 0);
   }
 
-  function testCreateDeterministicProxyAdmin(address proxyAdminOwner, bytes32 proxyAdminSalt)
-    public
-  {
+  function testCreateDeterministicProxyAdmin(
+    address proxyAdminOwner,
+    bytes32 proxyAdminSalt
+  ) public {
     // we know that this is covered at the ProxyAdmin contract
     vm.assume(proxyAdminOwner != address(0));
 

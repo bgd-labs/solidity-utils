@@ -36,9 +36,10 @@ contract TestTransparentProxyFactory is Test {
     assertEq(MockImpl(proxy1).getFoo(), FOO);
   }
 
-  function testCreateDeterministicWithDeterministicProxy(bytes32 proxyAdminSalt, bytes32 proxySalt)
-  public
-  {
+  function testCreateDeterministicWithDeterministicProxy(
+    bytes32 proxyAdminSalt,
+    bytes32 proxySalt
+  ) public {
     address deterministicProxyAdmin = factory.predictCreateDeterministicProxyAdmin(proxyAdminSalt);
 
     uint256 FOO = 2;
@@ -63,9 +64,10 @@ contract TestTransparentProxyFactory is Test {
     assertEq(MockImpl(proxy1).getFoo(), FOO);
   }
 
-  function testCreateDeterministicProxyAdmin(address proxyAdminOwner, bytes32 proxyAdminSalt)
-  public
-  {
+  function testCreateDeterministicProxyAdmin(
+    address proxyAdminOwner,
+    bytes32 proxyAdminSalt
+  ) public {
     // we know that this is covered at the ProxyAdmin contract
     vm.assume(proxyAdminOwner != address(0));
 

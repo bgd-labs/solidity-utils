@@ -66,11 +66,11 @@ contract TransparentProxyFactory is ITransparentProxyFactory {
   ) public view returns (address) {
     return
       _predictCreate2Address(
-      address(this),
-      salt,
-      type(TransparentUpgradeableProxy).creationCode,
-      abi.encode(logic, admin, data)
-    );
+        address(this),
+        salt,
+        type(TransparentUpgradeableProxy).creationCode,
+        abi.encode(logic, admin, data)
+      );
   }
 
   /// @inheritdoc ITransparentProxyFactory
