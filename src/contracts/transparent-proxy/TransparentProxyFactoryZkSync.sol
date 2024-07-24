@@ -7,14 +7,14 @@ import {TransparentUpgradeableProxy} from './TransparentUpgradeableProxy.sol';
 import {ProxyAdmin} from './ProxyAdmin.sol';
 
 /**
- * @title TransparentProxyFactory
+ * @title TransparentProxyFactoryZkSync
  * @author BGD Labs
  * @notice Factory contract to create transparent proxies, both with CREATE and CREATE2
  * @dev `create()` and `createDeterministic()` are not unified for clearer interface, and at the same
  * time allowing `createDeterministic()` with salt == 0
  * @dev Highly recommended to pass as `admin` on creation an OZ ProxyAdmin instance
  **/
-contract TransparentProxyFactory is ITransparentProxyFactory {
+contract TransparentProxyFactoryZkSync is ITransparentProxyFactory {
   /// @inheritdoc ITransparentProxyFactory
   bytes32 public constant TRANSPARENT_UPGRADABLE_PROXY_INIT_CODE_HASH = 0x010001b73fa7f2c39ea2d9c597a419e15436fc9d3e00e032410072fb94ad95e1;
 
