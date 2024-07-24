@@ -3,7 +3,6 @@
 pragma solidity ^0.8.0;
 
 import {Create3} from './Create3.sol';
-import {Ownable} from '../oz-common/Ownable.sol';
 import {ICreate3Factory} from './interfaces/ICreate3Factory.sol';
 
 /**
