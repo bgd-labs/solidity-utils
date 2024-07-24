@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import {IOwnable} from './interfaces/IOwnable.sol';
-import {ITransparentProxyFactory} from './interfaces/ITransparentProxyFactoryZkSync.sol';
-import {TransparentUpgradeableProxy} from './TransparentUpgradeableProxy.sol';
-import {ProxyAdmin} from './ProxyAdmin.sol';
+import {IOwnable} from '../../../src/contracts/transparent-proxy/interfaces/IOwnable.sol';
+import {ITransparentProxyFactoryZkSync} from "./interfaces/ITransparentProxyFactoryZkSync.sol";
+import {TransparentUpgradeableProxy} from '../../../src/contracts/transparent-proxy/TransparentUpgradeableProxy.sol';
+import {ProxyAdmin} from '../../../src/contracts/transparent-proxy/ProxyAdmin.sol';
 
 /**
  * @title TransparentProxyFactoryZkSync
@@ -14,7 +14,7 @@ import {ProxyAdmin} from './ProxyAdmin.sol';
  * time allowing `createDeterministic()` with salt == 0
  * @dev Highly recommended to pass as `admin` on creation an OZ ProxyAdmin instance
  **/
-contract TransparentProxyFactoryZkSync is ITransparentProxyFactory {
+contract TransparentProxyFactoryZkSync is ITransparentProxyFactoryZkSync {
   /// @inheritdoc ITransparentProxyFactory
   bytes32 public constant TRANSPARENT_UPGRADABLE_PROXY_INIT_CODE_HASH = 0x010001b73fa7f2c39ea2d9c597a419e15436fc9d3e00e032410072fb94ad95e1;
 

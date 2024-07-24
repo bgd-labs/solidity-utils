@@ -10,7 +10,8 @@ remappings = [
 
 
 [profile.default.zksync]
-src = 'src'
+src = 'src-zksync'
+test = 'test-sksync'
 libs = ['lib']
 fallback_oz = true
 mode = "3"

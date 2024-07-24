@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-interface ITransparentProxyFactory {
+interface ITransparentProxyFactoryZkSync {
   event ProxyCreated(address proxy, address indexed logic, address indexed proxyAdmin);
   event ProxyAdminCreated(address proxyAdmin, address indexed adminOwner);
   event ProxyDeterministicCreated(
