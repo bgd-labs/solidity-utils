@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 
 import {IOwnable} from './interfaces/IOwnable.sol';
-import {ITransparentProxyFactory} from './interfaces/ITransparentProxyFactory.sol';
+import {ITransparentProxyFactory} from './interfaces/ITransparentProxyFactoryZkSync.sol';
 import {TransparentUpgradeableProxy} from './TransparentUpgradeableProxy.sol';
 import {ProxyAdmin} from './ProxyAdmin.sol';
 
@@ -15,6 +15,15 @@ import {ProxyAdmin} from './ProxyAdmin.sol';
  * @dev Highly recommended to pass as `admin` on creation an OZ ProxyAdmin instance
  **/
 contract TransparentProxyFactory is ITransparentProxyFactory {
+  /// @inheritdoc ITransparentProxyFactory
+  bytes32 public constant TRANSPARENT_UPGRADABLE_PROXY_INIT_CODE_HASH = 0x010001b73fa7f2c39ea2d9c597a419e15436fc9d3e00e032410072fb94ad95e1;
+
+  /// @inheritdoc ITransparentProxyFactory
+  bytes32 public constant PROXY_ADMIN_INIT_CODE_HASH = 0x010000e7f9a8b61da13fe7e27804d9f641f5f8db05b07df720973af749a01ac1;
+
+  /// @inheritdoc ITransparentProxyFactory
+  bytes32 public constant ZKSYNC_CREATE2_PREFIX = keccak256("zksyncCreate2");
+
   /// @inheritdoc ITransparentProxyFactory
   function create(address logic, address admin, bytes calldata data) external returns (address) {
     address proxy = address(new TransparentUpgradeableProxy(logic, admin, data));
@@ -66,33 +75,34 @@ contract TransparentProxyFactory is ITransparentProxyFactory {
   ) public view returns (address) {
     return
       _predictCreate2Address(
-      address(this),
-      salt,
-      type(TransparentUpgradeableProxy).creationCode,
-      abi.encode(logic, admin, data)
-    );
+        address(this),
+        salt,
+        TRANSPARENT_UPGRADABLE_PROXY_INIT_CODE_HASH,
+        abi.encode(logic, admin, data)
+      );
   }
 
   /// @inheritdoc ITransparentProxyFactory
   function predictCreateDeterministicProxyAdmin(bytes32 salt) public view returns (address) {
-    return _predictCreate2Address(address(this), salt, type(ProxyAdmin).creationCode, abi.encode());
+    return _predictCreate2Address(address(this), salt, PROXY_ADMIN_INIT_CODE_HASH, abi.encode());
   }
 
   function _predictCreate2Address(
-    address creator,
+    address sender,
     bytes32 salt,
-    bytes memory creationCode,
-    bytes memory contructorArgs
+    bytes32 creationCodeHash,
+    bytes memory constructorInput
   ) internal pure returns (address) {
-    bytes32 hash = keccak256(
-      abi.encodePacked(
-        bytes1(0xff),
-        creator,
+    bytes32 addressHash = keccak256(
+      bytes.concat(
+        ZKSYNC_CREATE2_PREFIX,
+        bytes32(uint256(uint160(sender))),
         salt,
-        keccak256(abi.encodePacked(creationCode, contructorArgs))
+        creationCodeHash,
+        keccak256(constructorInput)
       )
     );
 
-    return address(uint160(uint256(hash)));
+    return address(uint160(uint256(addressHash)));
   }
 }
