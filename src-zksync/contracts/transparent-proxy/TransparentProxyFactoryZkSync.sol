@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import {IOwnable} from '../../../src/contracts/transparent-proxy/interfaces/IOwnable.sol';
+import {TransparentProxyFactoryBase, ITransparentProxyFactory} from '../../../src/contracts/transparent-proxy/TransparentProxyFactoryBase.sol';
 import {ITransparentProxyFactoryZkSync} from './interfaces/ITransparentProxyFactoryZkSync.sol';
-import {TransparentUpgradeableProxy} from '../../../src/contracts/transparent-proxy/TransparentUpgradeableProxy.sol';
-import {ProxyAdmin} from '../../../src/contracts/transparent-proxy/ProxyAdmin.sol';
 
 /**
  * @title TransparentProxyFactoryZkSync
@@ -15,7 +13,10 @@ import {ProxyAdmin} from '../../../src/contracts/transparent-proxy/ProxyAdmin.so
  * @dev Highly recommended to pass as `admin` on creation an OZ ProxyAdmin instance
  * @dev This contract needs solc=0.8.19 and zksolc=1.4.1 as codeHashes are specifically made for those versions
  **/
-contract TransparentProxyFactoryZkSync is ITransparentProxyFactoryZkSync {
+contract TransparentProxyFactoryZkSync is
+  TransparentProxyFactoryBase,
+  ITransparentProxyFactoryZkSync
+{
   /// @inheritdoc ITransparentProxyFactoryZkSync
   bytes32 public constant TRANSPARENT_UPGRADABLE_PROXY_INIT_CODE_HASH =
     0x010001b73fa7f2c39ea2d9c597a419e15436fc9d3e00e032410072fb94ad95e1;
@@ -27,55 +28,13 @@ contract TransparentProxyFactoryZkSync is ITransparentProxyFactoryZkSync {
   /// @inheritdoc ITransparentProxyFactoryZkSync
   bytes32 public constant ZKSYNC_CREATE2_PREFIX = keccak256('zksyncCreate2');
 
-  /// @inheritdoc ITransparentProxyFactoryZkSync
-  function create(address logic, address admin, bytes calldata data) external returns (address) {
-    address proxy = address(new TransparentUpgradeableProxy(logic, admin, data));
-
-    emit ProxyCreated(proxy, logic, admin);
-    return proxy;
-  }
-
-  /// @inheritdoc ITransparentProxyFactoryZkSync
-  function createProxyAdmin(address adminOwner) external returns (address) {
-    address proxyAdmin = address(new ProxyAdmin());
-    IOwnable(proxyAdmin).transferOwnership(adminOwner);
-
-    emit ProxyAdminCreated(proxyAdmin, adminOwner);
-    return proxyAdmin;
-  }
-
-  /// @inheritdoc ITransparentProxyFactoryZkSync
-  function createDeterministic(
-    address logic,
-    address admin,
-    bytes calldata data,
-    bytes32 salt
-  ) external returns (address) {
-    address proxy = address(new TransparentUpgradeableProxy{salt: salt}(logic, admin, data));
-
-    emit ProxyDeterministicCreated(proxy, logic, admin, salt);
-    return proxy;
-  }
-
-  /// @inheritdoc ITransparentProxyFactoryZkSync
-  function createDeterministicProxyAdmin(
-    address adminOwner,
-    bytes32 salt
-  ) external returns (address) {
-    address proxyAdmin = address(new ProxyAdmin{salt: salt}());
-    IOwnable(proxyAdmin).transferOwnership(adminOwner);
-
-    emit ProxyAdminDeterministicCreated(proxyAdmin, adminOwner, salt);
-    return proxyAdmin;
-  }
-
-  /// @inheritdoc ITransparentProxyFactoryZkSync
+  /// @inheritdoc ITransparentProxyFactory
   function predictCreateDeterministic(
     address logic,
     address admin,
     bytes calldata data,
     bytes32 salt
-  ) public view returns (address) {
+  ) public view override returns (address) {
     return
       _predictCreate2Address(
         address(this),
@@ -85,8 +44,13 @@ contract TransparentProxyFactoryZkSync is ITransparentProxyFactoryZkSync {
       );
   }
 
-  /// @inheritdoc ITransparentProxyFactoryZkSync
-  function predictCreateDeterministicProxyAdmin(bytes32 salt) public view returns (address) {
+  /// @inheritdoc ITransparentProxyFactory
+  function predictCreateDeterministicProxyAdmin(bytes32 salt)
+    public
+    view
+    override
+    returns (address)
+  {
     return _predictCreate2Address(address(this), salt, PROXY_ADMIN_INIT_CODE_HASH, abi.encode());
   }
 
