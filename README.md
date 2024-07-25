@@ -19,3 +19,17 @@ Modified from https://github.com/lifinance/create3-factory/blob/main/src/CREATE3
     - removal of named returns
     - changed name of getDeployed for predictAddress
     - usage of create3 lib by Agustin Aguilar instead of solmate
+
+## ZkSync
+
+As ZkSync network requires the use of a [forked](https://github.com/matter-labs/foundry-zksync) version of foundry we have created different profiles so that they can run
+as expected.
+
+- Contracts specific for ZkSync network can be found [here](src-zksync)
+- Tests specific for ZkSync network can be found [here](test-zksync)
+
+To build and test the contracts use `FOUNDRY_PROFILE=zksync` and the flag `--zksync`
+- Example:
+```solidity
+FOUNDRY_PROFILE=zksync forge test -vvv --zksync
+```
