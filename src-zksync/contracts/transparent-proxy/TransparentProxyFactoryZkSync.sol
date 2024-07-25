@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 
 import {IOwnable} from '../../../src/contracts/transparent-proxy/interfaces/IOwnable.sol';
-import {ITransparentProxyFactoryZkSync} from "./interfaces/ITransparentProxyFactoryZkSync.sol";
+import {ITransparentProxyFactoryZkSync} from './interfaces/ITransparentProxyFactoryZkSync.sol';
 import {TransparentUpgradeableProxy} from '../../../src/contracts/transparent-proxy/TransparentUpgradeableProxy.sol';
 import {ProxyAdmin} from '../../../src/contracts/transparent-proxy/ProxyAdmin.sol';
 
@@ -13,18 +13,21 @@ import {ProxyAdmin} from '../../../src/contracts/transparent-proxy/ProxyAdmin.so
  * @dev `create()` and `createDeterministic()` are not unified for clearer interface, and at the same
  * time allowing `createDeterministic()` with salt == 0
  * @dev Highly recommended to pass as `admin` on creation an OZ ProxyAdmin instance
+ * @dev This contract needs solc=0.8.19 and zksolc=1.4.1 as codeHashes are specifically made for those versions
  **/
 contract TransparentProxyFactoryZkSync is ITransparentProxyFactoryZkSync {
-  /// @inheritdoc ITransparentProxyFactory
-  bytes32 public constant TRANSPARENT_UPGRADABLE_PROXY_INIT_CODE_HASH = 0x010001b73fa7f2c39ea2d9c597a419e15436fc9d3e00e032410072fb94ad95e1;
+  /// @inheritdoc ITransparentProxyFactoryZkSync
+  bytes32 public constant TRANSPARENT_UPGRADABLE_PROXY_INIT_CODE_HASH =
+    0x010001b73fa7f2c39ea2d9c597a419e15436fc9d3e00e032410072fb94ad95e1;
 
-  /// @inheritdoc ITransparentProxyFactory
-  bytes32 public constant PROXY_ADMIN_INIT_CODE_HASH = 0x010000e7f9a8b61da13fe7e27804d9f641f5f8db05b07df720973af749a01ac1;
+  /// @inheritdoc ITransparentProxyFactoryZkSync
+  bytes32 public constant PROXY_ADMIN_INIT_CODE_HASH =
+    0x010000e7f9a8b61da13fe7e27804d9f641f5f8db05b07df720973af749a01ac1;
 
-  /// @inheritdoc ITransparentProxyFactory
-  bytes32 public constant ZKSYNC_CREATE2_PREFIX = keccak256("zksyncCreate2");
+  /// @inheritdoc ITransparentProxyFactoryZkSync
+  bytes32 public constant ZKSYNC_CREATE2_PREFIX = keccak256('zksyncCreate2');
 
-  /// @inheritdoc ITransparentProxyFactory
+  /// @inheritdoc ITransparentProxyFactoryZkSync
   function create(address logic, address admin, bytes calldata data) external returns (address) {
     address proxy = address(new TransparentUpgradeableProxy(logic, admin, data));
 
@@ -32,7 +35,7 @@ contract TransparentProxyFactoryZkSync is ITransparentProxyFactoryZkSync {
     return proxy;
   }
 
-  /// @inheritdoc ITransparentProxyFactory
+  /// @inheritdoc ITransparentProxyFactoryZkSync
   function createProxyAdmin(address adminOwner) external returns (address) {
     address proxyAdmin = address(new ProxyAdmin());
     IOwnable(proxyAdmin).transferOwnership(adminOwner);
@@ -41,7 +44,7 @@ contract TransparentProxyFactoryZkSync is ITransparentProxyFactoryZkSync {
     return proxyAdmin;
   }
 
-  /// @inheritdoc ITransparentProxyFactory
+  /// @inheritdoc ITransparentProxyFactoryZkSync
   function createDeterministic(
     address logic,
     address admin,
@@ -54,7 +57,7 @@ contract TransparentProxyFactoryZkSync is ITransparentProxyFactoryZkSync {
     return proxy;
   }
 
-  /// @inheritdoc ITransparentProxyFactory
+  /// @inheritdoc ITransparentProxyFactoryZkSync
   function createDeterministicProxyAdmin(
     address adminOwner,
     bytes32 salt
@@ -66,7 +69,7 @@ contract TransparentProxyFactoryZkSync is ITransparentProxyFactoryZkSync {
     return proxyAdmin;
   }
 
-  /// @inheritdoc ITransparentProxyFactory
+  /// @inheritdoc ITransparentProxyFactoryZkSync
   function predictCreateDeterministic(
     address logic,
     address admin,
@@ -82,7 +85,7 @@ contract TransparentProxyFactoryZkSync is ITransparentProxyFactoryZkSync {
       );
   }
 
-  /// @inheritdoc ITransparentProxyFactory
+  /// @inheritdoc ITransparentProxyFactoryZkSync
   function predictCreateDeterministicProxyAdmin(bytes32 salt) public view returns (address) {
     return _predictCreate2Address(address(this), salt, PROXY_ADMIN_INIT_CODE_HASH, abi.encode());
   }

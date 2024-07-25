@@ -5,13 +5,17 @@ out = 'out'
 libs = ['lib']
 remappings = []
 
-[profile.default.zksync]
+[profile.zksync]
 src = 'src-zksync'
-test = 'test-sksync'
+test = 'test-zksync'
 libs = ['lib']
+solc="0.8.19"
+
+[profile.zksync.zksync]
 fallback_oz = true
 mode = "3"
 zksolc="1.4.1"
+
 
 # See more config options https://github.com/gakonst/foundry/tree/master/config
 [rpc_endpoints]
