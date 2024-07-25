@@ -2,6 +2,7 @@
 pragma solidity >=0.8.0;
 
 import {TransparentProxyFactoryBase, ITransparentProxyFactory} from '../../../src/contracts/transparent-proxy/TransparentProxyFactoryBase.sol';
+import {ITransparentProxyFactoryZkSync} from './interfaces/ITransparentProxyFactoryZkSync.sol';
 
 /**
  * @title TransparentProxyFactoryZkSync
@@ -12,7 +13,10 @@ import {TransparentProxyFactoryBase, ITransparentProxyFactory} from '../../../sr
  * @dev Highly recommended to pass as `admin` on creation an OZ ProxyAdmin instance
  * @dev This contract needs solc=0.8.19 and zksolc=1.4.1 as codeHashes are specifically made for those versions
  **/
-contract TransparentProxyFactoryZkSync is TransparentProxyFactoryBase {
+contract TransparentProxyFactoryZkSync is
+  TransparentProxyFactoryBase,
+  ITransparentProxyFactoryZkSync
+{
   /// @inheritdoc ITransparentProxyFactoryZkSync
   bytes32 public constant TRANSPARENT_UPGRADABLE_PROXY_INIT_CODE_HASH =
     0x010001b73fa7f2c39ea2d9c597a419e15436fc9d3e00e032410072fb94ad95e1;
@@ -24,7 +28,7 @@ contract TransparentProxyFactoryZkSync is TransparentProxyFactoryBase {
   /// @inheritdoc ITransparentProxyFactoryZkSync
   bytes32 public constant ZKSYNC_CREATE2_PREFIX = keccak256('zksyncCreate2');
 
-  /// @inheritdoc ITransparentProxyFactoryZkSync
+  /// @inheritdoc ITransparentProxyFactory
   function predictCreateDeterministic(
     address logic,
     address admin,
@@ -40,7 +44,7 @@ contract TransparentProxyFactoryZkSync is TransparentProxyFactoryBase {
       );
   }
 
-  /// @inheritdoc ITransparentProxyFactoryZkSync
+  /// @inheritdoc ITransparentProxyFactory
   function predictCreateDeterministicProxyAdmin(bytes32 salt)
     public
     view
