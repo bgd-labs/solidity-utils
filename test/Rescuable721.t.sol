@@ -8,7 +8,8 @@ import {Rescuable721} from '../src/contracts/utils/Rescuable721.sol';
 
 contract MockReceiver721TokensContract is Rescuable721 {
   address public immutable ALLOWED;
-  constructor (address allowedAddress) {
+
+  constructor(address allowedAddress) {
     ALLOWED = allowedAddress;
   }
 
@@ -35,12 +36,9 @@ contract Rescue721Test is Test {
     tokensReceiver = new MockReceiver721TokensContract(ALLOWED);
   }
 
-  function testFuzzEmergencyTokenTransfer(address randomWallet, address recipient) public {
-    vm.assume(randomWallet != address(0));
+  function testFuzzEmergencyTokenTransfer(address recipient) public {
     vm.assume(recipient != address(0));
-    testToken.mint(randomWallet, 1);
-    hoax(randomWallet);
-    testToken.transferFrom(randomWallet, address(tokensReceiver), 1);
+    testToken.mint(address(tokensReceiver), 1);
 
     assertEq(testToken.balanceOf(address(tokensReceiver)), 1);
 
@@ -53,7 +51,10 @@ contract Rescue721Test is Test {
     assertEq(testToken.balanceOf(address(recipient)), 1);
   }
 
-  function testFuzzEmergencyTokenTransferWhenNotOwner(address randomWallet, address recipient) public {
+  function testFuzzEmergencyTokenTransferWhenNotOwner(
+    address randomWallet,
+    address recipient
+  ) public {
     vm.assume(randomWallet != address(0));
     vm.assume(recipient != address(0));
     testToken.mint(randomWallet, 1);

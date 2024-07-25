@@ -18,7 +18,7 @@ contract TestTransparentProxyFactory is Test {
 
   function testCreateDeterministic(address admin, bytes32 salt) public {
     // we know that this is covered at the ERC1967Upgrade
-    vm.assume(admin != address(0));
+    vm.assume(admin != address(0) && admin != address(this));
 
     uint256 FOO = 2;
     bytes memory data = abi.encodeWithSelector(mockImpl.initialize.selector, FOO);
