@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import {TransparentProxyFactoryBase, ITransparentProxyFactory} from '../../../src/contracts/transparent-proxy/TransparentProxyFactoryBase.sol';
-import {TransparentUpgradeableProxy} from '../../../src/contracts/transparent-proxy/TransparentUpgradeableProxy.sol';
-import {ProxyAdmin} from '../../../src/contracts/transparent-proxy/ProxyAdmin.sol';
+import {TransparentProxyFactoryBase} from '../../../src/contracts/transparent-proxy/TransparentProxyFactoryBase.sol';
 import {ITransparentProxyFactoryZkSync} from './interfaces/ITransparentProxyFactoryZkSync.sol';
 
 /**
@@ -19,58 +17,20 @@ contract TransparentProxyFactoryZkSync is
   ITransparentProxyFactoryZkSync
 {
   /// @inheritdoc ITransparentProxyFactoryZkSync
-  bytes32 public immutable TRANSPARENT_UPGRADABLE_PROXY_INIT_CODE_HASH;
-
-  /// @inheritdoc ITransparentProxyFactoryZkSync
-  bytes32 public immutable PROXY_ADMIN_INIT_CODE_HASH;
-
-  /// @inheritdoc ITransparentProxyFactoryZkSync
   bytes32 public constant ZKSYNC_CREATE2_PREFIX = keccak256('zksyncCreate2');
-
-  constructor() {
-    // to get the bytecode-hash in zkSync, we sanatize the bytes returned from the creationCode
-    TRANSPARENT_UPGRADABLE_PROXY_INIT_CODE_HASH = bytes32(_sliceBytes(type(TransparentUpgradeableProxy).creationCode, 36, 32));
-    PROXY_ADMIN_INIT_CODE_HASH = bytes32(_sliceBytes(type(ProxyAdmin).creationCode, 36, 32));
-  }
-
-  /// @inheritdoc ITransparentProxyFactory
-  function predictCreateDeterministic(
-    address logic,
-    address admin,
-    bytes calldata data,
-    bytes32 salt
-  ) public view override returns (address) {
-    return
-      _predictCreate2Address(
-        address(this),
-        salt,
-        TRANSPARENT_UPGRADABLE_PROXY_INIT_CODE_HASH,
-        abi.encode(logic, admin, data)
-      );
-  }
-
-  /// @inheritdoc ITransparentProxyFactory
-  function predictCreateDeterministicProxyAdmin(bytes32 salt)
-    public
-    view
-    override
-    returns (address)
-  {
-    return _predictCreate2Address(address(this), salt, PROXY_ADMIN_INIT_CODE_HASH, abi.encode());
-  }
 
   function _predictCreate2Address(
     address sender,
     bytes32 salt,
-    bytes32 creationCodeHash,
+    bytes memory creationCode,
     bytes memory constructorInput
-  ) internal pure returns (address) {
+  ) internal pure override returns (address) {
     bytes32 addressHash = keccak256(
       bytes.concat(
         ZKSYNC_CREATE2_PREFIX,
         bytes32(uint256(uint160(sender))),
         salt,
-        creationCodeHash,
+        bytes32(_sliceBytes(creationCode, 36, 32)),
         keccak256(constructorInput)
       )
     );
@@ -78,7 +38,11 @@ contract TransparentProxyFactoryZkSync is
     return address(uint160(uint256(addressHash)));
   }
 
-  function _sliceBytes(bytes memory data, uint256 start, uint256 length) internal pure returns (bytes memory) {
+  function _sliceBytes(
+    bytes memory data,
+    uint256 start,
+    uint256 length
+  ) internal pure returns (bytes memory) {
     require(start + length <= data.length, 'Slice out of bounds');
 
     bytes memory result = new bytes(length);
