@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import {TransparentProxyFactoryBase, ITransparentProxyFactory} from '../../../src/contracts/transparent-proxy/TransparentProxyFactoryBase.sol';
-import {TransparentUpgradeableProxy} from '../../../src/contracts/transparent-proxy/TransparentUpgradeableProxy.sol';
-import {ProxyAdmin} from '../../../src/contracts/transparent-proxy/ProxyAdmin.sol';
+import {TransparentProxyFactoryBase} from '../../../src/contracts/transparent-proxy/TransparentProxyFactoryBase.sol';
 import {ITransparentProxyFactoryZkSync} from './interfaces/ITransparentProxyFactoryZkSync.sol';
 
 /**
