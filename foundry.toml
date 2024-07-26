@@ -9,7 +9,8 @@ remappings = []
 src = 'src-zksync'
 test = 'test-zksync'
 libs = ['lib']
-solc="0.8.19"
+solc="0.8.24"
+evm_version = "cancun"
 
 [profile.zksync.zksync]
 fallback_oz = true

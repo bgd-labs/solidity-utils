@@ -1,32 +1,37 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.24;
 
 import {TransparentProxyFactoryBase, ITransparentProxyFactory} from '../../../src/contracts/transparent-proxy/TransparentProxyFactoryBase.sol';
+import {TransparentUpgradeableProxy} from '../../../src/contracts/transparent-proxy/TransparentUpgradeableProxy.sol';
+import {ProxyAdmin} from '../../../src/contracts/transparent-proxy/ProxyAdmin.sol';
 import {ITransparentProxyFactoryZkSync} from './interfaces/ITransparentProxyFactoryZkSync.sol';
 
 /**
  * @title TransparentProxyFactoryZkSync
  * @author BGD Labs
- * @notice Factory contract to create transparent proxies, both with CREATE and CREATE2
+ * @notice Factory contract specific to zkSync to create transparent proxies, both with CREATE and CREATE2
  * @dev `create()` and `createDeterministic()` are not unified for clearer interface, and at the same
  * time allowing `createDeterministic()` with salt == 0
  * @dev Highly recommended to pass as `admin` on creation an OZ ProxyAdmin instance
- * @dev This contract needs solc=0.8.19 and zksolc=1.4.1 as codeHashes are specifically made for those versions
  **/
 contract TransparentProxyFactoryZkSync is
   TransparentProxyFactoryBase,
   ITransparentProxyFactoryZkSync
 {
   /// @inheritdoc ITransparentProxyFactoryZkSync
-  bytes32 public constant TRANSPARENT_UPGRADABLE_PROXY_INIT_CODE_HASH =
-    0x010001b73fa7f2c39ea2d9c597a419e15436fc9d3e00e032410072fb94ad95e1;
+  bytes32 public immutable TRANSPARENT_UPGRADABLE_PROXY_INIT_CODE_HASH;
 
   /// @inheritdoc ITransparentProxyFactoryZkSync
-  bytes32 public constant PROXY_ADMIN_INIT_CODE_HASH =
-    0x010000e7f9a8b61da13fe7e27804d9f641f5f8db05b07df720973af749a01ac1;
+  bytes32 public immutable PROXY_ADMIN_INIT_CODE_HASH;
 
   /// @inheritdoc ITransparentProxyFactoryZkSync
   bytes32 public constant ZKSYNC_CREATE2_PREFIX = keccak256('zksyncCreate2');
+
+  constructor() {
+    // to get the bytecode-hash in zkSync, we sanatize the bytes returned from the creationCode
+    TRANSPARENT_UPGRADABLE_PROXY_INIT_CODE_HASH = bytes32(_sliceBytes(type(TransparentUpgradeableProxy).creationCode, 36, 32));
+    PROXY_ADMIN_INIT_CODE_HASH = bytes32(_sliceBytes(type(ProxyAdmin).creationCode, 36, 32));
+  }
 
   /// @inheritdoc ITransparentProxyFactory
   function predictCreateDeterministic(
@@ -71,5 +76,21 @@ contract TransparentProxyFactoryZkSync is
     );
 
     return address(uint160(uint256(addressHash)));
+  }
+
+  function _sliceBytes(bytes memory data, uint256 start, uint256 length) internal pure returns (bytes memory) {
+    require(start + length <= data.length, 'Slice out of bounds');
+
+    bytes memory result = new bytes(length);
+    assembly {
+      let dataPtr := add(data, 32)
+      let resultPtr := add(result, 32)
+
+      // Use mcopy to efficiently copy the slice
+      mcopy(resultPtr, add(dataPtr, start), length)
+
+      mstore(result, length)
+    }
+    return result;
   }
 }
