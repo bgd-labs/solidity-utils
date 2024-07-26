@@ -67,8 +67,30 @@ abstract contract TransparentProxyFactoryBase is ITransparentProxyFactory {
     address admin,
     bytes calldata data,
     bytes32 salt
-  ) public view virtual returns (address);
+  ) public view override returns (address) {
+    return
+      _predictCreate2Address(
+        address(this),
+        salt,
+        type(TransparentUpgradeableProxy).creationCode,
+        abi.encode(logic, admin, data)
+      );
+  }
 
   /// @inheritdoc ITransparentProxyFactory
-  function predictCreateDeterministicProxyAdmin(bytes32 salt) public view virtual returns (address);
+  function predictCreateDeterministicProxyAdmin(bytes32 salt)
+    public
+    view
+    override
+    returns (address)
+  {
+    return _predictCreate2Address(address(this), salt, type(ProxyAdmin).creationCode, abi.encode());
+  }
+
+  function _predictCreate2Address(
+    address creator,
+    bytes32 salt,
+    bytes memory creationCode,
+    bytes memory constructorArgs
+  ) internal pure virtual returns (address);
 }
