@@ -1,6 +1,7 @@
 [profile.default]
 src = 'src'
 tests = 'tests'
+script = 'script'
 out = 'out'
 libs = ['lib']
 remappings = []
@@ -8,6 +9,7 @@ remappings = []
 [profile.zksync]
 src = 'src-zksync'
 test = 'test-zksync'
+script = 'script-zksync'
 libs = ['lib']
 solc="0.8.24"
 evm_version = "cancun"
@@ -16,7 +18,6 @@ evm_version = "cancun"
 fallback_oz = true
 mode = "3"
 zksolc="1.4.1"
-
 
 # See more config options https://github.com/gakonst/foundry/tree/master/config
 [rpc_endpoints]
