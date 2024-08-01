@@ -2,10 +2,10 @@
 pragma solidity ^0.8.24;
 
 import {Test} from 'forge-std/Test.sol';
-import {TransparentProxyFactoryZkSync} from '../src-zksync/contracts/transparent-proxy/TransparentProxyFactoryZkSync.sol';
-import {TransparentUpgradeableProxy} from '../src/contracts/transparent-proxy/TransparentUpgradeableProxy.sol';
-import {IOwnable} from '../src/contracts/transparent-proxy/interfaces/IOwnable.sol';
-import {MockImpl} from '../src/mocks/MockImpl.sol';
+import {TransparentProxyFactoryZkSync} from '../src/contracts/transparent-proxy/TransparentProxyFactoryZkSync.sol';
+import {TransparentUpgradeableProxy} from '../../src/contracts/transparent-proxy/TransparentUpgradeableProxy.sol';
+import {IOwnable} from '../../src/contracts/transparent-proxy/interfaces/IOwnable.sol';
+import {MockImpl} from '../../src/mocks/MockImpl.sol';
 
 contract TestTransparentProxyFactoryZkSync is Test {
   TransparentProxyFactoryZkSync internal factory;

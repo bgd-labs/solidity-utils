@@ -7,17 +7,16 @@ libs = ['lib']
 remappings = []
 
 [profile.zksync]
-src = 'src-zksync'
-test = 'test-zksync'
-script = 'script-zksync'
+src = 'zksync/src'
+test = 'zksync/test'
+script = 'zksync/script'
 libs = ['lib']
-solc="0.8.24"
-evm_version = "cancun"
+solc = '0.8.24'
 
 [profile.zksync.zksync]
 fallback_oz = true
 mode = "3"
-zksolc="1.4.1"
+zksolc = "1.4.1"
 
 # See more config options https://github.com/gakonst/foundry/tree/master/config
 [rpc_endpoints]
