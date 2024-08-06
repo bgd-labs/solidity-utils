@@ -9,7 +9,7 @@ library ChainIds {
   uint256 internal constant BNB = 56;
   uint256 internal constant POLYGON = 137;
   uint256 internal constant FANTOM = 250;
-  uint256 internal constant ZK_SYNC = 324;
+  uint256 internal constant ZKSYNC = 324;
   uint256 internal constant METIS = 1088;
   uint256 internal constant ZK_EVM = 1101;
   uint256 internal constant BASE = 8453;
@@ -37,7 +37,7 @@ library TestNetChainIds {
   uint256 internal constant CELO_ALFAJORES = 44787;
   uint256 internal constant OPTIMISM_SEPOLIA = 11155420;
   uint256 internal constant ARBITRUM_SEPOLIA = 421614;
-  uint256 internal constant ZK_SYNC_SEPOLIA = 300;
+  uint256 internal constant ZKSYNC_SEPOLIA = 300;
 }
 
 library ChainHelpers {
@@ -57,7 +57,7 @@ library ChainHelpers {
       newFork = vm.createSelectFork(vm.rpcUrl('polygon'));
     } else if (chainId == ChainIds.FANTOM) {
       newFork = vm.createSelectFork(vm.rpcUrl('fantom'));
-    } else if (chainId == ChainIds.ZK_SYNC) {
+    } else if (chainId == ChainIds.ZKSYNC) {
       newFork = vm.createSelectFork(vm.rpcUrl('zkSync'));
     } else if (chainId == ChainIds.METIS) {
       newFork = vm.createSelectFork(vm.rpcUrl('metis'));
@@ -77,7 +77,7 @@ library ChainHelpers {
       newFork = vm.createSelectFork(vm.rpcUrl('sepolia'));
     } else if (chainId == ChainIds.HARMONY) {
       newFork = vm.createSelectFork(vm.rpcUrl('harmony'));
-    } else if (chainId == ChainIds.ZK_SYNC) {
+    } else if (chainId == ChainIds.ZKSYNC) {
       newFork = vm.createSelectFork(vm.rpcUrl('zksync'));
     } else {
       revert UnknownChainId();
@@ -111,7 +111,7 @@ library ChainHelpers {
       networkName = 'scroll';
     } else if (chainId == ChainIds.CELO) {
       networkName = 'celo';
-    } else if (chainId == ChainIds.ZK_SYNC) {
+    } else if (chainId == ChainIds.ZKSYNC) {
       networkName = 'zksync';
     }
     // testnets
@@ -137,7 +137,7 @@ library ChainHelpers {
       networkName = 'scroll_sepolia';
     } else if (chainId == TestNetChainIds.CELO_ALFAJORES) {
       networkName = 'celo_alfajores';
-    } else if (chainId == TestNetChainIds.ZK_SYNC_SEPOLIA) {
+    } else if (chainId == TestNetChainIds.ZKSYNC_SEPOLIA) {
       networkName = 'zksync_sepolia';
     } else {
       revert('chain id is not supported');

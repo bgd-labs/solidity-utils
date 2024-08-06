@@ -36,8 +36,8 @@ fantom = "${RPC_FANTOM}"
 fantom-testnet = "${RPC_FANTOM_TESTNET}"
 binance = "${RPC_BINANCE}"
 binance-testnet = "${RPC_BINANCE_TESTNET}"
-zksync = "${RPC_ZK_SYNC}"
-zksync-testnet = "${RPC_ZK_SYNC_TESTNET}"
+zksync = "${RPC_ZKSYNC}"
+zksync-testnet = "${RPC_ZKSYNC_TESTNET}"
 
 [etherscan]
 ethereum = { key = "${ETHERSCAN_API_KEY_MAINNET}", chain = 1 }
@@ -56,8 +56,8 @@ fantom = { key = "${ETHERSCAN_API_KEY_FANTOM}", chain = 250 }
 fantom-testnet = { key = "${ETHERSCAN_API_KEY_FANTOM}", chain = 250 }
 binance = { key = "${ETHERSCAN_API_KEY_BINANCE}", chain = 56 }
 binance-testnet = { key = "${ETHERSCAN_API_KEY_BINANCE}", chain = 56 }
-zksync = { key = "${ETHERSCAN_API_KEY_ZK_SYNC}", chain = 324 }
-zksync-testnet = { key = "${ETHERSCAN_API_KEY_ZK_SYNC}", chain = 300, url = 'https://api-sepolia-era.zksync.network/api'}
+zksync = { key = "${ETHERSCAN_API_KEY_ZKSYNC}", chain = 324 }
+zksync-testnet = { key = "${ETHERSCAN_API_KEY_ZKSYNC}", chain = 300, url = 'https://api-sepolia-era.zksync.network/api'}
 
 [fuzz]
 no_zksync_reserved_addresses = true
