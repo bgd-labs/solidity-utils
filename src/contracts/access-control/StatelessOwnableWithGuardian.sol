@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MIT
+// @dev modified version without storage that is intended to be anchored to a ACL
 pragma solidity >=0.7.0;
 
 import {IStatelessOwnableWithGuardian} from './interfaces/IStatelessOwnableWithGuardian.sol';
