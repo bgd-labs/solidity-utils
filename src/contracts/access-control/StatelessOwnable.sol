@@ -16,8 +16,9 @@ import {IOwnable} from './interfaces/IOwnable.sol';
  * This module is used through inheritance. It will make available the modifier
  * `onlyOwner`, which can be applied to your functions to restrict their use to
  * the owner.
+ *
  * @dev modified oz version without storage that is intended to be anchored to a ACL.
- * Ownership is no longer transfered, but fetched via `owner`
+ * Owner can not be transfered, but are fetched via custom logic in `owner`
  */
 abstract contract StatelessOwnable is Context, IOwnable {
   /**

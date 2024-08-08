@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-// @dev modified version without storage that is intended to be anchored to a ACL
 pragma solidity >=0.7.0;
 
 import {IStatelessOwnableWithGuardian} from './interfaces/IStatelessOwnableWithGuardian.sol';
@@ -15,6 +14,8 @@ import {StatelessOwnable} from './StatelessOwnable.sol';
  * This module is used through inheritance. It will make available the modifier
  * `onlyGuardian` and `onlyOwnerOrGuardian, which can be applied to your functions to restrict their use to
  * the guardian or owner & guardian respectively.
+ *
+ * @dev modified version without storage that is intended to be anchored to a ACL
  */
 abstract contract StatelessOwnableWithGuardian is StatelessOwnable, IStatelessOwnableWithGuardian {
   modifier onlyGuardian() {
