@@ -2,9 +2,9 @@
 pragma solidity ^0.8.20;
 
 import 'forge-std/Test.sol';
-import {UpgradableOwnableWithGuardian} from '../src/contracts/access-control/UpgradableOwnableWithGuardian.sol';
+import {UpgradeableOwnableWithGuardian} from '../src/contracts/access-control/UpgradeableOwnableWithGuardian.sol';
 
-contract ImplOwnableWithGuardian is UpgradableOwnableWithGuardian {
+contract ImplOwnableWithGuardian is UpgradeableOwnableWithGuardian {
   function initialize(address owner, address guardian) public initializer {
     __Ownable_init(owner);
     __Ownable_With_Guardian_init(guardian);
@@ -16,7 +16,7 @@ contract ImplOwnableWithGuardian is UpgradableOwnableWithGuardian {
 }
 
 contract TestOfUpgradableOwnableWithGuardian is Test {
-  UpgradableOwnableWithGuardian public withGuardian;
+  UpgradeableOwnableWithGuardian public withGuardian;
 
   address owner = address(0x4);
   address guardian = address(0x8);
@@ -34,7 +34,7 @@ contract TestOfUpgradableOwnableWithGuardian is Test {
   function test_onlyGuardian() external {
     vm.expectRevert(
       abi.encodeWithSelector(
-        UpgradableOwnableWithGuardian.OnlyGuardianInvalidCaller.selector,
+        UpgradeableOwnableWithGuardian.OnlyGuardianInvalidCaller.selector,
         address(this)
       )
     );
@@ -44,7 +44,7 @@ contract TestOfUpgradableOwnableWithGuardian is Test {
   function test_onlyOwnerOrGuardian() external {
     vm.expectRevert(
       abi.encodeWithSelector(
-        UpgradableOwnableWithGuardian.OnlyGuardianOrOwnerInvalidCaller.selector,
+        UpgradeableOwnableWithGuardian.OnlyGuardianOrOwnerInvalidCaller.selector,
         address(this)
       )
     );
@@ -67,7 +67,7 @@ contract TestOfUpgradableOwnableWithGuardian is Test {
     vm.prank(eoa);
     vm.expectRevert(
       abi.encodeWithSelector(
-        UpgradableOwnableWithGuardian.OnlyGuardianOrOwnerInvalidCaller.selector,
+        UpgradeableOwnableWithGuardian.OnlyGuardianOrOwnerInvalidCaller.selector,
         eoa
       )
     );
