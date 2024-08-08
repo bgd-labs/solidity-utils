@@ -6,6 +6,8 @@ import {IStatelessOwnableWithGuardian} from './interfaces/IStatelessOwnableWithG
 import {StatelessOwnable} from './StatelessOwnable.sol';
 
 /**
+ * @title StatelessOwnableWithGuardian
+ * @author BGD Labs
  * @dev Contract module which provides a basic access control mechanism, where
  * there is an account (a guardian) that can be granted exclusive access to
  * specific functions.

@@ -7,6 +7,8 @@ import '../oz-common/Context.sol';
 import {IOwnable} from './interfaces/IOwnable.sol';
 
 /**
+ * @title StatelessOwnable
+ * @author BGD Labs
  * @dev Contract module which provides a basic access control mechanism, where
  * there is an account (an owner) that can be granted exclusive access to
  * specific functions.
