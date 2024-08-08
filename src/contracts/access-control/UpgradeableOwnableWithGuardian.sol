@@ -8,7 +8,7 @@ import {IWithGuardian} from './interfaces/IWithGuardian.sol';
  * Forked version of https://github.com/bgd-labs/solidity-utils/blob/main/src/contracts/access-control/OwnableWithGuardian.sol
  * Relying on UpgradableOwnable & moving the storage to 7201
  */
-abstract contract UpgradableOwnableWithGuardian is OwnableUpgradeable, IWithGuardian {
+abstract contract UpgradeableOwnableWithGuardian is OwnableUpgradeable, IWithGuardian {
   /// @custom:storage-location erc7201:aave.storage.OwnableWithGuardian
   struct OwnableWithGuardian {
     address _guardian;
