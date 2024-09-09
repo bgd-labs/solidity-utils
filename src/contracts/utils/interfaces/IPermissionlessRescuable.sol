@@ -8,25 +8,23 @@ import {IRescuableBase} from './IRescuableBase.sol';
  * @author BGD Labs
  * @notice interface containing the objects, events and methods definitions of the Rescuable contract
  */
-interface IRescuable is IRescuableBase {
+interface IPermissionlessRescuable is IRescuableBase {
   /**
    * @notice method called to rescue tokens sent erroneously to the contract. Only callable by owner
    * @param erc20Token address of the token to rescue
-   * @param to address to send the tokens
    * @param amount of tokens to rescue
    */
-  function emergencyTokenTransfer(address erc20Token, address to, uint256 amount) external;
+  function emergencyTokenTransfer(address erc20Token, uint256 amount) external;
 
   /**
    * @notice method called to rescue ether sent erroneously to the contract. Only callable by owner
-   * @param to address to send the eth
    * @param amount of eth to rescue
    */
-  function emergencyEtherTransfer(address to, uint256 amount) external;
+  function emergencyEtherTransfer(uint256 amount) external;
 
   /**
-   * @notice method that defines the address that is allowed to rescue tokens
-   * @return the allowed address
+   * @notice method that defines the address that should receive the rescued tokens
+   * @return the receiver address
    */
-  function whoCanRescue() external view returns (address);
+  function whoShouldReceiveFunds() external view returns (address);
 }
