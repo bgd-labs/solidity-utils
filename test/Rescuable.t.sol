@@ -6,16 +6,25 @@ import {IERC20} from '../src/contracts/oz-common/interfaces/IERC20.sol';
 import {Address} from '../src/contracts/oz-common/Address.sol';
 import {ERC20} from '../src/mocks/ERC20.sol';
 import {Rescuable, IRescuable} from '../src/contracts/utils/Rescuable.sol';
+import {RescuableBase, IRescuableBase} from '../src/contracts/utils/RescuableBase.sol';
 
 contract MockReceiverTokensContract is Rescuable {
   address public immutable ALLOWED;
-  constructor (address allowedAddress) {
+
+  constructor(address allowedAddress) {
     ALLOWED = allowedAddress;
   }
 
   function whoCanRescue() public view override returns (address) {
     return ALLOWED;
   }
+
+  function maxRescue(
+    address
+  ) public pure override(RescuableBase, IRescuableBase) returns (uint256) {
+    return type(uint256).max;
+  }
+
   receive() external payable {}
 }
 

@@ -28,4 +28,11 @@ interface IRescuableBase {
    * @param amount quantity of tokens rescued
    */
   event NativeTokensRescued(address indexed caller, address indexed to, uint256 amount);
+
+  /**
+   * @notice method that defined the maximum amount rescuable for any given asset.
+   * @dev there's currently no way to limit the rescuable "native asset", as we assume erc20s as intended underlying.
+   * @return the maximum amount of
+   */
+  function maxRescue(address erc20Token) external view returns (uint256);
 }

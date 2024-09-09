@@ -27,10 +27,4 @@ interface IPermissionlessRescuable is IRescuableBase {
    * @return the receiver address
    */
   function whoShouldReceiveFunds() external view returns (address);
-
-  /**
-   * @notice method that defined the maximum amount rescuable for any given asset.
-   * @return the maximum amount of
-   */
-  function maxRescue(address erc20Token) external view returns (uint256);
 }

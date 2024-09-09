@@ -11,15 +11,11 @@ abstract contract PermissionlessRescuable is RescuableBase, IPermissionlessRescu
 
   /// @inheritdoc IPermissionlessRescuable
   function emergencyTokenTransfer(address erc20Token, uint256 amount) external virtual {
-    uint256 max = maxRescue(erc20Token);
-    _emergencyTokenTransfer(erc20Token, whoShouldReceiveFunds(), max > amount ? amount : max);
+    _emergencyTokenTransfer(erc20Token, whoShouldReceiveFunds(), amount);
   }
 
   /// @inheritdoc IPermissionlessRescuable
   function emergencyEtherTransfer(uint256 amount) external virtual {
     _emergencyEtherTransfer(whoShouldReceiveFunds(), amount);
   }
-
-  /// @inheritdoc IPermissionlessRescuable
-  function maxRescue(address erc20Token) public view virtual returns (uint256);
 }

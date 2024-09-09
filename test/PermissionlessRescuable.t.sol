@@ -6,6 +6,7 @@ import {IERC20} from '../src/contracts/oz-common/interfaces/IERC20.sol';
 import {Address} from '../src/contracts/oz-common/Address.sol';
 import {ERC20} from '../src/mocks/ERC20.sol';
 import {PermissionlessRescuable, IPermissionlessRescuable} from '../src/contracts/utils/PermissionlessRescuable.sol';
+import {RescuableBase, IRescuableBase} from '../src/contracts/utils/RescuableBase.sol';
 
 // Concrete implementation of PermissionlessRescuable for testing
 contract TestPermissionlessRescuable is PermissionlessRescuable {
@@ -24,7 +25,9 @@ contract TestPermissionlessRescuable is PermissionlessRescuable {
   /**
    * Mock implementation forcing 10 wei leftover
    */
-  function maxRescue(address erc20) public view override returns (uint256) {
+  function maxRescue(
+    address erc20
+  ) public view override(RescuableBase, IRescuableBase) returns (uint256) {
     if (erc20 == restrictedErc20) {
       uint256 balance = ERC20(erc20).balanceOf(address(this));
       return balance > 10 ? balance - 10 : 0;
