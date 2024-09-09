@@ -5,6 +5,7 @@ import 'forge-std/Test.sol';
 import {Address} from '../src/contracts/oz-common/Address.sol';
 import {MockERC721, ERC721} from '../src/mocks/ERC721.sol';
 import {Rescuable721} from '../src/contracts/utils/Rescuable721.sol';
+import {RescuableBase, IRescuableBase} from '../src/contracts/utils/RescuableBase.sol';
 
 contract MockReceiver721TokensContract is Rescuable721 {
   address public immutable ALLOWED;
@@ -15,6 +16,12 @@ contract MockReceiver721TokensContract is Rescuable721 {
 
   function whoCanRescue() public view override returns (address) {
     return ALLOWED;
+  }
+
+  function maxRescue(
+    address
+  ) public pure override(RescuableBase, IRescuableBase) returns (uint256) {
+    return type(uint256).max;
   }
 }
 
