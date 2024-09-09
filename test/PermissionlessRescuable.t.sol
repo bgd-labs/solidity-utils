@@ -82,7 +82,7 @@ contract PermissionlessRescuableTest is Test {
   function test_emergencyEtherTransferInsufficientBalance_shouldRevert() public {
     uint256 amount = 1 ether;
     // Not sending any Ether to the contract
-    vm.expectRevert();
+    vm.expectRevert(bytes('ETH_TRANSFER_FAIL'));
     rescuable.emergencyEtherTransfer(amount);
   }
 }
