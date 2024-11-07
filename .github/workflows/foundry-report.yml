@@ -57,6 +57,7 @@ jobs:
         run: npx -y lcov-parse ./lcov.info > cache/lcov.json
 
       - uses: ArtiomTr/jest-coverage-report-action@v2
+        if: steps.cache.outputs.cache-matched-key != ''
         with:
           coverage-file: ./cache/lcov.json
           base-coverage-file: ./cache/lcon.json.backup
