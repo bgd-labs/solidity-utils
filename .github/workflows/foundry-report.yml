@@ -27,9 +27,8 @@ jobs:
         uses: actions/cache/restore@6849a6489940f00c2f30c0fb92c6274307ccb58a # pin@v4
         with:
           path: cache
-          key: ${{ runner.os }}-bgd-foundry-${{ hashFiles('safe.csv') }}-${{ github.sha }}
+          key: ${{ runner.os }}-bgd-foundry-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-bgd-foundry-${{ hashFiles('safe.csv') }}-
             ${{ runner.os }}-bgd-foundry-
             ${{ runner.os }}-
 
@@ -66,4 +65,4 @@ jobs:
         uses: actions/cache/save@6849a6489940f00c2f30c0fb92c6274307ccb58a # pin@v4
         with:
           path: cache
-          key: ${{ runner.os }}-bgd-foundry-${{ hashFiles('safe.csv') }}-${{ github.sha }}
+          key: ${{ runner.os }}-bgd-foundry-${{ github.sha }}
