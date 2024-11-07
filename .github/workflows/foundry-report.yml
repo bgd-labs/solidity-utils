@@ -40,7 +40,7 @@ jobs:
           ls -l
           cd ..
           cp cache/gas.json cache/gas.backup.json || :
-          cp cache/lcov.json cache/lcov.backup.json || :
+          cp cache/lcov.info cache/lcov.backup.info || :
 
       # required
       - name: Build
@@ -52,15 +52,14 @@ jobs:
       - name: Code coverage
         run: forge coverage --fuzz-runs 1 --report lcov --no-match-coverage "(scripts|tests|deployments|mocks)"
 
-      # most toolings expect json, but foundry can only generate the raw .info atm
+      # move file to cache folder
       - name: Lcov transform
-        run: npx -y lcov-parse ./lcov.info > cache/lcov.json
+        run: mv lcov.info cache/lcov.info
 
-      - uses: ArtiomTr/jest-coverage-report-action@v2
-        if: steps.cache.outputs.cache-matched-key != ''
+      - uses: romeovs/lcov-reporter-action@v0.3.1
         with:
-          coverage-file: ./cache/lcov.json
-          base-coverage-file: ./cache/lcov.backup.json
+          lcov-file: ./cache/lcov.info
+          lcov-base: ./cache/lcov.backup.info
 
       - name: Cache Save
         # if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
