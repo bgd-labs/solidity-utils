@@ -1,0 +1,69 @@
+name: Foundry reports
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  gas-report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # pin@v4
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Cache Restore
+        id: cache
+        uses: actions/cache/restore@6849a6489940f00c2f30c0fb92c6274307ccb58a # pin@v4
+        with:
+          path: cache
+          key: ${{ runner.os }}-bgd-foundry-${{ hashFiles('safe.csv') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-bgd-foundry-${{ hashFiles('safe.csv') }}-
+            ${{ runner.os }}-bgd-foundry-
+            ${{ runner.os }}-
+
+      - name: Create backup
+        if: steps.cache.outputs.cache-matched-key != ''
+        run: |
+          cd cache
+          ls -l
+          cd ..
+          cp cache/gas.json cache/gas.backup.json || :
+          cp cache/lcov.info cache/lcov.backup.info || :
+
+      # required
+      - name: Build
+        run: forge build
+
+      - name: Gas report
+        run: forge test --fuzz-runs 1 --gas-report --json > cache/gas.json
+
+      - name: Code coverage
+        run: forge coverage --fuzz-runs 1 --report lcov --no-match-coverage "(scripts|tests|deployments|mocks)"
+
+      # most toolings expect json, but foundry can only generate the raw .info atm
+      - name: Lcov transform
+        run: npx -y lcov-parse ./lcov.info > cache/lcov.json
+
+      - uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          coverage-file: ./cache/lcov.json
+          base-coverage-file: ./cache/lcon.json.backup
+
+      - name: Cache Save
+        # if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+        uses: actions/cache/save@6849a6489940f00c2f30c0fb92c6274307ccb58a # pin@v4
+        with:
+          path: cache
+          key: ${{ runner.os }}-bgd-foundry-${{ hashFiles('safe.csv') }}-${{ github.sha }}
