@@ -40,7 +40,7 @@ jobs:
           ls -l
           cd ..
           cp cache/gas.json cache/gas.backup.json || :
-          cp cache/lcov.info cache/lcov.backup.info || :
+          cp cache/lcov.json cache/lcov.backup.json || :
 
       # required
       - name: Build
