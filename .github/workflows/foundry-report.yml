@@ -48,6 +48,32 @@ jobs:
       - name: Gas report
         run: forge test --fuzz-runs 1 --gas-report --json > cache/gas.json
 
+      - uses: bgd-labs/action-foundry-gas-diff@main
+        id: gas
+        with:
+          # The path to the first contract to compare
+          ROOT_REPORT_PATH: 'cache/gas.backup.json'
+          # The path to the second contract to compare
+          REPORT_PATH: 'cache/gas.json'
+
+      - name: Find Comment
+        uses: peter-evans/find-comment@v3
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Gas report
+
+      - name: Create or update comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            Gas report
+            ${{ steps.gas.outputs.gas-report }}
+          edit-mode: replace
+
       - name: Code coverage
         run: forge coverage --fuzz-runs 1 --report lcov --no-match-coverage "(scripts|tests|deployments|mocks)"
 
