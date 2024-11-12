@@ -13,6 +13,7 @@ test = 'zksync/test'
 script = 'zksync/script'
 libs = ['lib']
 solc = '0.8.24'
+evm_version = 'cancun'
 
 [profile.zksync.zksync]
 fallback_oz = true
