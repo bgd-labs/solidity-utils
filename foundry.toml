@@ -4,6 +4,7 @@ tests = 'tests'
 script = 'script'
 out = 'out'
 libs = ['lib']
+evm_version = 'shanghai'
 remappings = []
 
 [profile.zksync]
@@ -12,6 +13,7 @@ test = 'zksync/test'
 script = 'zksync/script'
 libs = ['lib']
 solc = '0.8.24'
+evm_version = 'cancun'
 
 [profile.zksync.zksync]
 fallback_oz = true
@@ -57,7 +59,7 @@ fantom-testnet = { key = "${ETHERSCAN_API_KEY_FANTOM}", chain = 250 }
 binance = { key = "${ETHERSCAN_API_KEY_BINANCE}", chain = 56 }
 binance-testnet = { key = "${ETHERSCAN_API_KEY_BINANCE}", chain = 56 }
 zksync = { key = "${ETHERSCAN_API_KEY_ZKSYNC}", chain = 324 }
-zksync-testnet = { key = "${ETHERSCAN_API_KEY_ZKSYNC}", chain = 300, url = 'https://api-sepolia-era.zksync.network/api'}
+zksync-testnet = { key = "${ETHERSCAN_API_KEY_ZKSYNC}", chain = 300, url = 'https://api-sepolia-era.zksync.network/api' }
 
 [fuzz]
 no_zksync_reserved_addresses = true

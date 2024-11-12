@@ -1,4 +1,4 @@
-name: Head branch workflow
+name: Test
 
 concurrency:
   group: ${{ github.workflow }}
@@ -6,6 +6,9 @@ concurrency:
 
 on:
   pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
   test:
@@ -14,6 +17,6 @@ jobs:
     uses: bgd-labs/github-workflows/.github/workflows/foundry-test.yml@main
     secrets: inherit
     with:
-      mode: "CHANGED"
+      mode: 'CHANGED'
       zksync: true
-      ROOT_DIR: "zksync"
+      ROOT_DIR: 'zksync'

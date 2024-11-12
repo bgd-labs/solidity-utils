@@ -44,7 +44,7 @@ contract Rescue721Test is Test {
   }
 
   function testFuzzEmergencyTokenTransfer(address recipient) public {
-    vm.assume(recipient != address(0));
+    vm.assume(recipient != address(0) && recipient != address(tokensReceiver));
     testToken.mint(address(tokensReceiver), 1);
 
     assertEq(testToken.balanceOf(address(tokensReceiver)), 1);
