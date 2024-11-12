@@ -5,11 +5,11 @@ import 'forge-std/Test.sol';
 import {IERC20} from '../src/contracts/oz-common/interfaces/IERC20.sol';
 import {Address} from '../src/contracts/oz-common/Address.sol';
 import {ERC20} from '../src/mocks/ERC20.sol';
-import {PermissionlessRescuable, IPermissionlessRescuable} from '../src/contracts/utils/PermissionlessRescuable.sol';
+import {PermissionlessRescuable as AbstractPermissionlessRescuable, IPermissionlessRescuable} from '../src/contracts/utils/PermissionlessRescuable.sol';
 import {RescuableBase, IRescuableBase} from '../src/contracts/utils/RescuableBase.sol';
 
 // Concrete implementation of PermissionlessRescuable for testing
-contract TestPermissionlessRescuable is PermissionlessRescuable {
+contract PermissionlessRescuable is AbstractPermissionlessRescuable {
   address public fundsReceiver;
   address public restrictedErc20;
 
@@ -40,7 +40,7 @@ contract TestPermissionlessRescuable is PermissionlessRescuable {
 }
 
 contract PermissionlessRescuableTest is Test {
-  TestPermissionlessRescuable public rescuable;
+  PermissionlessRescuable public rescuable;
   ERC20 public mockToken;
   ERC20 public restrictedMockToken;
   address public fundsReceiver;
@@ -57,7 +57,7 @@ contract PermissionlessRescuableTest is Test {
     fundsReceiver = address(0x123);
     mockToken = new ERC20('Test', 'TST');
     restrictedMockToken = new ERC20('Test', 'TST');
-    rescuable = new TestPermissionlessRescuable(fundsReceiver, address(restrictedMockToken));
+    rescuable = new PermissionlessRescuable(fundsReceiver, address(restrictedMockToken));
   }
 
   function test_whoShouldReceiveFunds() public {
