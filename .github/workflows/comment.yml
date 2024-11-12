@@ -15,4 +15,4 @@ permissions:
 
 jobs:
   comment:
-    uses: bgd-labs/github-workflows/.github/workflows/generic-comment.yml@main
+    uses: bgd-labs/github-workflows/.github/workflows/comment.yml@main
