@@ -16,6 +16,7 @@ jobs:
     secrets: inherit
   test-sol-zksync:
     uses: bgd-labs/github-workflows/.github/workflows/foundry-test.yml@main
+    needs: test
     secrets: inherit
     with:
       mode: 'CHANGED'
