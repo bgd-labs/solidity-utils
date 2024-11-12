@@ -7,6 +7,7 @@ pragma solidity ^0.8.8;
  * @notice interface containing the objects, events and methods definitions of the RescuableBase contract
  */
 interface IRescuableBase {
+  error EthTransferFailed();
   /**
    * @notice emitted when erc20 tokens get rescued
    * @param caller address that triggers the rescue

@@ -75,7 +75,7 @@ contract RescueTest is Test {
 
     address recipient = address(1230123519);
 
-    vm.expectRevert((bytes('ONLY_RESCUE_GUARDIAN')));
+    vm.expectRevert(abi.encodeWithSelector(IRescuable.OnlyRescueGuardian.selector));
     tokensReceiver.emergencyEtherTransfer(recipient, 5 ether);
   }
 
@@ -108,7 +108,7 @@ contract RescueTest is Test {
 
     address recipient = address(1230123519);
 
-    vm.expectRevert((bytes('ONLY_RESCUE_GUARDIAN')));
+    vm.expectRevert(abi.encodeWithSelector(IRescuable.OnlyRescueGuardian.selector));
     tokensReceiver.emergencyTokenTransfer(address(testToken), recipient, 3 ether);
   }
 }
