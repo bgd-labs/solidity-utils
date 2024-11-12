@@ -21,4 +21,3 @@ jobs:
     with:
       mode: 'CHANGED'
       zksync: true
-      ROOT_DIR: 'zksync'
