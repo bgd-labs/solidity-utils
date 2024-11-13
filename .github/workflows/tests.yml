@@ -47,6 +47,7 @@ jobs:
       - name: Create comment body
         id: get-comment-body
         run: |
+          mkdir -p /tmp/content
           printf "Foundry report\n\n" > /tmp/content/content.txt
           printf "\`\`\`shell\n$(cat /tmp/foundry_version)\n\`\`\`\n\n" >> /tmp/content/content.txt
           printf "<details><summary>Build log</summary>\n\n\`\`\`shell\n$(cat /tmp/foundry_build)\n\`\`\`\n</details>\n\n" >> /tmp/content/content.txt
