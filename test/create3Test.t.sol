@@ -32,11 +32,7 @@ contract Create3FactoryTest is Test {
     factory = new Create3Factory{salt: CREATE3_FACTORY_SALT}();
   }
 
-  function testCreate3WithoutValue(
-    address someAddress,
-    address owner,
-    bytes32 salt
-  ) public {
+  function testCreate3WithoutValue(address someAddress, address owner, bytes32 salt) public {
     bytes memory encodedParams = abi.encode(someAddress, owner);
     bytes memory code = type(MockContract).creationCode;
     // deploy Voting portal
@@ -52,13 +48,12 @@ contract Create3FactoryTest is Test {
     );
     assertEq(MockContract(votingPortal).owner(), owner);
     assertEq(MockContract(votingPortal).SOME_ADDRESS(), someAddress);
+
+    vm.expectRevert(abi.encodeWithSelector(Create3.TargetAlreadyExists.selector));
+    factory.create(salt, abi.encodePacked(code, encodedParams));
   }
 
-  function testCreate3WithValue(
-    address someAddress,
-    address owner,
-    address creator
-  ) public {
+  function testCreate3WithValue(address someAddress, address owner, address creator) public {
     bytes memory encodedParams = abi.encode(someAddress, owner);
     bytes memory code = type(MockContract).creationCode;
     bytes32 salt = keccak256(bytes('Voting portal eth-avax-2'));

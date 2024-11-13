@@ -4,10 +4,16 @@ pragma solidity ^0.8.0;
 import 'forge-std/Test.sol';
 import {OwnableWithGuardian} from '../src/contracts/access-control/OwnableWithGuardian.sol';
 
-contract ImplOwnableWithGuardian is OwnableWithGuardian {}
+contract ImplOwnableWithGuardian is OwnableWithGuardian {
+  function mock_onlyGuardian() external onlyGuardian {}
+
+  function mock_onlyOwnerOrGuardian() external onlyOwnerOrGuardian {}
+}
 
 contract TestOfOwnableWithGuardian is Test {
   OwnableWithGuardian public withGuardian;
+
+  address owner = makeAddr('owner');
 
   function setUp() public {
     withGuardian = new ImplOwnableWithGuardian();
@@ -18,7 +24,14 @@ contract TestOfOwnableWithGuardian is Test {
     assertEq(withGuardian.guardian(), address(this));
   }
 
-  function testGuardianUpdate(address guardian) external {
+  function testGuardianUpdateViaGuardian(address guardian) external {
+    withGuardian.transferOwnership(owner);
+    withGuardian.updateGuardian(guardian);
+  }
+
+  function testGuardianUpdateViaOwner(address guardian) external {
+    withGuardian.transferOwnership(owner);
+    vm.prank(owner);
     withGuardian.updateGuardian(guardian);
   }
 
