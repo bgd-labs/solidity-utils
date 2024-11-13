@@ -12,12 +12,70 @@ on:
 
 jobs:
   test:
-    uses: bgd-labs/github-workflows/.github/workflows/foundry-test.yml@main
-    secrets: inherit
-  test-sol-zksync:
-    uses: bgd-labs/github-workflows/.github/workflows/foundry-test.yml@main
-    needs: test
-    secrets: inherit
-    with:
-      mode: 'CHANGED'
-      zksync: true
+    name: Foundry build n test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: bgd-labs/action-rpc-env@main
+        with:
+          ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY }}
+
+      # we simply use foundry zk for all jobs in this repo
+      - name: Install Foundry zksync
+        if: ${{ inputs.zksync }}
+        uses: bgd-labs/foundry-zksync-toolchain@340cea9a42119d9a77a6bb0a8236d4311582b709
+        with:
+          version: nightly
+
+      - name: Run Forge build
+        run: |
+          forge --version | sed -r 's/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g' | tee /tmp/foundry_version ; test ${PIPESTATUS[0]} -eq 0
+          forge cache ls
+          ${{ inputs.zksync && 'FOUNDRY_PROFILE=zksync' || '' }} forge build --sizes ${{ inputs.zksync && '--zksync' || ''}} | sed -r 's/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g' | tee /tmp/foundry_build ; test ${PIPESTATUS[0]} -eq 0
+        id: build
+
+      - name: Run Forge tests
+        uses: bgd-labs/github-workflows/.github/actions/foundry-test@main
+
+      - name: Run ZK tests
+        uses: bgd-labs/github-workflows/.github/actions/foundry-test@main
+        with:
+          ZKSYNC: true
+
+      - name: Create comment body
+        id: get-comment-body
+        run: |
+          printf "Foundry report\n\n" > /tmp/content/content.txt
+          printf "\`\`\`shell\n$(cat /tmp/foundry_version)\n\`\`\`\n\n" >> /tmp/content/content.txt
+          printf "<details><summary>Build log</summary>\n\n\`\`\`shell\n$(cat /tmp/foundry_build)\n\`\`\`\n</details>\n\n" >> /tmp/content/content.txt
+          printf "<details><summary>Test ${{ env.testStatus == 0 && 'success :rainbow:' || 'error :finnadie::x:'}}</summary>\n\n\`\`\`shell\n$(cat /tmp/foundry_test)\n\`\`\`\n</details>\n\n" >> /tmp/content/content.txt
+
+      - name: Run Gas report
+        uses: bgd-labs/github-workflows/.github/actions/foundry-gas-report@main
+
+      - name: Run Lcov report
+        uses: bgd-labs/github-workflows/.github/actions/foundry-lcov-report@main
+
+      - name: Save PR number
+        if: github.event_name == 'pull_request' || github.event_name == 'pull_request_target'
+        env:
+          PR_NUMBER: ${{ github.event.number }}
+        run: |
+          mkdir -p ./pr
+          echo $PR_NUMBER > /tmp/content/pr_number.txt
+
+      - uses: actions/upload-artifact@v4
+        if: github.event_name == 'pull_request' || github.event_name == 'pull_request_target'
+        with:
+          name: content
+          path: /tmp/content
+
+      # we let failing tests pass so we can log them in the comment, still we want the ci to fail
+      - name: Post test
+        if: ${{ env.testStatus != 0 }}
+        run: |
+          echo "tests failed"
+          exit 1
