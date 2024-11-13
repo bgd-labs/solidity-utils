@@ -4,29 +4,53 @@ pragma solidity ^0.8.0;
 import 'forge-std/Test.sol';
 import {OwnableWithGuardian} from '../src/contracts/access-control/OwnableWithGuardian.sol';
 
-contract ImplOwnableWithGuardian is OwnableWithGuardian {}
+contract ImplOwnableWithGuardian is OwnableWithGuardian {
+  function mock_onlyGuardian() external onlyGuardian {}
+
+  function mock_onlyOwnerOrGuardian() external onlyOwnerOrGuardian {}
+}
 
 contract TestOfOwnableWithGuardian is Test {
-  OwnableWithGuardian public withGuardian;
+  ImplOwnableWithGuardian public withGuardian;
+
+  address owner = makeAddr('owner');
+  address guardian = makeAddr('guardian');
 
   function setUp() public {
     withGuardian = new ImplOwnableWithGuardian();
-  }
-
-  function testConstructorLogic() external {
     assertEq(withGuardian.owner(), address(this));
     assertEq(withGuardian.guardian(), address(this));
-  }
-
-  function testGuardianUpdate(address guardian) external {
+    withGuardian.transferOwnership(owner);
     withGuardian.updateGuardian(guardian);
   }
 
-  function testGuardianUpdateNoAccess(address guardian) external {
-    vm.assume(guardian != address(this));
+  function testConstructorLogic() external view {
+    assertEq(withGuardian.owner(), owner);
+    assertEq(withGuardian.guardian(), guardian);
+  }
 
-    vm.prank(guardian);
+  function testGuardianUpdateViaGuardian(address newGuardian) external {
+    vm.startPrank(guardian);
+    withGuardian.updateGuardian(newGuardian);
+  }
+
+  function testGuardianUpdateViaOwner(address newGuardian) external {
+    vm.prank(owner);
+    withGuardian.updateGuardian(newGuardian);
+  }
+
+  function testGuardianUpdateNoAccess() external {
     vm.expectRevert('ONLY_BY_OWNER_OR_GUARDIAN');
     withGuardian.updateGuardian(guardian);
+  }
+
+  function test_onlyGuardianGuard() external {
+    vm.prank(guardian);
+    withGuardian.mock_onlyGuardian();
+  }
+
+  function test_onlyGuardianGuard_shouldRevert() external {
+    vm.expectRevert('ONLY_BY_GUARDIAN');
+    withGuardian.mock_onlyGuardian();
   }
 }
