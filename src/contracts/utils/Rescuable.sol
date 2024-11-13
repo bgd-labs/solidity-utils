@@ -13,7 +13,9 @@ import {IRescuable} from './interfaces/IRescuable.sol';
 abstract contract Rescuable is RescuableBase, IRescuable {
   /// @notice modifier that checks that caller is allowed address
   modifier onlyRescueGuardian() {
-    require(msg.sender == whoCanRescue(), 'ONLY_RESCUE_GUARDIAN');
+    if (msg.sender != whoCanRescue()) {
+      revert OnlyRescueGuardian();
+    }
     _;
   }
 

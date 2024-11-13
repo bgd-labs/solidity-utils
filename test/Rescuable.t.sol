@@ -5,10 +5,10 @@ import 'forge-std/Test.sol';
 import {IERC20} from '../src/contracts/oz-common/interfaces/IERC20.sol';
 import {Address} from '../src/contracts/oz-common/Address.sol';
 import {ERC20} from '../src/mocks/ERC20.sol';
-import {Rescuable, IRescuable} from '../src/contracts/utils/Rescuable.sol';
+import {Rescuable as AbstractRescuable, IRescuable} from '../src/contracts/utils/Rescuable.sol';
 import {RescuableBase, IRescuableBase} from '../src/contracts/utils/RescuableBase.sol';
 
-contract MockReceiverTokensContract is Rescuable {
+contract Rescuable is AbstractRescuable {
   address public immutable ALLOWED;
 
   constructor(address allowedAddress) {
@@ -32,7 +32,7 @@ contract RescueTest is Test {
   address public constant ALLOWED = address(1023579);
 
   IERC20 public testToken;
-  MockReceiverTokensContract public tokensReceiver;
+  Rescuable public tokensReceiver;
 
   event ERC20Rescued(
     address indexed caller,
@@ -44,7 +44,7 @@ contract RescueTest is Test {
 
   function setUp() public {
     testToken = new ERC20('Test', 'TST');
-    tokensReceiver = new MockReceiverTokensContract(ALLOWED);
+    tokensReceiver = new Rescuable(ALLOWED);
   }
 
   function testEmergencyEtherTransfer() public {
@@ -75,7 +75,7 @@ contract RescueTest is Test {
 
     address recipient = address(1230123519);
 
-    vm.expectRevert((bytes('ONLY_RESCUE_GUARDIAN')));
+    vm.expectRevert(abi.encodeWithSelector(IRescuable.OnlyRescueGuardian.selector));
     tokensReceiver.emergencyEtherTransfer(recipient, 5 ether);
   }
 
@@ -108,7 +108,7 @@ contract RescueTest is Test {
 
     address recipient = address(1230123519);
 
-    vm.expectRevert((bytes('ONLY_RESCUE_GUARDIAN')));
+    vm.expectRevert(abi.encodeWithSelector(IRescuable.OnlyRescueGuardian.selector));
     tokensReceiver.emergencyTokenTransfer(address(testToken), recipient, 3 ether);
   }
 }

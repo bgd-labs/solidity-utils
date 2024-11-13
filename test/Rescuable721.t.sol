@@ -4,10 +4,10 @@ pragma solidity ^0.8.0;
 import 'forge-std/Test.sol';
 import {Address} from '../src/contracts/oz-common/Address.sol';
 import {MockERC721, ERC721} from '../src/mocks/ERC721.sol';
-import {Rescuable721} from '../src/contracts/utils/Rescuable721.sol';
+import {Rescuable721 as AbstractRescuable721} from '../src/contracts/utils/Rescuable721.sol';
 import {RescuableBase, IRescuableBase} from '../src/contracts/utils/RescuableBase.sol';
 
-contract MockReceiver721TokensContract is Rescuable721 {
+contract Rescuable721 is AbstractRescuable721 {
   address public immutable ALLOWED;
 
   constructor(address allowedAddress) {
@@ -29,7 +29,7 @@ contract Rescue721Test is Test {
   address public constant ALLOWED = address(1023579);
 
   MockERC721 public testToken;
-  MockReceiver721TokensContract public tokensReceiver;
+  Rescuable721 public tokensReceiver;
 
   event ERC721Rescued(
     address indexed caller,
@@ -40,7 +40,7 @@ contract Rescue721Test is Test {
 
   function setUp() public {
     testToken = new MockERC721();
-    tokensReceiver = new MockReceiver721TokensContract(ALLOWED);
+    tokensReceiver = new Rescuable721(ALLOWED);
   }
 
   function testFuzzEmergencyTokenTransfer(address recipient) public {

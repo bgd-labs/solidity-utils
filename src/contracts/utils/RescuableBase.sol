@@ -25,7 +25,9 @@ abstract contract RescuableBase is IRescuableBase {
 
   function _emergencyEtherTransfer(address to, uint256 amount) internal virtual {
     (bool success, ) = to.call{value: amount}(new bytes(0));
-    require(success, 'ETH_TRANSFER_FAIL');
+    if (!success) {
+      revert EthTransferFailed();
+    }
 
     emit NativeTokensRescued(msg.sender, to, amount);
   }

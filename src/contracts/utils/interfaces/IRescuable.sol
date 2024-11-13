@@ -9,6 +9,8 @@ import {IRescuableBase} from './IRescuableBase.sol';
  * @notice interface containing the objects, events and methods definitions of the Rescuable contract
  */
 interface IRescuable is IRescuableBase {
+  error OnlyRescueGuardian();
+
   /**
    * @notice method called to rescue tokens sent erroneously to the contract. Only callable by owner
    * @param erc20Token address of the token to rescue
