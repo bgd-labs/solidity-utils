@@ -24,17 +24,10 @@ jobs:
           ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY }}
 
       # we simply use foundry zk for all jobs in this repo
-      - name: Install Foundry zksync
-        uses: bgd-labs/foundry-zksync-toolchain@340cea9a42119d9a77a6bb0a8236d4311582b709
+      - name: Run Foundry setup
+        uses: bgd-labs/github-workflows/.github/actions/foundry-setup@main
         with:
-          version: nightly
-
-      - name: Run Forge build
-        run: |
-          forge --version | sed -r 's/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g' | tee /tmp/foundry_version ; test ${PIPESTATUS[0]} -eq 0
-          forge cache ls
-          ${{ inputs.zksync && 'FOUNDRY_PROFILE=zksync' || '' }} forge build --sizes ${{ inputs.zksync && '--zksync' || ''}} | sed -r 's/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g' | tee /tmp/foundry_build ; test ${PIPESTATUS[0]} -eq 0
-        id: build
+          ZKSYNC: 'true'
 
       - name: Run Forge tests
         uses: bgd-labs/github-workflows/.github/actions/foundry-test@main
@@ -43,15 +36,6 @@ jobs:
         uses: bgd-labs/github-workflows/.github/actions/foundry-test@main
         with:
           ZKSYNC: true
-
-      - name: Create comment body
-        id: get-comment-body
-        run: |
-          mkdir -p /tmp/content
-          printf "Foundry report\n\n" > /tmp/content/content.txt
-          printf "\`\`\`shell\n$(cat /tmp/foundry_version)\n\`\`\`\n\n" >> /tmp/content/content.txt
-          printf "<details><summary>Build log</summary>\n\n\`\`\`shell\n$(cat /tmp/foundry_build)\n\`\`\`\n</details>\n\n" >> /tmp/content/content.txt
-          printf "<details><summary>Test ${{ env.testStatus == 0 && 'success :rainbow:' || 'error :finnadie::x:'}}</summary>\n\n\`\`\`shell\n$(cat /tmp/foundry_test)\n\`\`\`\n</details>\n\n" >> /tmp/content/content.txt
 
       - name: Run Gas report
         uses: bgd-labs/github-workflows/.github/actions/foundry-gas-report@main
