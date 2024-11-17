@@ -2,10 +2,10 @@
 pragma solidity ^0.8.0;
 
 import 'forge-std/Test.sol';
+import {Ownable} from 'openzeppelin-contracts/contracts/access/Ownable.sol';
 import {ProxyAdmin} from '../src/contracts/transparent-proxy/ProxyAdmin.sol';
 import {TransparentProxyFactory} from '../src/contracts/transparent-proxy/TransparentProxyFactory.sol';
 import {TransparentUpgradeableProxy} from '../src/contracts/transparent-proxy/TransparentUpgradeableProxy.sol';
-import {IOwnable} from '../src/contracts/transparent-proxy/interfaces/IOwnable.sol';
 import {MockImpl} from '../src/mocks/MockImpl.sol';
 
 contract TestTransparentProxyFactory is Test {
@@ -83,7 +83,7 @@ contract TestTransparentProxyFactory is Test {
       proxyAdminOwner
     );
 
-    address proxyOwner = IOwnable(proxyAdmin).owner();
+    address proxyOwner = Ownable(proxyAdmin).owner();
 
     assertEq(predictedProxyAdmin, proxyAdmin);
     assertEq(proxyOwner, proxyAdminOwner);
@@ -94,6 +94,6 @@ contract TestTransparentProxyFactory is Test {
     vm.assume(proxyAdminOwner != address(0));
 
     address proxyAdmin = factory.createDeterministicProxyAdmin(proxyAdminOwner, proxyAdminSalt);
-    assertEq(IOwnable(proxyAdmin).owner(), proxyAdminOwner);
+    assertEq(Ownable(proxyAdmin).owner(), proxyAdminOwner);
   }
 }

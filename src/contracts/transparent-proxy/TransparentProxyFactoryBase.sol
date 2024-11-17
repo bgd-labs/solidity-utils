@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import {IOwnable} from './interfaces/IOwnable.sol';
 import {ITransparentProxyFactory} from './interfaces/ITransparentProxyFactory.sol';
 import {TransparentUpgradeableProxy} from './TransparentUpgradeableProxy.sol';
 import {ProxyAdmin} from './ProxyAdmin.sol';
