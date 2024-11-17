@@ -40,8 +40,7 @@ interface ITransparentUpgradeableProxy is IERC1967 {
  *
  * These properties mean that the admin account can only be used for upgrading the proxy, so it's best if it's a
  * dedicated account that is not used for anything else. This will avoid headaches due to sudden errors when trying to
- * call a function from the proxy implementation. For this reason, the proxy deploys an instance of {ProxyAdmin} and
- * allows upgrades only if they come through it. You should think of the `ProxyAdmin` instance as the administrative
+ * call a function from the proxy implementation. You should think of the `ProxyAdmin` instance as the administrative
  * interface of the proxy, including the ability to change who can trigger upgrades by transferring ownership.
  *
  * NOTE: The real interface of this proxy is that defined in `ITransparentUpgradeableProxy`. This contract does not
