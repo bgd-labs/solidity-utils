@@ -6,18 +6,20 @@ import 'forge-std/Test.sol';
 import {IERC20} from '../src/contracts/oz-common/interfaces/IERC20.sol';
 import {Address} from '../src/contracts/oz-common/Address.sol';
 import {ERC20} from '../src/mocks/ERC20.sol';
-import {Rescuable as AbstractRescuable, IRescuable} from '../src/contracts/utils/Rescuable.sol';
+import {RescuableACL as AbstractRescuableACL, IRescuable} from '../src/contracts/utils/RescuableACL.sol';
 import {RescuableBase, IRescuableBase} from '../src/contracts/utils/RescuableBase.sol';
 
-contract Rescuable is AbstractRescuable {
+contract RescuableACL is AbstractRescuableACL {
   address public immutable ALLOWED;
 
   constructor(address allowedAddress) {
     ALLOWED = allowedAddress;
   }
 
-  function whoCanRescue() public view override returns (address) {
-    return ALLOWED;
+  function _checkRescueGuardian() internal view override {
+    if (msg.sender != ALLOWED) {
+      revert OnlyRescueGuardian();
+    }
   }
 
   function maxRescue(
@@ -29,11 +31,11 @@ contract Rescuable is AbstractRescuable {
   receive() external payable {}
 }
 
-contract RescueTest is Test {
+contract RescueACLTest is Test {
   address public constant ALLOWED = address(1023579);
 
   IERC20 public testToken;
-  Rescuable public tokensReceiver;
+  RescuableACL public tokensReceiver;
 
   event ERC20Rescued(
     address indexed caller,
@@ -45,7 +47,7 @@ contract RescueTest is Test {
 
   function setUp() public {
     testToken = new ERC20('Test', 'TST');
-    tokensReceiver = new Rescuable(ALLOWED);
+    tokensReceiver = new RescuableACL(ALLOWED);
   }
 
   function testEmergencyEtherTransfer() public {

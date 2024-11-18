@@ -11,11 +11,7 @@ abstract contract RescuableBase is IRescuableBase {
   /// @inheritdoc IRescuableBase
   function maxRescue(address erc20Token) public view virtual returns (uint256);
 
-  function _emergencyTokenTransfer(
-    address erc20Token,
-    address to,
-    uint256 amount
-  ) internal virtual {
+  function _emergencyTokenTransfer(address erc20Token, address to, uint256 amount) internal {
     uint256 max = maxRescue(erc20Token);
     amount = max > amount ? amount : max;
     IERC20(erc20Token).safeTransfer(to, amount);
@@ -23,7 +19,7 @@ abstract contract RescuableBase is IRescuableBase {
     emit ERC20Rescued(msg.sender, erc20Token, to, amount);
   }
 
-  function _emergencyEtherTransfer(address to, uint256 amount) internal virtual {
+  function _emergencyEtherTransfer(address to, uint256 amount) internal {
     (bool success, ) = to.call{value: amount}(new bytes(0));
     if (!success) {
       revert EthTransferFailed();
