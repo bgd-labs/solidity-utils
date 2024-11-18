@@ -2,9 +2,10 @@
 pragma solidity ^0.8.0;
 
 import 'forge-std/Test.sol';
+import {Ownable} from 'openzeppelin-contracts/contracts/access/Ownable.sol';
+import {ProxyAdmin} from '../src/contracts/transparent-proxy/ProxyAdmin.sol';
 import {TransparentProxyFactory} from '../src/contracts/transparent-proxy/TransparentProxyFactory.sol';
 import {TransparentUpgradeableProxy} from '../src/contracts/transparent-proxy/TransparentUpgradeableProxy.sol';
-import {IOwnable} from '../src/contracts/transparent-proxy/interfaces/IOwnable.sol';
 import {MockImpl} from '../src/mocks/MockImpl.sol';
 
 contract TestTransparentProxyFactory is Test {
@@ -25,12 +26,12 @@ contract TestTransparentProxyFactory is Test {
 
     address predictedAddress1 = factory.predictCreateDeterministic(
       address(mockImpl),
-      admin,
+      ProxyAdmin(admin),
       data,
       salt
     );
 
-    address proxy1 = factory.createDeterministic(address(mockImpl), admin, data, salt);
+    address proxy1 = factory.createDeterministic(address(mockImpl), ProxyAdmin(admin), data, salt);
 
     assertEq(predictedAddress1, proxy1);
     assertEq(MockImpl(proxy1).getFoo(), FOO);
@@ -40,7 +41,11 @@ contract TestTransparentProxyFactory is Test {
     bytes32 proxyAdminSalt,
     bytes32 proxySalt
   ) public {
-    address deterministicProxyAdmin = factory.predictCreateDeterministicProxyAdmin(proxyAdminSalt);
+    address owner = makeAddr('owner');
+    address deterministicProxyAdmin = factory.predictCreateDeterministicProxyAdmin(
+      proxyAdminSalt,
+      owner
+    );
 
     uint256 FOO = 2;
 
@@ -48,14 +53,14 @@ contract TestTransparentProxyFactory is Test {
 
     address predictedAddress1 = factory.predictCreateDeterministic(
       address(mockImpl),
-      deterministicProxyAdmin,
+      ProxyAdmin(deterministicProxyAdmin),
       data,
       proxySalt
     );
 
     address proxy1 = factory.createDeterministic(
       address(mockImpl),
-      deterministicProxyAdmin,
+      ProxyAdmin(deterministicProxyAdmin),
       data,
       proxySalt
     );
@@ -73,9 +78,12 @@ contract TestTransparentProxyFactory is Test {
 
     address proxyAdmin = factory.createDeterministicProxyAdmin(proxyAdminOwner, proxyAdminSalt);
 
-    address predictedProxyAdmin = factory.predictCreateDeterministicProxyAdmin(proxyAdminSalt);
+    address predictedProxyAdmin = factory.predictCreateDeterministicProxyAdmin(
+      proxyAdminSalt,
+      proxyAdminOwner
+    );
 
-    address proxyOwner = IOwnable(proxyAdmin).owner();
+    address proxyOwner = Ownable(proxyAdmin).owner();
 
     assertEq(predictedProxyAdmin, proxyAdmin);
     assertEq(proxyOwner, proxyAdminOwner);
@@ -86,6 +94,6 @@ contract TestTransparentProxyFactory is Test {
     vm.assume(proxyAdminOwner != address(0));
 
     address proxyAdmin = factory.createDeterministicProxyAdmin(proxyAdminOwner, proxyAdminSalt);
-    assertEq(IOwnable(proxyAdmin).owner(), proxyAdminOwner);
+    assertEq(Ownable(proxyAdmin).owner(), proxyAdminOwner);
   }
 }
