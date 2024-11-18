@@ -25,10 +25,4 @@ interface IRescuable is IRescuableBase {
    * @param amount of eth to rescue
    */
   function emergencyEtherTransfer(address to, uint256 amount) external;
-
-  /**
-   * @notice method that defines the address that is allowed to rescue tokens
-   * @return the allowed address
-   */
-  function whoCanRescue() external view returns (address);
 }

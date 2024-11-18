@@ -6,16 +6,14 @@ import {RescuableBase} from './RescuableBase.sol';
 import {IRescuable} from './interfaces/IRescuable.sol';
 
 /**
- * @title Rescuable
+ * @title Rescuable specially for ACL models
  * @author BGD Labs
  * @notice abstract contract with the methods to rescue tokens (ERC20 and native)  from a contract
  */
-abstract contract Rescuable is RescuableBase, IRescuable {
+abstract contract RescuableACL is RescuableBase, IRescuable {
   /// @notice modifier that checks that caller is allowed address
   modifier onlyRescueGuardian() {
-    if (msg.sender != whoCanRescue()) {
-      revert OnlyRescueGuardian();
-    }
+    _checkRescueGuardian();
     _;
   }
 
@@ -24,14 +22,15 @@ abstract contract Rescuable is RescuableBase, IRescuable {
     address erc20Token,
     address to,
     uint256 amount
-  ) external virtual onlyRescueGuardian {
+  ) external onlyRescueGuardian {
     _emergencyTokenTransfer(erc20Token, to, amount);
   }
 
   /// @inheritdoc IRescuable
-  function emergencyEtherTransfer(address to, uint256 amount) external virtual onlyRescueGuardian {
+  function emergencyEtherTransfer(address to, uint256 amount) external onlyRescueGuardian {
     _emergencyEtherTransfer(to, amount);
   }
 
-  function whoCanRescue() public view virtual returns (address);
+  /// @notice function, that should revert if `msg.sender` isn't allowed to rescue funds
+  function _checkRescueGuardian() internal view virtual;
 }
