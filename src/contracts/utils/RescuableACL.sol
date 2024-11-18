@@ -8,7 +8,7 @@ import {IRescuable} from './interfaces/IRescuable.sol';
 /**
  * @title Rescuable specially for ACL models
  * @author BGD Labs
- * @notice abstract contract with the methods to rescue tokens (ERC20 and native)  from a contract
+ * @notice abstract contract with the methods to rescue tokens (ERC20 and native) from a contract
  */
 abstract contract RescuableACL is RescuableBase, IRescuable {
   /// @notice modifier that checks that caller is allowed address
