@@ -21,6 +21,7 @@ library ChainIds {
   uint256 internal constant HARMONY = 1666600000;
   uint256 internal constant CELO = 42220;
   uint256 internal constant POLYGON_ZK_EVM = 1101;
+  uint256 internal constant LINEA = 59144;
 }
 
 library TestNetChainIds {
@@ -38,6 +39,7 @@ library TestNetChainIds {
   uint256 internal constant OPTIMISM_SEPOLIA = 11155420;
   uint256 internal constant ARBITRUM_SEPOLIA = 421614;
   uint256 internal constant ZKSYNC_SEPOLIA = 300;
+  uint256 internal constant LINEA_SEPOLIA = 59141;
 }
 
 library ChainHelpers {
@@ -79,6 +81,8 @@ library ChainHelpers {
       newFork = vm.createSelectFork(vm.rpcUrl('harmony'));
     } else if (chainId == ChainIds.ZKSYNC) {
       newFork = vm.createSelectFork(vm.rpcUrl('zksync'));
+    } else if (chainId == ChainIds.LINEA) {
+      newFork = vm.createSelectFork(vm.rpcUrl('linea'));
     } else {
       revert UnknownChainId();
     }
@@ -113,6 +117,8 @@ library ChainHelpers {
       networkName = 'celo';
     } else if (chainId == ChainIds.ZKSYNC) {
       networkName = 'zksync';
+    } else if (chainId == ChainIds.LINEA) {
+      networkName = 'linea';
     }
     // testnets
     else if (chainId == TestNetChainIds.ETHEREUM_SEPOLIA) {
@@ -139,6 +145,8 @@ library ChainHelpers {
       networkName = 'celo_alfajores';
     } else if (chainId == TestNetChainIds.ZKSYNC_SEPOLIA) {
       networkName = 'zksync_sepolia';
+    } else if (chainId == TestNetChainIds.LINEA_SEPOLIA) {
+      networkName = 'linea_sepolia';
     } else {
       revert('chain id is not supported');
     }
