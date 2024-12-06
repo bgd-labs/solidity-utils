@@ -75,6 +75,10 @@ abstract contract ZkSyncScript is WithChainIdValidation {
   constructor() WithChainIdValidation(ChainIds.ZKSYNC) {}
 }
 
+abstract contract LineaScript is WithChainIdValidation {
+  constructor() WithChainIdValidation(ChainIds.LINEA) {}
+}
+
 abstract contract SepoliaScript is WithChainIdValidation {
   constructor() WithChainIdValidation(ChainIds.SEPOLIA) {}
 }
@@ -127,22 +131,20 @@ library Create2Utils {
     return (_addr.code.length > 0);
   }
 
-  function computeCreate2Address(bytes32 salt, bytes32 initcodeHash)
-    internal
-    pure
-    returns (address)
-  {
+  function computeCreate2Address(
+    bytes32 salt,
+    bytes32 initcodeHash
+  ) internal pure returns (address) {
     return
       addressFromLast20Bytes(
         keccak256(abi.encodePacked(bytes1(0xff), CREATE2_FACTORY, salt, initcodeHash))
       );
   }
 
-  function computeCreate2Address(bytes32 salt, bytes memory bytecode)
-    internal
-    pure
-    returns (address)
-  {
+  function computeCreate2Address(
+    bytes32 salt,
+    bytes memory bytecode
+  ) internal pure returns (address) {
     return computeCreate2Address(salt, keccak256(abi.encodePacked(bytecode)));
   }
 
