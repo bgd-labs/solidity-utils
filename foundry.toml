@@ -4,8 +4,11 @@ tests = 'tests'
 script = 'script'
 out = 'out'
 libs = ['lib']
-evm_version = 'shanghai'
+evm_version = 'london'
 remappings = []
+optimizer_runs = 200
+solc = '0.8.20'
+bytecode_hash = 'none'
 
 [profile.zksync]
 src = 'zksync/src'
