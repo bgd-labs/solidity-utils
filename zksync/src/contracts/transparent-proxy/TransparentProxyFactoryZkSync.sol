@@ -22,7 +22,7 @@ contract TransparentProxyFactoryZkSync is
   function _predictCreate2Address(
     address sender,
     bytes32 salt,
-    bytes memory creationCode,
+    bytes memory bytecodeHash,
     bytes memory constructorInput
   ) internal pure override returns (address) {
     bytes32 addressHash = keccak256(
@@ -30,31 +30,11 @@ contract TransparentProxyFactoryZkSync is
         ZKSYNC_CREATE2_PREFIX,
         bytes32(uint256(uint160(sender))),
         salt,
-        bytes32(_sliceBytes(creationCode, 36, 32)),
+        abi.decode(bytecodeHash, (address)),
         keccak256(constructorInput)
       )
     );
 
     return address(uint160(uint256(addressHash)));
-  }
-
-  function _sliceBytes(
-    bytes memory data,
-    uint256 start,
-    uint256 length
-  ) internal pure returns (bytes memory) {
-    require(start + length <= data.length, 'Slice out of bounds');
-
-    bytes memory result = new bytes(length);
-    assembly {
-      let dataPtr := add(data, 32)
-      let resultPtr := add(result, 32)
-
-      // Use mcopy to efficiently copy the slice
-      mcopy(resultPtr, add(dataPtr, start), length)
-
-      mstore(result, length)
-    }
-    return result;
   }
 }

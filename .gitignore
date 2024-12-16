@@ -6,3 +6,4 @@ broadcast
 node_modules
 package-lock.json
 zkout/
+.DS_Store
