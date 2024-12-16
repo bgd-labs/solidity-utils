@@ -30,7 +30,7 @@ contract TransparentProxyFactoryZkSync is
         ZKSYNC_CREATE2_PREFIX,
         bytes32(uint256(uint160(sender))),
         salt,
-        abi.decode(bytecodeHash, (address)),
+        abi.decode(bytecodeHash, (bytes32)),
         keccak256(constructorInput)
       )
     );
