@@ -2,7 +2,6 @@
 pragma solidity >=0.8.24;
 
 import {TransparentProxyFactoryBase} from '../../../../src/contracts/transparent-proxy/TransparentProxyFactoryBase.sol';
-import {ITransparentProxyFactoryZkSync} from './interfaces/ITransparentProxyFactoryZkSync.sol';
 import {Create2UtilsZkSync} from '../utils/ScriptUtilsZkSync.sol';
 
 /**
@@ -13,13 +12,7 @@ import {Create2UtilsZkSync} from '../utils/ScriptUtilsZkSync.sol';
  * time allowing `createDeterministic()` with salt == 0
  * @dev Highly recommended to pass as `admin` on creation an OZ ProxyAdmin instance
  **/
-contract TransparentProxyFactoryZkSync is
-  TransparentProxyFactoryBase,
-  ITransparentProxyFactoryZkSync
-{
-  /// @inheritdoc ITransparentProxyFactoryZkSync
-  bytes32 public constant ZKSYNC_CREATE2_PREFIX = keccak256('zksyncCreate2');
-
+contract TransparentProxyFactoryZkSync is TransparentProxyFactoryBase {
   function _predictCreate2Address(
     address sender,
     bytes32 salt,
