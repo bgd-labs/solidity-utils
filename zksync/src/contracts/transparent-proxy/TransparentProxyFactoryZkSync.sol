@@ -21,7 +21,7 @@ contract TransparentProxyFactoryZkSync is TransparentProxyFactoryBase {
   ) internal pure override returns (address) {
     bytes32 addressHash = keccak256(
       bytes.concat(
-        ZKSYNC_CREATE2_PREFIX,
+        Create2UtilsZkSync.ZKSYNC_CREATE2_PREFIX,
         bytes32(uint256(uint160(sender))),
         salt,
         Create2UtilsZkSync.getBytecodeHashFromBytecode(creationCode),

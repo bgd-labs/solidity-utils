@@ -32,6 +32,8 @@ library Create2UtilsZkSync {
   // https://github.com/matter-labs/era-contracts/blob/main/system-contracts/contracts/Create2Factory.sol
   address public constant CREATE2_FACTORY = 0x0000000000000000000000000000000000010000;
 
+  bytes32 public constant ZKSYNC_CREATE2_PREFIX = keccak256('zksyncCreate2');
+
   /**
    * @dev Deploys a contract using the CREATE2 opcode.
    * @param salt A salt to influence the address of the deployed contract.
@@ -158,7 +160,7 @@ library Create2UtilsZkSync {
   ) internal pure returns (address) {
     bytes32 addressHash = keccak256(
       bytes.concat(
-        keccak256('zksyncCreate2'), // zkSync create2 prefix
+        ZKSYNC_CREATE2_PREFIX,
         bytes32(uint256(uint160(CREATE2_FACTORY))),
         salt,
         bytecodeHash,
