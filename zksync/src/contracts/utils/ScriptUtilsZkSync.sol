@@ -188,8 +188,13 @@ library Create2UtilsZkSync {
       let dataPtr := add(data, 32)
       let resultPtr := add(result, 32)
 
-      // Use mcopy to efficiently copy the slice
-      mcopy(resultPtr, add(dataPtr, start), length)
+      // Copy the slice
+      let words := div(add(length, 31), 32)
+      let srcPtr := add(dataPtr, start)
+
+      for { let i := 0 } lt(i, words) { i := add(i, 1) } {
+        mstore(add(resultPtr, mul(i, 32)), mload(add(srcPtr, mul(i, 32))))
+      }
 
       mstore(result, length)
     }
