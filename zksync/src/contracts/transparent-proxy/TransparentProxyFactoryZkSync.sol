@@ -3,6 +3,7 @@ pragma solidity >=0.8.24;
 
 import {TransparentProxyFactoryBase} from '../../../../src/contracts/transparent-proxy/TransparentProxyFactoryBase.sol';
 import {ITransparentProxyFactoryZkSync} from './interfaces/ITransparentProxyFactoryZkSync.sol';
+import {Create2UtilsZkSync} from '../utils/ScriptUtilsZkSync.sol';
 
 /**
  * @title TransparentProxyFactoryZkSync
@@ -30,31 +31,11 @@ contract TransparentProxyFactoryZkSync is
         ZKSYNC_CREATE2_PREFIX,
         bytes32(uint256(uint160(sender))),
         salt,
-        bytes32(_sliceBytes(creationCode, 36, 32)),
+        Create2UtilsZkSync.getBytecodeHashFromBytecode(creationCode),
         keccak256(constructorInput)
       )
     );
 
     return address(uint160(uint256(addressHash)));
-  }
-
-  function _sliceBytes(
-    bytes memory data,
-    uint256 start,
-    uint256 length
-  ) internal pure returns (bytes memory) {
-    require(start + length <= data.length, 'Slice out of bounds');
-
-    bytes memory result = new bytes(length);
-    assembly {
-      let dataPtr := add(data, 32)
-      let resultPtr := add(result, 32)
-
-      // Use mcopy to efficiently copy the slice
-      mcopy(resultPtr, add(dataPtr, start), length)
-
-      mstore(result, length)
-    }
-    return result;
   }
 }
