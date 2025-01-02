@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import {ProxyAdmin} from '../ProxyAdmin.sol';
+import {ProxyAdmin} from 'openzeppelin-contracts/contracts/proxy/transparent/ProxyAdmin.sol';
 
 interface ITransparentProxyFactory {
   event ProxyCreated(address proxy, address indexed logic, address indexed proxyAdmin);
@@ -28,7 +28,7 @@ interface ITransparentProxyFactory {
    *             for an `initialize` function being `function initialize(uint256 foo) external initializer;`
    * @return address The address of the proxy deployed
    **/
-  function create(address logic, ProxyAdmin admin, bytes memory data) external returns (address);
+  function create(address logic, address admin, bytes memory data) external returns (address);
 
   /**
    * @notice Creates a proxyAdmin instance, and transfers ownership to provided owner
@@ -51,7 +51,7 @@ interface ITransparentProxyFactory {
    **/
   function createDeterministic(
     address logic,
-    ProxyAdmin admin,
+    address admin,
     bytes memory data,
     bytes32 salt
   ) external returns (address);
@@ -80,7 +80,7 @@ interface ITransparentProxyFactory {
    **/
   function predictCreateDeterministic(
     address logic,
-    ProxyAdmin admin,
+    address admin,
     bytes calldata data,
     bytes32 salt
   ) external view returns (address);

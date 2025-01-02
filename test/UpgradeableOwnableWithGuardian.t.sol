@@ -26,7 +26,7 @@ contract TestOfUpgradableOwnableWithGuardian is Test {
     ImplOwnableWithGuardian(address(withGuardian)).initialize(owner, guardian);
   }
 
-  function test_initializer() external {
+  function test_initializer() external view {
     assertEq(withGuardian.owner(), owner);
     assertEq(withGuardian.guardian(), guardian);
   }

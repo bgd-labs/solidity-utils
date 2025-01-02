@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
+import {TransparentUpgradeableProxy} from 'openzeppelin-contracts/contracts/proxy/transparent/TransparentUpgradeableProxy.sol';
+import {ProxyAdmin} from 'openzeppelin-contracts/contracts/proxy/transparent/ProxyAdmin.sol';
 import {ITransparentProxyFactory} from './interfaces/ITransparentProxyFactory.sol';
-import {TransparentUpgradeableProxy} from './TransparentUpgradeableProxy.sol';
-import {ProxyAdmin} from './ProxyAdmin.sol';
 
 /**
  * @title TransparentProxyFactory
@@ -15,10 +15,14 @@ import {ProxyAdmin} from './ProxyAdmin.sol';
  **/
 abstract contract TransparentProxyFactoryBase is ITransparentProxyFactory {
   /// @inheritdoc ITransparentProxyFactory
-  function create(address logic, ProxyAdmin admin, bytes calldata data) external returns (address) {
-    address proxy = address(new TransparentUpgradeableProxy(logic, admin, data));
+  function create(
+    address logic,
+    address adminOwner,
+    bytes calldata data
+  ) external returns (address) {
+    address proxy = address(new TransparentUpgradeableProxy(logic, adminOwner, data));
 
-    emit ProxyCreated(proxy, logic, address(admin));
+    emit ProxyCreated(proxy, logic, address(adminOwner));
     return proxy;
   }
 
@@ -33,13 +37,13 @@ abstract contract TransparentProxyFactoryBase is ITransparentProxyFactory {
   /// @inheritdoc ITransparentProxyFactory
   function createDeterministic(
     address logic,
-    ProxyAdmin admin,
+    address adminOwner,
     bytes calldata data,
     bytes32 salt
   ) external returns (address) {
-    address proxy = address(new TransparentUpgradeableProxy{salt: salt}(logic, admin, data));
+    address proxy = address(new TransparentUpgradeableProxy{salt: salt}(logic, adminOwner, data));
 
-    emit ProxyDeterministicCreated(proxy, logic, address(admin), salt);
+    emit ProxyDeterministicCreated(proxy, logic, address(adminOwner), salt);
     return proxy;
   }
 
@@ -57,7 +61,7 @@ abstract contract TransparentProxyFactoryBase is ITransparentProxyFactory {
   /// @inheritdoc ITransparentProxyFactory
   function predictCreateDeterministic(
     address logic,
-    ProxyAdmin admin,
+    address admin,
     bytes calldata data,
     bytes32 salt
   ) public view returns (address) {
@@ -66,7 +70,7 @@ abstract contract TransparentProxyFactoryBase is ITransparentProxyFactory {
         address(this),
         salt,
         type(TransparentUpgradeableProxy).creationCode,
-        abi.encode(logic, address(admin), data)
+        abi.encode(logic, admin, data)
       );
   }
 

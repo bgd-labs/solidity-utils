@@ -60,7 +60,7 @@ contract PermissionlessRescuableTest is Test {
     rescuable = new PermissionlessRescuable(fundsReceiver, address(restrictedMockToken));
   }
 
-  function test_whoShouldReceiveFunds() public {
+  function test_whoShouldReceiveFunds() public view {
     assertEq(rescuable.whoShouldReceiveFunds(), fundsReceiver);
   }
 

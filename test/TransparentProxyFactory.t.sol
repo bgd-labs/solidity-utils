@@ -3,9 +3,9 @@ pragma solidity ^0.8.0;
 
 import 'forge-std/Test.sol';
 import {Ownable} from 'openzeppelin-contracts/contracts/access/Ownable.sol';
-import {ProxyAdmin} from '../src/contracts/transparent-proxy/ProxyAdmin.sol';
+import {TransparentUpgradeableProxy} from 'openzeppelin-contracts/contracts/proxy/transparent/TransparentUpgradeableProxy.sol';
+import {ProxyAdmin} from 'openzeppelin-contracts/contracts/proxy/transparent/ProxyAdmin.sol';
 import {TransparentProxyFactory} from '../src/contracts/transparent-proxy/TransparentProxyFactory.sol';
-import {TransparentUpgradeableProxy} from '../src/contracts/transparent-proxy/TransparentUpgradeableProxy.sol';
 import {MockImpl} from '../src/mocks/MockImpl.sol';
 
 contract TestTransparentProxyFactory is Test {
@@ -26,12 +26,12 @@ contract TestTransparentProxyFactory is Test {
 
     address predictedAddress1 = factory.predictCreateDeterministic(
       address(mockImpl),
-      ProxyAdmin(admin),
+      admin,
       data,
       salt
     );
 
-    address proxy1 = factory.createDeterministic(address(mockImpl), ProxyAdmin(admin), data, salt);
+    address proxy1 = factory.createDeterministic(address(mockImpl), admin, data, salt);
 
     assertEq(predictedAddress1, proxy1);
     assertEq(MockImpl(proxy1).getFoo(), FOO);
@@ -53,14 +53,14 @@ contract TestTransparentProxyFactory is Test {
 
     address predictedAddress1 = factory.predictCreateDeterministic(
       address(mockImpl),
-      ProxyAdmin(deterministicProxyAdmin),
+      deterministicProxyAdmin,
       data,
       proxySalt
     );
 
     address proxy1 = factory.createDeterministic(
       address(mockImpl),
-      ProxyAdmin(deterministicProxyAdmin),
+      deterministicProxyAdmin,
       data,
       proxySalt
     );
