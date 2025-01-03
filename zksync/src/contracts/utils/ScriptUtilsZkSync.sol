@@ -12,8 +12,22 @@ import {ICreate2Factory} from './interfaces/ICreate2Factory.sol';
  * use the Create2Factory contract from the era-contracts repository. When using the Create2Factory to deploy a smart contract with
  * a deterministic address, you need to provide not the contract creation code, but the hash of the contract bytecode.
  * Then zkSync tries to match the provided bytecode hash with contracts that already exist on the network. If it finds one,
- * the contract will be deployed. These utils use the Create2Factory contract, so before trying to deploy a contract with a
- * deterministic address, you first need to deploy it at a random address to let zkSync remember its bytecode.
+ * the contract will be deployed. 
+ *   So if you deploy the contract that  already exists in zksync network, you simply need to call the
+ * deploy function with a valid bytecode hash(check below). Otherwise, consider using the factory method. You'll need to write
+ * a factory contract like this:
+ * 
+ * contract Factory {
+ *   address public immutable IMPL;
+ *   
+ *   constructor(bytes32 salt, bytes memory arguments) {
+ *     IMPL = Create2UtilsZkSync.create2Deploy(type(Contract).creationCode, arguments); 
+ *   }
+ * }
+ * 
+ *   This approach will force foundry-zksync to create EIP-712 transaction and pass your contract's full bytecode 
+ * in `factory_deps` field of the transaction. It can be handled by zksync network and you'll be able to
+ * deploy contract in deterministic address even if it wasn't deployed before.
  * @dev This library uses the contract's creation code to compute the bytecode hash.
  * You can get the creation code using `type(Contract).creationCode`.
  * IMPORTANT: There might be a bug while compiling and executing tests or scripts with the --zksync flag.
