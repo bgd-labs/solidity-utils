@@ -31,6 +31,22 @@ interface ITransparentProxyFactory {
   function create(address logic, ProxyAdmin admin, bytes memory data) external returns (address);
 
   /**
+   * @notice Creates a transparent proxy instance, doing the first initialization in construction
+   * @dev Version using CREATE
+   * @param logic The address of the implementation contract
+   * @param initialOwner The initial owner of the admin deployed by the proxy.
+   * @param data abi encoded call to the function with `initializer` (or `reinitializer`) modifier.
+   *             E.g. `abi.encodeWithSelector(mockImpl.initialize.selector, 2)`
+   *             for an `initialize` function being `function initialize(uint256 foo) external initializer;`
+   * @return address The address of the proxy deployed
+   **/
+  function createAndDeployNewAdmin(
+    address logic,
+    address initialOwner,
+    bytes memory data
+  ) external returns (address);
+
+  /**
    * @notice Creates a proxyAdmin instance, and transfers ownership to provided owner
    * @dev Version using CREATE
    * @param adminOwner The owner of the proxyAdmin deployed.
@@ -52,6 +68,24 @@ interface ITransparentProxyFactory {
   function createDeterministic(
     address logic,
     ProxyAdmin admin,
+    bytes memory data,
+    bytes32 salt
+  ) external returns (address);
+
+  /**
+   * @notice Creates a transparent proxy instance, doing the first initialization in construction
+   * @dev Version using CREATE2, so deterministic
+   * @param logic The address of the implementation contract
+   * @param initialOwner The initial owner of the admin deployed by the proxy.
+   * @param data abi encoded call to the function with `initializer` (or `reinitializer`) modifier.
+   *             E.g. `abi.encodeWithSelector(mockImpl.initialize.selector, 2)`
+   *             for an `initialize` function being `function initialize(uint256 foo) external initializer;`
+   * @param salt Value to be used in the address calculation, to be chosen by the account calling this function
+   * @return address The address of the proxy deployed
+   **/
+  function createDeterministicAndDeployNewAdmin(
+    address logic,
+    address initialOwner,
     bytes memory data,
     bytes32 salt
   ) external returns (address);
@@ -81,6 +115,23 @@ interface ITransparentProxyFactory {
   function predictCreateDeterministic(
     address logic,
     ProxyAdmin admin,
+    bytes calldata data,
+    bytes32 salt
+  ) external view returns (address);
+
+  /**
+   * @notice Pre-calculates and return the address on which `createDeterministic` will deploy a proxy
+   * @param logic The address of the implementation contract
+   * @param initialOwner The initial owner of the admin deployed by the proxy
+   * @param data abi encoded call to the function with `initializer` (or `reinitializer`) modifier.
+   *             E.g. `abi.encodeWithSelector(mockImpl.initialize.selector, 2)`
+   *             for an `initialize` function being `function initialize(uint256 foo) external initializer;`
+   * @param salt Value to be used in the address calculation, to be chosen by the account calling this function
+   * @return address The pre-calculated address
+   **/
+  function predictCreateDeterministicAndDeployNewAdmin(
+    address logic,
+    address initialOwner,
     bytes calldata data,
     bytes32 salt
   ) external view returns (address);

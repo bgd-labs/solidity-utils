@@ -16,7 +16,25 @@ import {ProxyAdmin} from './ProxyAdmin.sol';
 abstract contract TransparentProxyFactoryBase is ITransparentProxyFactory {
   /// @inheritdoc ITransparentProxyFactory
   function create(address logic, ProxyAdmin admin, bytes calldata data) external returns (address) {
-    address proxy = address(new TransparentUpgradeableProxy(logic, admin, data));
+    return _create(logic, address(admin), data, true);
+  }
+
+  /// @inheritdoc ITransparentProxyFactory
+  function createAndDeployNewAdmin(
+    address logic,
+    address initialOwner,
+    bytes calldata data
+  ) external returns (address) {
+    return _create(logic, initialOwner, data, false);
+  }
+
+  function _create(
+    address logic,
+    address admin,
+    bytes calldata data,
+    bool reuseAdmin
+  ) internal returns (address) {
+    address proxy = address(new TransparentUpgradeableProxy(logic, admin, data, reuseAdmin));
 
     emit ProxyCreated(proxy, logic, address(admin));
     return proxy;
@@ -37,9 +55,31 @@ abstract contract TransparentProxyFactoryBase is ITransparentProxyFactory {
     bytes calldata data,
     bytes32 salt
   ) external returns (address) {
-    address proxy = address(new TransparentUpgradeableProxy{salt: salt}(logic, admin, data));
+    return _createDeterministic(logic, address(admin), data, true, salt);
+  }
 
-    emit ProxyDeterministicCreated(proxy, logic, address(admin), salt);
+  /// @inheritdoc ITransparentProxyFactory
+  function createDeterministicAndDeployNewAdmin(
+    address logic,
+    address initialOwner,
+    bytes calldata data,
+    bytes32 salt
+  ) external returns (address) {
+    return _createDeterministic(logic, initialOwner, data, false, salt);
+  }
+
+  function _createDeterministic(
+    address logic,
+    address ownerOrAdmin,
+    bytes calldata data,
+    bool reuseAdmin,
+    bytes32 salt
+  ) internal returns (address) {
+    address proxy = address(
+      new TransparentUpgradeableProxy{salt: salt}(logic, ownerOrAdmin, data, reuseAdmin)
+    );
+
+    emit ProxyDeterministicCreated(proxy, logic, address(ownerOrAdmin), salt);
     return proxy;
   }
 
@@ -66,7 +106,23 @@ abstract contract TransparentProxyFactoryBase is ITransparentProxyFactory {
         address(this),
         salt,
         type(TransparentUpgradeableProxy).creationCode,
-        abi.encode(logic, address(admin), data)
+        abi.encode(logic, address(admin), data, true)
+      );
+  }
+
+  /// @inheritdoc ITransparentProxyFactory
+  function predictCreateDeterministicAndDeployNewAdmin(
+    address logic,
+    address initialOwner,
+    bytes calldata data,
+    bytes32 salt
+  ) public view returns (address) {
+    return
+      _predictCreate2Address(
+        address(this),
+        salt,
+        type(TransparentUpgradeableProxy).creationCode,
+        abi.encode(logic, address(initialOwner), data, false)
       );
   }
 
