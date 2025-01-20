@@ -108,6 +108,10 @@ abstract contract TransparentProxyFactoryBase is ITransparentProxyFactory {
     _proxyToAdmin[proxy] = _predictCreate1Address(proxy);
   }
 
+  /**
+   * @dev the prediction only depends on the address of the proxy.
+   * The admin is always the first and only contract deployed by the proxy.
+   */
   function _predictCreate1Address(address proxy) internal virtual returns (address) {
     return
       address(
