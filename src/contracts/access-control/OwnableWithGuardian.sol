@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.7.0;
 
+import {Ownable} from 'openzeppelin-contracts/contracts/access/Ownable.sol';
 import {IWithGuardian} from './interfaces/IWithGuardian.sol';
-import {Ownable} from '../oz-common/Ownable.sol';
 
 abstract contract OwnableWithGuardian is Ownable, IWithGuardian {
   address private _guardian;
 
-  constructor() {
+  constructor(address initialOwner) Ownable(initialOwner) {
     _updateGuardian(_msgSender());
   }
 
@@ -41,10 +41,11 @@ abstract contract OwnableWithGuardian is Ownable, IWithGuardian {
   }
 
   function _checkGuardian() internal view {
-    require(guardian() == _msgSender(), 'ONLY_BY_GUARDIAN');
+    if (guardian() != _msgSender()) revert OnlyGuardianInvalidCaller(_msgSender());
   }
 
   function _checkOwnerOrGuardian() internal view {
-    require(_msgSender() == owner() || _msgSender() == guardian(), 'ONLY_BY_OWNER_OR_GUARDIAN');
+    if (_msgSender() != owner() && _msgSender() != guardian())
+      revert OnlyGuardianOrOwnerInvalidCaller(_msgSender());
   }
 }
