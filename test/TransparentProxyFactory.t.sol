@@ -35,24 +35,26 @@ contract TestTransparentProxyFactory is Test {
     }
   }
 
-  function testCreateDeterministic(address admin, bytes32 salt) public {
+  function test_createDeterministicProxy(address initialOwner, bytes32 salt) public {
     // we know that this is covered at the ERC1967Upgrade
-    vm.assume(admin != address(0) && admin != address(this));
+    vm.assume(initialOwner != address(0) && initialOwner != address(this));
 
     uint256 FOO = 2;
     bytes memory data = abi.encodeWithSelector(mockImpl.initialize.selector, FOO);
 
     address predictedAddress1 = factory.predictCreateDeterministic(
       address(mockImpl),
-      admin,
+      initialOwner,
       data,
       salt
     );
 
-    address proxy1 = factory.createDeterministic(address(mockImpl), admin, data, salt);
+    address proxy1 = factory.createDeterministic(address(mockImpl), initialOwner, data, salt);
 
     assertEq(predictedAddress1, proxy1);
     assertEq(MockImpl(proxy1).getFoo(), FOO);
+    address proxyAdmin = factory.getProxyAdmin(proxy1);
+    assertEq(ProxyAdmin(proxyAdmin).owner(), initialOwner);
   }
 
   function testCreateDeterministicWithDeterministicProxy(
@@ -60,10 +62,7 @@ contract TestTransparentProxyFactory is Test {
     bytes32 proxySalt
   ) public {
     address owner = makeAddr('owner');
-    factory.predictCreateDeterministicProxyAdmin(proxyAdminSalt, owner);
-
     uint256 FOO = 2;
-
     bytes memory data = abi.encodeWithSelector(mockImpl.initialize.selector, FOO);
 
     address predictedAddress1 = factory.predictCreateDeterministic(
