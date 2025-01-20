@@ -14,6 +14,12 @@ import {ITransparentProxyFactory} from './interfaces/ITransparentProxyFactory.so
  * @dev Highly recommended to pass as `admin` on creation an OZ ProxyAdmin instance
  **/
 abstract contract TransparentProxyFactoryBase is ITransparentProxyFactory {
+  mapping(address proxy => address admin) internal _proxyToAdmin;
+
+  function getProxyAdmin(address proxy) external view returns (address) {
+    return _proxyToAdmin[proxy];
+  }
+
   /// @inheritdoc ITransparentProxyFactory
   function create(
     address logic,
@@ -21,8 +27,10 @@ abstract contract TransparentProxyFactoryBase is ITransparentProxyFactory {
     bytes calldata data
   ) external returns (address) {
     address proxy = address(new TransparentUpgradeableProxy(logic, adminOwner, data));
+    _storeProxyInRegistry(proxy);
 
     emit ProxyCreated(proxy, logic, address(adminOwner));
+
     return proxy;
   }
 
@@ -42,6 +50,7 @@ abstract contract TransparentProxyFactoryBase is ITransparentProxyFactory {
     bytes32 salt
   ) external returns (address) {
     address proxy = address(new TransparentUpgradeableProxy{salt: salt}(logic, adminOwner, data));
+    _storeProxyInRegistry(proxy);
 
     emit ProxyDeterministicCreated(proxy, logic, address(adminOwner), salt);
     return proxy;
@@ -94,4 +103,26 @@ abstract contract TransparentProxyFactoryBase is ITransparentProxyFactory {
     bytes memory creationCode,
     bytes memory constructorArgs
   ) internal pure virtual returns (address);
+
+  function _storeProxyInRegistry(address proxy) internal {
+    _proxyToAdmin[proxy] = _predictCreate1Address(proxy);
+  }
+
+  function _predictCreate1Address(address proxy) internal virtual returns (address) {
+    return
+      address(
+        uint160(
+          uint256(
+            keccak256(
+              abi.encodePacked(
+                bytes1(0xd6), // RLP prefix for a list with total length 22
+                bytes1(0x94), // RLP prefix for an address (20 bytes)
+                proxy, // 20-byte address
+                uint8(1) // 1-byte nonce
+              )
+            )
+          )
+        )
+      );
+  }
 }

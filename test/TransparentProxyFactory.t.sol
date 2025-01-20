@@ -17,6 +17,24 @@ contract TestTransparentProxyFactory is Test {
     mockImpl = new MockImpl();
   }
 
+  function test_createProxy() external {
+    address owner = makeAddr('admin');
+    uint256 FOO = 2;
+    bytes memory data = abi.encodeWithSelector(mockImpl.initialize.selector, FOO);
+    {
+      address proxy = factory.create(address(mockImpl), owner, data);
+
+      address proxyAdmin = factory.getProxyAdmin(proxy);
+      assertEq(ProxyAdmin(proxyAdmin).owner(), owner);
+    }
+    {
+      address proxy = factory.create(address(mockImpl), owner, data);
+
+      address proxyAdmin = factory.getProxyAdmin(proxy);
+      assertEq(ProxyAdmin(proxyAdmin).owner(), owner);
+    }
+  }
+
   function testCreateDeterministic(address admin, bytes32 salt) public {
     // we know that this is covered at the ERC1967Upgrade
     vm.assume(admin != address(0) && admin != address(this));
@@ -42,10 +60,7 @@ contract TestTransparentProxyFactory is Test {
     bytes32 proxySalt
   ) public {
     address owner = makeAddr('owner');
-    address deterministicProxyAdmin = factory.predictCreateDeterministicProxyAdmin(
-      proxyAdminSalt,
-      owner
-    );
+    factory.predictCreateDeterministicProxyAdmin(proxyAdminSalt, owner);
 
     uint256 FOO = 2;
 
