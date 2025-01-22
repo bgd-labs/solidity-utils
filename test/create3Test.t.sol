@@ -2,16 +2,15 @@
 pragma solidity ^0.8.0;
 
 import 'forge-std/Test.sol';
+import {Ownable} from 'openzeppelin-contracts/contracts/access/Ownable.sol';
 import {Create3Factory, ICreate3Factory, Create3} from '../src/contracts/create3/Create3Factory.sol';
-import {Ownable} from '../src/contracts/oz-common/Ownable.sol';
 
 contract MockContract is Ownable {
   address public immutable SOME_ADDRESS;
   address internal _someOtherAddress;
 
-  constructor(address someAddress, address owner) {
+  constructor(address someAddress, address owner) Ownable(owner) {
     SOME_ADDRESS = someAddress;
-    _transferOwnership(owner);
   }
 
   function getOtherAddress() external view returns (address) {
