@@ -105,14 +105,14 @@ abstract contract TransparentProxyFactoryBase is ITransparentProxyFactory {
   ) internal pure virtual returns (address);
 
   function _storeProxyInRegistry(address proxy) internal {
-    _proxyToAdmin[proxy] = _predictCreate1Address(proxy);
+    _proxyToAdmin[proxy] = _predictProxyAdminAddress(proxy);
   }
 
   /**
    * @dev the prediction only depends on the address of the proxy.
    * The admin is always the first and only contract deployed by the proxy.
    */
-  function _predictCreate1Address(address proxy) internal virtual returns (address) {
+  function _predictProxyAdminAddress(address proxy) internal pure virtual returns (address) {
     return
       address(
         uint160(

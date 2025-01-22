@@ -18,6 +18,7 @@ contract TransparentProxyFactoryZkSync is
 {
   /// @inheritdoc ITransparentProxyFactoryZkSync
   bytes32 public constant ZKSYNC_CREATE2_PREFIX = keccak256('zksyncCreate2');
+  bytes32 public constant ZKSYNC_CREATE_PREFIX = keccak256('zksyncCreate');
 
   function _predictCreate2Address(
     address sender,
@@ -56,5 +57,14 @@ contract TransparentProxyFactoryZkSync is
       mstore(result, length)
     }
     return result;
+  }
+
+  // on zksync nonces start with 0 https://docs.zksync.io/zksync-protocol/differences/nonces
+  function _predictProxyAdminAddress(address proxy) internal pure override returns (address) {
+    bytes32 addressHash = keccak256(
+      bytes.concat(ZKSYNC_CREATE_PREFIX, bytes32(uint256(uint160(proxy))), bytes32(uint256(0)))
+    );
+
+    return address(uint160(uint256(addressHash)));
   }
 }
