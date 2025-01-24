@@ -3,9 +3,8 @@ pragma solidity ^0.8.0;
 
 import 'forge-std/Test.sol';
 import {Ownable} from 'openzeppelin-contracts/contracts/access/Ownable.sol';
-import {ProxyAdmin} from '../src/contracts/transparent-proxy/ProxyAdmin.sol';
+import {ProxyAdmin} from 'openzeppelin-contracts/contracts/proxy/transparent/ProxyAdmin.sol';
 import {TransparentProxyFactory} from '../src/contracts/transparent-proxy/TransparentProxyFactory.sol';
-import {TransparentUpgradeableProxy} from '../src/contracts/transparent-proxy/TransparentUpgradeableProxy.sol';
 import {MockImpl} from '../src/mocks/MockImpl.sol';
 
 contract TestTransparentProxyFactory is Test {
@@ -17,24 +16,44 @@ contract TestTransparentProxyFactory is Test {
     mockImpl = new MockImpl();
   }
 
-  function testCreateDeterministic(address admin, bytes32 salt) public {
+  function test_createProxy() external {
+    address owner = makeAddr('admin');
+    uint256 FOO = 2;
+    bytes memory data = abi.encodeWithSelector(mockImpl.initialize.selector, FOO);
+    {
+      address proxy = factory.create(address(mockImpl), owner, data);
+
+      address proxyAdmin = factory.getProxyAdmin(proxy);
+      assertEq(ProxyAdmin(proxyAdmin).owner(), owner);
+    }
+    {
+      address proxy = factory.create(address(mockImpl), owner, data);
+
+      address proxyAdmin = factory.getProxyAdmin(proxy);
+      assertEq(ProxyAdmin(proxyAdmin).owner(), owner);
+    }
+  }
+
+  function test_createDeterministicProxy(address initialOwner, bytes32 salt) public {
     // we know that this is covered at the ERC1967Upgrade
-    vm.assume(admin != address(0) && admin != address(this));
+    vm.assume(initialOwner != address(0) && initialOwner != address(this));
 
     uint256 FOO = 2;
     bytes memory data = abi.encodeWithSelector(mockImpl.initialize.selector, FOO);
 
     address predictedAddress1 = factory.predictCreateDeterministic(
       address(mockImpl),
-      ProxyAdmin(admin),
+      initialOwner,
       data,
       salt
     );
 
-    address proxy1 = factory.createDeterministic(address(mockImpl), ProxyAdmin(admin), data, salt);
+    address proxy1 = factory.createDeterministic(address(mockImpl), initialOwner, data, salt);
 
     assertEq(predictedAddress1, proxy1);
     assertEq(MockImpl(proxy1).getFoo(), FOO);
+    address proxyAdmin = factory.getProxyAdmin(proxy1);
+    assertEq(ProxyAdmin(proxyAdmin).owner(), initialOwner);
   }
 
   function testCreateDeterministicWithDeterministicProxy(
@@ -42,28 +61,17 @@ contract TestTransparentProxyFactory is Test {
     bytes32 proxySalt
   ) public {
     address owner = makeAddr('owner');
-    address deterministicProxyAdmin = factory.predictCreateDeterministicProxyAdmin(
-      proxyAdminSalt,
-      owner
-    );
-
     uint256 FOO = 2;
-
     bytes memory data = abi.encodeWithSelector(mockImpl.initialize.selector, FOO);
 
     address predictedAddress1 = factory.predictCreateDeterministic(
       address(mockImpl),
-      ProxyAdmin(deterministicProxyAdmin),
+      owner,
       data,
       proxySalt
     );
 
-    address proxy1 = factory.createDeterministic(
-      address(mockImpl),
-      ProxyAdmin(deterministicProxyAdmin),
-      data,
-      proxySalt
-    );
+    address proxy1 = factory.createDeterministic(address(mockImpl), owner, data, proxySalt);
 
     assertEq(predictedAddress1, proxy1);
     assertEq(MockImpl(proxy1).getFoo(), FOO);
