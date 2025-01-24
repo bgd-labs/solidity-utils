@@ -29,7 +29,7 @@ abstract contract TransparentProxyFactoryBase is ITransparentProxyFactory {
     address proxy = address(new TransparentUpgradeableProxy(logic, adminOwner, data));
     _storeProxyInRegistry(proxy);
 
-    emit ProxyCreated(proxy, logic, address(adminOwner));
+    emit ProxyCreated(proxy, logic, adminOwner);
 
     return proxy;
   }
@@ -52,7 +52,7 @@ abstract contract TransparentProxyFactoryBase is ITransparentProxyFactory {
     address proxy = address(new TransparentUpgradeableProxy{salt: salt}(logic, adminOwner, data));
     _storeProxyInRegistry(proxy);
 
-    emit ProxyDeterministicCreated(proxy, logic, address(adminOwner), salt);
+    emit ProxyDeterministicCreated(proxy, logic, adminOwner, salt);
     return proxy;
   }
 
