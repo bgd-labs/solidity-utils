@@ -9,62 +9,54 @@ remappings = []
 optimizer = true
 optimizer_runs = 200
 solc = '0.8.27'
+bytecode_hash = 'none'
 
 [profile.zksync]
 src = 'zksync/src'
 test = 'zksync/test'
 script = 'zksync/script'
 libs = ['lib']
-solc = '0.8.24'
+solc = '0.8.27'
 evm_version = 'cancun'
 optimizer = true
 optimizer_runs = 200
+bytecode_hash = 'none'
 
 [profile.zksync.zksync]
 fallback_oz = true
 mode = "3"
-zksolc = "1.5.4"
+zksolc = "1.5.10"
+
+[profile.linea]
+evm_version = 'london'
 
 # See more config options https://github.com/gakonst/foundry/tree/master/config
 [rpc_endpoints]
-ethereum = "${RPC_MAINNET}"
-ethereum-testnet = "${RPC_MAINNET_TESTNET}"
+### foundry toml ###
+mainnet = "${RPC_MAINNET}"
 polygon = "${RPC_POLYGON}"
-polygon-testnet = "${RPC_POLYGON_TESTNET}"
-arbitrum = "${RPC_ARBITRUM}"
-arbitrum-testnet = "${RPC_ARBITRUM_TESTNET}"
-metis = "${RPC_METIS}"
-metis-testnet = "${RPC_METIS_TESTNET}"
+polygon_amoy = "${RPC_POLYGON_AMOY}"
 avalanche = "${RPC_AVALANCHE}"
-avalanche-testnet = "${RPC_AVALANCHE_TESTNET}"
-optimism = "${RPC_OPTIMISM}"
-optimism-testnet = "${RPC_OPTIMISM_TESTNET}"
+avalanche_fuji = "${RPC_AVALANCHE_FUJI}"
+arbitrum = "${RPC_ARBITRUM}"
+arbitrum_sepolia = "${RPC_ARBITRUM_SEPOLIA}"
 fantom = "${RPC_FANTOM}"
-fantom-testnet = "${RPC_FANTOM_TESTNET}"
-binance = "${RPC_BINANCE}"
-binance-testnet = "${RPC_BINANCE_TESTNET}"
+fantom_testnet = "${RPC_FANTOM_TESTNET}"
+optimism = "${RPC_OPTIMISM}"
+optimism_sepolia = "${RPC_OPTIMISM_SEPOLIA}"
+harmony = "${RPC_HARMONY}"
+sepolia = "${RPC_SEPOLIA}"
+scroll = "${RPC_SCROLL}"
+scroll_sepolia = "${RPC_SCROLL_SEPOLIA}"
+metis = "${RPC_METIS}"
+base = "${RPC_BASE}"
+base_sepolia = "${RPC_BASE_SEPOLIA}"
+bnb = "${RPC_BNB}"
+gnosis = "${RPC_GNOSIS}"
+zkEVM = "${RPC_ZKEVM}"
+celo = "${RPC_CELO}"
 zksync = "${RPC_ZKSYNC}"
-zksync-testnet = "${RPC_ZKSYNC_TESTNET}"
-
-[etherscan]
-ethereum = { key = "${ETHERSCAN_API_KEY_MAINNET}", chain = 1 }
-ethereum-testnet = { key = "${ETHERSCAN_API_KEY_MAINNET}", chain = 1 }
-optimism = { key = "${ETHERSCAN_API_KEY_OPTIMISM}", chain = 10 }
-optimism-testnet = { key = "${ETHERSCAN_API_KEY_OPTIMISM}", chain = 10 }
-avalanche = { key = "${ETHERSCAN_API_KEY_AVALANCHE}", chain = 43114 }
-avalanche-testnet = { key = "${ETHERSCAN_API_KEY_AVALANCHE}", chain = 43114 }
-polygon = { key = "${ETHERSCAN_API_KEY_POLYGON}", chain = 137 }
-polygon-testnet = { key = "${ETHERSCAN_API_KEY_POLYGON}", chain = 137 }
-arbitrum = { key = "${ETHERSCAN_API_KEY_ARBITRUM}", chain = 42161 }
-arbitrum-testnet = { key = "${ETHERSCAN_API_KEY_ARBITRUM}", chain = 42161 }
-metis = { key = "any", chain = 1088, url = 'https://andromeda-explorer.metis.io/' }
-metis-testnet = { key = "any", chain = 599, url = 'https://goerli.explorer.metisdevops.link/' }
-fantom = { key = "${ETHERSCAN_API_KEY_FANTOM}", chain = 250 }
-fantom-testnet = { key = "${ETHERSCAN_API_KEY_FANTOM}", chain = 250 }
-binance = { key = "${ETHERSCAN_API_KEY_BINANCE}", chain = 56 }
-binance-testnet = { key = "${ETHERSCAN_API_KEY_BINANCE}", chain = 56 }
-zksync = { key = "${ETHERSCAN_API_KEY_ZKSYNC}", chain = 324 }
-zksync-testnet = { key = "${ETHERSCAN_API_KEY_ZKSYNC}", chain = 300, url = 'https://api-sepolia-era.zksync.network/api' }
+linea = "${RPC_LINEA}"
 
 [fuzz]
 no_zksync_reserved_addresses = true
