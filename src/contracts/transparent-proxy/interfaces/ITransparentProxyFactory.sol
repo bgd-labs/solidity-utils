@@ -2,17 +2,17 @@
 pragma solidity >=0.8.0;
 
 interface ITransparentProxyFactory {
-  event ProxyCreated(address proxy, address indexed logic, address indexed proxyAdmin);
-  event ProxyAdminCreated(address proxyAdmin, address indexed adminOwner);
+  event ProxyCreated(address proxy, address indexed logic, address indexed initialOwner);
+  event ProxyAdminCreated(address proxyAdmin, address indexed initialOwner);
   event ProxyDeterministicCreated(
     address proxy,
     address indexed logic,
-    address indexed admin,
+    address indexed initialOwner,
     bytes32 indexed salt
   );
   event ProxyAdminDeterministicCreated(
     address proxyAdmin,
-    address indexed adminOwner,
+    address indexed initialOwner,
     bytes32 indexed salt
   );
 
@@ -35,10 +35,10 @@ interface ITransparentProxyFactory {
   /**
    * @notice Creates a proxyAdmin instance, and transfers ownership to provided owner
    * @dev Version using CREATE
-   * @param adminOwner The owner of the proxyAdmin deployed.
+   * @param initialOwner The initial owner of the proxyAdmin deployed.
    * @return address The address of the proxyAdmin deployed
    **/
-  function createProxyAdmin(address adminOwner) external returns (address);
+  function createProxyAdmin(address initialOwner) external returns (address);
 
   /**
    * @notice Creates a transparent proxy instance, doing the first initialization in construction
