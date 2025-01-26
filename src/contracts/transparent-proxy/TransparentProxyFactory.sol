@@ -9,7 +9,6 @@ import {TransparentProxyFactoryBase} from './TransparentProxyFactoryBase.sol';
  * @notice Factory contract to create transparent proxies, both with CREATE and CREATE2
  * @dev `create()` and `createDeterministic()` are not unified for clearer interface, and at the same
  * time allowing `createDeterministic()` with salt == 0
- * @dev Highly recommended to pass as `admin` on creation an OZ ProxyAdmin instance
  **/
 contract TransparentProxyFactory is TransparentProxyFactoryBase {
   function _predictCreate2Address(
