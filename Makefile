@@ -44,4 +44,4 @@ endef
 deploy-create3-factory:
 	$(call deploy_fn,DeployCreate3Factory,ethereum avalanche polygon optimism arbitrum binance base metis,DeployCreate3Factory)
 deploy-proxy-factory:
-	$(call deploy_fn,DeployTransparentProxyFactory,linea,DeployTransparentProxyFactory)
+	$(call deploy_fn,DeployTransparentProxyFactory,sonic mantle,DeployTransparentProxyFactory)
