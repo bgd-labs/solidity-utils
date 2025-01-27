@@ -25,16 +25,6 @@ abstract contract UpgradeableOwnableWithGuardian is OwnableUpgradeable, IWithGua
   }
 
   /**
-   * @dev The caller account is not authorized to perform an operation.
-   */
-  error OnlyGuardianInvalidCaller(address account);
-
-  /**
-   * @dev The caller account is not authorized to perform an operation.
-   */
-  error OnlyGuardianOrOwnerInvalidCaller(address account);
-
-  /**
    * @dev Initializes the contract setting the address provided by the deployer as the initial owner.
    */
   function __Ownable_With_Guardian_init(address initialGuardian) internal onlyInitializing {

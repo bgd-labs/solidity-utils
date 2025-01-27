@@ -2,9 +2,11 @@
 pragma solidity ^0.8.0;
 
 import 'forge-std/Test.sol';
-import {OwnableWithGuardian} from '../src/contracts/access-control/OwnableWithGuardian.sol';
+import {OwnableWithGuardian, IWithGuardian} from '../src/contracts/access-control/OwnableWithGuardian.sol';
 
 contract ImplOwnableWithGuardian is OwnableWithGuardian {
+  constructor(address initialOwner) OwnableWithGuardian(initialOwner) {}
+
   function mock_onlyGuardian() external onlyGuardian {}
 
   function mock_onlyOwnerOrGuardian() external onlyOwnerOrGuardian {}
@@ -17,7 +19,7 @@ contract TestOfOwnableWithGuardian is Test {
   address guardian = makeAddr('guardian');
 
   function setUp() public {
-    withGuardian = new ImplOwnableWithGuardian();
+    withGuardian = new ImplOwnableWithGuardian(address(this));
     assertEq(withGuardian.owner(), address(this));
     assertEq(withGuardian.guardian(), address(this));
     withGuardian.transferOwnership(owner);
@@ -40,7 +42,9 @@ contract TestOfOwnableWithGuardian is Test {
   }
 
   function testGuardianUpdateNoAccess() external {
-    vm.expectRevert('ONLY_BY_OWNER_OR_GUARDIAN');
+    vm.expectRevert(
+      abi.encodeWithSelector(IWithGuardian.OnlyGuardianOrOwnerInvalidCaller.selector, address(this))
+    );
     withGuardian.updateGuardian(guardian);
   }
 
@@ -50,7 +54,9 @@ contract TestOfOwnableWithGuardian is Test {
   }
 
   function test_onlyGuardianGuard_shouldRevert() external {
-    vm.expectRevert('ONLY_BY_GUARDIAN');
+    vm.expectRevert(
+      abi.encodeWithSelector(IWithGuardian.OnlyGuardianInvalidCaller.selector, address(this))
+    );
     withGuardian.mock_onlyGuardian();
   }
 }
