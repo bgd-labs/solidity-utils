@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {Initializable} from '../contracts/transparent-proxy/Initializable.sol';
+import {Initializable} from 'openzeppelin-contracts/contracts/proxy/utils/Initializable.sol';
 
 contract MockImpl is Initializable {
   uint256 public _foo;
