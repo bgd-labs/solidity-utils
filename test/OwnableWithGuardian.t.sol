@@ -5,7 +5,7 @@ import 'forge-std/Test.sol';
 import {OwnableWithGuardian, IWithGuardian} from '../src/contracts/access-control/OwnableWithGuardian.sol';
 
 contract ImplOwnableWithGuardian is OwnableWithGuardian {
-  constructor(address initialOwner) OwnableWithGuardian(initialOwner) {}
+  constructor(address initialOwner, address guardian) OwnableWithGuardian(initialOwner, guardian) {}
 
   function mock_onlyGuardian() external onlyGuardian {}
 
@@ -19,7 +19,7 @@ contract TestOfOwnableWithGuardian is Test {
   address guardian = makeAddr('guardian');
 
   function setUp() public {
-    withGuardian = new ImplOwnableWithGuardian(address(this));
+    withGuardian = new ImplOwnableWithGuardian(address(this), address(this));
     assertEq(withGuardian.owner(), address(this));
     assertEq(withGuardian.guardian(), address(this));
     withGuardian.transferOwnership(owner);

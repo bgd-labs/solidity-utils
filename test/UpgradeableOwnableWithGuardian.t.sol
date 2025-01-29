@@ -6,8 +6,7 @@ import {UpgradeableOwnableWithGuardian, IWithGuardian} from '../src/contracts/ac
 
 contract ImplOwnableWithGuardian is UpgradeableOwnableWithGuardian {
   function initialize(address owner, address guardian) public initializer {
-    __Ownable_init(owner);
-    __Ownable_With_Guardian_init(guardian);
+    __Ownable_With_Guardian_init(owner, guardian);
   }
 
   function mock_onlyGuardian() external onlyGuardian {}
