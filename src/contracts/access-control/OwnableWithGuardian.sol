@@ -7,8 +7,8 @@ import {IWithGuardian} from './interfaces/IWithGuardian.sol';
 abstract contract OwnableWithGuardian is Ownable, IWithGuardian {
   address private _guardian;
 
-  constructor(address initialOwner) Ownable(initialOwner) {
-    _updateGuardian(_msgSender());
+  constructor(address initialOwner, address initialGuardian) Ownable(initialOwner) {
+    _updateGuardian(initialGuardian);
   }
 
   modifier onlyGuardian() {

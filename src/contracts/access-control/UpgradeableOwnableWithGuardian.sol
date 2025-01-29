@@ -25,9 +25,21 @@ abstract contract UpgradeableOwnableWithGuardian is OwnableUpgradeable, IWithGua
   }
 
   /**
-   * @dev Initializes the contract setting the address provided by the deployer as the initial owner.
+   * @dev Initializes the contract setting the address provided by the deployer as the initial owner & guardian.
+   * @param initialOwner The address of the initial owner
+   * @param initialGuardian The address of the initial guardian
    */
-  function __Ownable_With_Guardian_init(address initialGuardian) internal onlyInitializing {
+  function __Ownable_With_Guardian_init(
+    address initialOwner,
+    address initialGuardian
+  ) internal onlyInitializing {
+    __Ownable_init_unchained(initialOwner);
+    __Ownable_With_Guardian_init_unchained(initialGuardian);
+  }
+
+  function __Ownable_With_Guardian_init_unchained(
+    address initialGuardian
+  ) internal onlyInitializing {
     _updateGuardian(initialGuardian);
   }
 
