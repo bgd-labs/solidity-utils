@@ -96,4 +96,11 @@ interface ITransparentProxyFactory {
     bytes32 salt,
     address initialOwner
   ) external view returns (address);
+
+  /**
+   * @notice Returns the address of the `ProxyAdmin` associated with a given transparent proxy.
+   * @param proxy Address of the transparent proxy
+   * @return address Address of the `ProxyAdmin` that was deployed when the proxy was created
+   */
+  function getProxyAdmin(address proxy) external view returns (address);
 }
