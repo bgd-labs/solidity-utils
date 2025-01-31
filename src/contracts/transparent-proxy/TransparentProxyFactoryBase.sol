@@ -15,6 +15,7 @@ import {ITransparentProxyFactory} from './interfaces/ITransparentProxyFactory.so
 abstract contract TransparentProxyFactoryBase is ITransparentProxyFactory {
   mapping(address proxy => address admin) internal _proxyToAdmin;
 
+  /// @inheritdoc ITransparentProxyFactory
   function getProxyAdmin(address proxy) external view returns (address) {
     return _proxyToAdmin[proxy];
   }
