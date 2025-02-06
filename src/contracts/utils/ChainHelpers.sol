@@ -22,6 +22,8 @@ library ChainIds {
   uint256 internal constant CELO = 42220;
   uint256 internal constant POLYGON_ZK_EVM = 1101;
   uint256 internal constant LINEA = 59144;
+  uint256 internal constant SONIC = 146;
+  uint256 internal constant MANTLE = 5000;
 }
 
 library TestNetChainIds {
@@ -40,6 +42,8 @@ library TestNetChainIds {
   uint256 internal constant ARBITRUM_SEPOLIA = 421614;
   uint256 internal constant ZKSYNC_SEPOLIA = 300;
   uint256 internal constant LINEA_SEPOLIA = 59141;
+  uint256 internal constant SONIC_BLAZE = 57054;
+  uint256 internal constant MANTLE_SEPOLIA = 5003;
 }
 
 library ChainHelpers {
@@ -83,6 +87,10 @@ library ChainHelpers {
       newFork = vm.createSelectFork(vm.rpcUrl('zksync'));
     } else if (chainId == ChainIds.LINEA) {
       newFork = vm.createSelectFork(vm.rpcUrl('linea'));
+    } else if (chainId == ChainIds.SONIC) {
+      newFork = vm.createSelectFork(vm.rpcUrl('sonic'));
+    } else if (chainId == ChainIds.MANTLE) {
+      newFork = vm.createSelectFork(vm.rpcUrl('mantle'));
     } else {
       revert UnknownChainId();
     }
@@ -119,6 +127,10 @@ library ChainHelpers {
       networkName = 'zksync';
     } else if (chainId == ChainIds.LINEA) {
       networkName = 'linea';
+    } else if (chainId == ChainIds.SONIC) {
+      networkName = 'sonic';
+    } else if (chainId == ChainIds.MANTLE) {
+      networkName = 'mantle';
     }
     // testnets
     else if (chainId == TestNetChainIds.ETHEREUM_SEPOLIA) {
@@ -147,6 +159,10 @@ library ChainHelpers {
       networkName = 'zksync_sepolia';
     } else if (chainId == TestNetChainIds.LINEA_SEPOLIA) {
       networkName = 'linea_sepolia';
+    } else if (chainId == TestNetChainIds.SONIC_BLAZE) {
+      networkName = 'sonic_blaze';
+    } else if (chainId == TestNetChainIds.MANTLE_SEPOLIA) {
+      networkName = 'mantle_sepolia';
     } else {
       revert('chain id is not supported');
     }
