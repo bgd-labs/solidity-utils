@@ -8,7 +8,11 @@ library Create2UtilsZkSync {
   address public constant CREATE2_FACTORY = 0x0000000000000000000000000000000000010000;
 
   // @dev the bytecodeHash is the unsanitized input we get via `type(Contract).creationCode`
-  function create2Deploy(bytes32 salt, bytes memory bytecodeHash, bytes memory arguments) internal returns (address) {
+  function create2Deploy(
+    bytes32 salt,
+    bytes memory bytecodeHash,
+    bytes memory arguments
+  ) internal returns (address) {
     return create2Deploy(salt, bytes32(sliceBytes(bytecodeHash, 36, 32)), arguments);
   }
 
@@ -30,11 +34,7 @@ library Create2UtilsZkSync {
     if (isContractDeployed(computed)) {
       return computed;
     } else {
-      address deployedAt = ICreate2Factory(CREATE2_FACTORY).create2(
-        salt,
-        bytecodeHash,
-        arguments
-      );
+      address deployedAt = ICreate2Factory(CREATE2_FACTORY).create2(salt, bytecodeHash, arguments);
 
       require(deployedAt == computed, 'failure at create2 address derivation');
       return deployedAt;
@@ -50,11 +50,7 @@ library Create2UtilsZkSync {
     if (isContractDeployed(computed)) {
       return computed;
     } else {
-      address deployedAt = ICreate2Factory(CREATE2_FACTORY).create2(
-        salt,
-        bytecodeHash,
-        ''
-      );
+      address deployedAt = ICreate2Factory(CREATE2_FACTORY).create2(salt, bytecodeHash, '');
 
       require(deployedAt == computed, 'failure at create2 address derivation');
       return deployedAt;
@@ -90,7 +86,11 @@ library Create2UtilsZkSync {
     return (_addr.code.length > 0);
   }
 
-  function sliceBytes(bytes memory data, uint256 start, uint256 length) internal pure returns (bytes memory) {
+  function sliceBytes(
+    bytes memory data,
+    uint256 start,
+    uint256 length
+  ) internal pure returns (bytes memory) {
     require(start + length <= data.length, 'Slice out of bounds');
     bytes memory result = new bytes(length);
 
@@ -102,7 +102,11 @@ library Create2UtilsZkSync {
       let words := div(add(length, 31), 32)
       let srcPtr := add(dataPtr, start)
 
-      for { let i := 0 } lt(i, words) { i := add(i, 1) } {
+      for {
+        let i := 0
+      } lt(i, words) {
+        i := add(i, 1)
+      } {
         mstore(add(resultPtr, mul(i, 32)), mload(add(srcPtr, mul(i, 32))))
       }
 

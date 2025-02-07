@@ -10,7 +10,6 @@ import {Rescuable} from './Rescuable.sol';
  * @notice abstract contract that extend Rescuable with the methods to rescue ERC721 tokens from a contract
  */
 abstract contract Rescuable721 is Rescuable, IRescuable721 {
-
   /// @inheritdoc IRescuable721
   function emergency721TokenTransfer(
     address erc721Token,

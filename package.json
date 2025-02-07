@@ -7,8 +7,8 @@
     "test": "tests"
   },
   "scripts": {
-    "lint": "prettier ./",
-    "lint:fix": "npm run lint -- --write",
+    "lint": "prettier . --check",
+    "lint:fix": "prettier . --write",
     "ci:publish": "npm publish --access=public"
   },
   "repository": {
