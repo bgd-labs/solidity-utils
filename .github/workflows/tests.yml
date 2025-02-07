@@ -17,20 +17,3 @@ jobs:
     uses: bgd-labs/github-workflows/.github/workflows/foundry-test.yml@main
   test-zk:
     uses: bgd-labs/github-workflows/.github/workflows/foundry-test-zk.yml@main
-  merge:
-    name: Merge artifacts
-    runs-on: ubuntu-latest
-    needs: [test, test-zk]
-    if: always()
-    steps:
-      - uses: actions/upload-artifact/merge@v4
-        with:
-          # The name of the artifact that the artifacts will be merged into
-          # Optional. Default is 'merged-artifacts'
-          name: 'content'
-
-          # A glob pattern matching the artifacts that should be merged.
-          # Optional. Default is '*'
-          pattern: 'content*'
-
-          delete-merged: true
