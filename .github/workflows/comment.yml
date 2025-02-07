@@ -12,7 +12,6 @@ permissions:
   checks: read
   statuses: read
   pull-requests: write
-  content: write
 
 jobs:
   comment:
