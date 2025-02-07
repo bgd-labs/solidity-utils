@@ -17,3 +17,17 @@ jobs:
     uses: bgd-labs/github-workflows/.github/workflows/foundry-test.yml@feat/better-sharable-actions
   test-zk:
     uses: bgd-labs/github-workflows/.github/workflows/foundry-test-zk.yml@feat/better-sharable-actions
+  merge:
+    name: Merge artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/upload-artifact/merge@v4
+        if: always()
+        with:
+          # The name of the artifact that the artifacts will be merged into
+          # Optional. Default is 'merged-artifacts'
+          name: 'content'
+
+          # A glob pattern matching the artifacts that should be merged.
+          # Optional. Default is '*'
+          pattern: 'content*'
