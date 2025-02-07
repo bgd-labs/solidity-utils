@@ -1,7 +1,7 @@
 name: Test
 
 concurrency:
-  group: ${{ github.workflow }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 on:
@@ -11,46 +11,9 @@ on:
       - main
 
 jobs:
+  lint:
+    uses: bgd-labs/github-workflows/.github/workflows/foundry-lint-prettier.yml@feat/better-sharable-actions
   test:
-    name: Foundry build n test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      - uses: bgd-labs/action-rpc-env@main
-        with:
-          ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY }}
-
-      # we simply use foundry zk for all jobs in this repo
-      - name: Run Foundry setup
-        uses: bgd-labs/github-workflows/.github/actions/foundry-setup@main
-        with:
-          ZKSYNC: 'true'
-
-      - name: Run Forge tests
-        id: test
-        uses: bgd-labs/github-workflows/.github/actions/foundry-test@main
-
-      - name: Run ZK tests
-        id: zktest
-        uses: bgd-labs/github-workflows/.github/actions/foundry-test@main
-        with:
-          ZKSYNC: true
-
-      - name: Run Gas report
-        uses: bgd-labs/github-workflows/.github/actions/foundry-gas-report@main
-
-      - name: Run Lcov report
-        uses: bgd-labs/github-workflows/.github/actions/foundry-lcov-report@main
-
-      - name: Run Forge tests
-        uses: bgd-labs/github-workflows/.github/actions/comment-artifact@main
-
-      # we let failing tests pass so we can log them in the comment, still we want the ci to fail
-      - name: Post test
-        if: ${{ steps.test.outputs.testStatus != 0 || steps.zktest.outputs.testStatus != 0 }}
-        run: |
-          echo "tests failed"
-          exit 1
+    uses: bgd-labs/github-workflows/.github/workflows/foundry-test.yml@feat/better-sharable-actions
+  test-zk:
+    uses: bgd-labs/github-workflows/.github/workflows/foundry-test-zk.yml@feat/better-sharable-actions
