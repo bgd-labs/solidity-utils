@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 /**
  * @title A library for deploying contracts EIP-3171 style.
  * @author BGD Labs
-*/
+ */
 library Create3 {
   error ErrorCreatingProxy();
   error ErrorCreatingContract();
@@ -59,10 +59,7 @@ library Create3 {
    * @param creationCode Creation code (constructor) of the contract to be deployed, this value doesn't affect the resulting address
    * @return address of the deployed contract, reverts on error
    */
-  function create3(
-    bytes32 salt,
-    bytes memory creationCode
-  ) internal returns (address) {
+  function create3(bytes32 salt, bytes memory creationCode) internal returns (address) {
     return create3(salt, creationCode, 0);
   }
 
@@ -88,12 +85,7 @@ library Create3 {
     // Create CREATE2 proxy
     address proxy;
     assembly {
-      proxy := create2(
-        value,
-        add(proxyCreationCode, 32),
-        mload(proxyCreationCode),
-        salt
-      )
+      proxy := create2(value, add(proxyCreationCode, 32), mload(proxyCreationCode), salt)
     }
     if (proxy == address(0)) revert ErrorCreatingProxy();
 
@@ -128,22 +120,12 @@ library Create3 {
       uint160(
         uint256(
           keccak256(
-            abi.encodePacked(
-              hex'ff',
-              preDeployedFactory,
-              salt,
-              KECCAK256_PROXY_CHILD_BYTECODE
-            )
+            abi.encodePacked(hex'ff', preDeployedFactory, salt, KECCAK256_PROXY_CHILD_BYTECODE)
           )
         )
       )
     );
 
-    return
-      address(
-        uint160(
-          uint256(keccak256(abi.encodePacked(hex'd6_94', proxy, hex'01')))
-        )
-      );
+    return address(uint160(uint256(keccak256(abi.encodePacked(hex'd6_94', proxy, hex'01')))));
   }
 }

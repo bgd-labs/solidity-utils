@@ -15,10 +15,7 @@ interface ICreate3Factory {
    * @param creationCode The creation code of the contract to deploy
    * @return The address of the deployed contract
    */
-  function create(
-    bytes32 salt,
-    bytes memory creationCode
-  ) external payable returns (address);
+  function create(bytes32 salt, bytes memory creationCode) external payable returns (address);
 
   /**
    * @notice Predicts the address of a deployed contract
@@ -27,8 +24,5 @@ interface ICreate3Factory {
    * @param salt The deployer-specific salt for determining the deployed contract's address
    * @return The address of the contract that will be deployed
    */
-  function predictAddress(
-    address deployer,
-    bytes32 salt
-  ) external view returns (address);
+  function predictAddress(address deployer, bytes32 salt) external view returns (address);
 }
