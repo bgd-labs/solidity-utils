@@ -12,11 +12,11 @@ on:
 
 jobs:
   lint:
-    uses: bgd-labs/github-workflows/.github/workflows/foundry-lint-prettier.yml@feat/better-sharable-actions
+    uses: bgd-labs/github-workflows/.github/workflows/foundry-lint-prettier.yml@main
   test:
-    uses: bgd-labs/github-workflows/.github/workflows/foundry-test.yml@feat/better-sharable-actions
+    uses: bgd-labs/github-workflows/.github/workflows/foundry-test.yml@main
   # test-zk:
-  #   uses: bgd-labs/github-workflows/.github/workflows/foundry-test-zk.yml@feat/better-sharable-actions
+  #   uses: bgd-labs/github-workflows/.github/workflows/foundry-test-zk.yml@main
   # merge:
   #   name: Merge artifacts
   #   runs-on: ubuntu-latest
