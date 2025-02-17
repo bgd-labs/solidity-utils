@@ -79,6 +79,22 @@ abstract contract LineaScript is WithChainIdValidation {
   constructor() WithChainIdValidation(ChainIds.LINEA) {}
 }
 
+abstract contract CeloScript is WithChainIdValidation {
+  constructor() WithChainIdValidation(ChainIds.CELO) {}
+}
+
+abstract contract SonicScript is WithChainIdValidation {
+  constructor() WithChainIdValidation(ChainIds.SONIC) {}
+}
+
+abstract contract InkScript is WithChainIdValidation {
+  constructor() WithChainIdValidation(ChainIds.INK) {}
+}
+
+abstract contract MantleScript is WithChainIdValidation {
+  constructor() WithChainIdValidation(ChainIds.MANTLE) {}
+}
+
 abstract contract SepoliaScript is WithChainIdValidation {
   constructor() WithChainIdValidation(ChainIds.SEPOLIA) {}
 }
