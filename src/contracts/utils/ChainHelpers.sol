@@ -24,6 +24,7 @@ library ChainIds {
   uint256 internal constant LINEA = 59144;
   uint256 internal constant SONIC = 146;
   uint256 internal constant MANTLE = 5000;
+  uint256 internal constant INK = 57073;
 }
 
 library TestNetChainIds {
@@ -87,10 +88,14 @@ library ChainHelpers {
       newFork = vm.createSelectFork(vm.rpcUrl('zksync'));
     } else if (chainId == ChainIds.LINEA) {
       newFork = vm.createSelectFork(vm.rpcUrl('linea'));
+    } else if (chainId == ChainIds.CELO) {
+      newFork = vm.createSelectFork(vm.rpcUrl('celo'));
     } else if (chainId == ChainIds.SONIC) {
       newFork = vm.createSelectFork(vm.rpcUrl('sonic'));
     } else if (chainId == ChainIds.MANTLE) {
       newFork = vm.createSelectFork(vm.rpcUrl('mantle'));
+    } else if (chainId == ChainIds.INK) {
+      newFork = vm.createSelectFork(vm.rpcUrl('ink'));
     } else {
       revert UnknownChainId();
     }
@@ -131,6 +136,8 @@ library ChainHelpers {
       networkName = 'sonic';
     } else if (chainId == ChainIds.MANTLE) {
       networkName = 'mantle';
+    } else if (chainId == ChainIds.INK) {
+      networkName = 'ink';
     }
     // testnets
     else if (chainId == TestNetChainIds.ETHEREUM_SEPOLIA) {
