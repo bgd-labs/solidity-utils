@@ -5,7 +5,7 @@ import 'forge-std/Test.sol';
 
 import {IERC20} from 'openzeppelin-contracts/contracts/token/ERC20/IERC20.sol';
 import {Address} from 'openzeppelin-contracts/contracts/utils/Address.sol';
-import {ERC20} from '../src/mocks/ERC20.sol';
+import {ERC20} from './mocks/ERC20.sol';
 import {Rescuable as AbstractRescuable, IRescuable} from '../src/contracts/utils/Rescuable.sol';
 import {RescuableBase, IRescuableBase} from '../src/contracts/utils/RescuableBase.sol';
 

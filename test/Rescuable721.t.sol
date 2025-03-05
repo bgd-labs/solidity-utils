@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import 'forge-std/Test.sol';
 import {Address} from 'openzeppelin-contracts/contracts/utils/Address.sol';
-import {MockERC721, ERC721} from '../src/mocks/ERC721.sol';
+import {MockERC721, ERC721} from './mocks/ERC721.sol';
 import {Rescuable721 as AbstractRescuable721} from '../src/contracts/utils/Rescuable721.sol';
 import {RescuableBase, IRescuableBase} from '../src/contracts/utils/RescuableBase.sol';
 

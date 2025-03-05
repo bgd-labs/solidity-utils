@@ -5,7 +5,7 @@ import {Test} from 'forge-std/Test.sol';
 import {TransparentUpgradeableProxy, ProxyAdmin} from 'openzeppelin-contracts/contracts/proxy/transparent/TransparentUpgradeableProxy.sol';
 import {Ownable} from 'openzeppelin-contracts/contracts/access/Ownable.sol';
 import {TransparentProxyFactoryZkSync} from '../src/contracts/transparent-proxy/TransparentProxyFactoryZkSync.sol';
-import {MockImpl} from '../../src/mocks/MockImpl.sol';
+import {MockImpl} from '../../test/mocks/MockImpl.sol';
 
 contract TestTransparentProxyFactoryZkSync is Test {
   TransparentProxyFactoryZkSync internal factory;
