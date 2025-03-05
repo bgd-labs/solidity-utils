@@ -1,7 +1,13 @@
 {
   "name": "@bgd-labs/solidity-utils",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Common contracts we use almost everywhere",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "src"
+  ],
   "directories": {
     "lib": "lib",
     "test": "tests"
@@ -9,7 +15,9 @@
   "scripts": {
     "lint": "prettier . --check",
     "lint:fix": "prettier . --write",
-    "ci:publish": "npm publish --access=public"
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "changeset publish"
   },
   "repository": {
     "type": "git",
@@ -23,7 +31,12 @@
   },
   "homepage": "https://github.com/bgd-labs/solidity-utils#readme",
   "devDependencies": {
+    "@changesets/cli": "^2.28.1",
     "prettier": "^2.8.3",
     "prettier-plugin-solidity": "^1.1.1"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.1.0",
+    "@openzeppelin/contracts-upgradeable": "^5.1.0"
   }
 }
