@@ -15,6 +15,7 @@ deploy-avalanche :; forge script script/DeployTransparentProxyFactory.s.sol:Depl
 deploy-optimism :; forge script script/DeployTransparentProxyFactory.s.sol:DeployOptimism --rpc-url optimism --broadcast --legacy --ledger --mnemonic-indexes ${MNEMONIC_INDEX} --sender ${LEDGER_SENDER} --verify -vvvv
 deploy-arbitrum :; forge script script/DeployTransparentProxyFactory.s.sol:DeployArbitrum --rpc-url arbitrum --broadcast --legacy --ledger --mnemonic-indexes ${MNEMONIC_INDEX} --sender ${LEDGER_SENDER} --verify -vvvv
 deploy-zksync	:; FOUNDRY_PROFILE=zksync forge script zksync/script/DeployTransparentProxyFactoryZkSync.s.sol:DeployZkSync --zksync --system-mode=true --rpc-url zksync --broadcast --ledger --mnemonic-indexes ${MNEMONIC_INDEX} --sender ${LEDGER_SENDER} --verify -vvvv
+deploy-ink :; forge script script/DeployTransparentProxyFactory.s.sol:DeployTransparentProxyFactory --rpc-url ink --broadcast --ledger --mnemonic-indexes ${MNEMONIC_INDEX} --sender ${LEDGER_SENDER} --verify -vvvv
 
 # ---------------------------------------------- BASE SCRIPT CONFIGURATION ---------------------------------------------
 
