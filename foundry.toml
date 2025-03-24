@@ -6,6 +6,10 @@ out = 'out'
 libs = ['lib']
 evm_version = 'shanghai'
 remappings = []
+bytecode_hash = 'none'
+optimizer = true
+optimizer_runs = 200
+solc = '0.8.20'
 
 [profile.zksync]
 src = 'zksync/src'
