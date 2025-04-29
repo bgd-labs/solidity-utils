@@ -143,7 +143,7 @@ library ChainHelpers {
     } else if (chainId == ChainIds.INK) {
       networkName = 'ink';
     } else if (chainId == ChainIds.SONEIUM) {
-      networkName = 'sonium';
+      networkName = 'soneium';
     }
     // testnets
     else if (chainId == TestNetChainIds.ETHEREUM_SEPOLIA) {
