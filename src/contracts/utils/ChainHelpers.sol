@@ -177,7 +177,7 @@ library ChainHelpers {
     } else if (chainId == TestNetChainIds.MANTLE_SEPOLIA) {
       networkName = 'mantle_sepolia';
     } else if (chainId == TestNetChainIds.SONEIUM_MINATO) {
-      networkName = 'sonium_minato';
+      networkName = 'soneium_minato';
     } else {
       revert('chain id is not supported');
     }
