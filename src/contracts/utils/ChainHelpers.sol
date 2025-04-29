@@ -25,6 +25,7 @@ library ChainIds {
   uint256 internal constant SONIC = 146;
   uint256 internal constant MANTLE = 5000;
   uint256 internal constant INK = 57073;
+  uint256 internal constant SONEIUM = 1868;
 }
 
 library TestNetChainIds {
@@ -45,6 +46,7 @@ library TestNetChainIds {
   uint256 internal constant LINEA_SEPOLIA = 59141;
   uint256 internal constant SONIC_BLAZE = 57054;
   uint256 internal constant MANTLE_SEPOLIA = 5003;
+  uint256 internal constant SONEIUM_MINATO = 1946;
 }
 
 library ChainHelpers {
@@ -96,6 +98,8 @@ library ChainHelpers {
       newFork = vm.createSelectFork(vm.rpcUrl('mantle'));
     } else if (chainId == ChainIds.INK) {
       newFork = vm.createSelectFork(vm.rpcUrl('ink'));
+    } else if (chainId == ChainIds.SONEIUM) {
+      newFork = vm.createSelectFork(vm.rpcUrl('sonium'));
     } else {
       revert UnknownChainId();
     }
@@ -138,6 +142,8 @@ library ChainHelpers {
       networkName = 'mantle';
     } else if (chainId == ChainIds.INK) {
       networkName = 'ink';
+    } else if (chainId == ChainIds.SONEIUM) {
+      networkName = 'sonium';
     }
     // testnets
     else if (chainId == TestNetChainIds.ETHEREUM_SEPOLIA) {
@@ -170,6 +176,8 @@ library ChainHelpers {
       networkName = 'sonic_blaze';
     } else if (chainId == TestNetChainIds.MANTLE_SEPOLIA) {
       networkName = 'mantle_sepolia';
+    } else if (chainId == TestNetChainIds.SONEIUM_MINATO) {
+      networkName = 'sonium_minato';
     } else {
       revert('chain id is not supported');
     }
