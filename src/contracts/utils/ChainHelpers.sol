@@ -99,7 +99,7 @@ library ChainHelpers {
     } else if (chainId == ChainIds.INK) {
       newFork = vm.createSelectFork(vm.rpcUrl('ink'));
     } else if (chainId == ChainIds.SONEIUM) {
-      newFork = vm.createSelectFork(vm.rpcUrl('sonium'));
+      newFork = vm.createSelectFork(vm.rpcUrl('soneium'));
     } else {
       revert UnknownChainId();
     }
