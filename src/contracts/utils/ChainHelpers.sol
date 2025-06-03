@@ -26,6 +26,7 @@ library ChainIds {
   uint256 internal constant MANTLE = 5000;
   uint256 internal constant INK = 57073;
   uint256 internal constant SONEIUM = 1868;
+  uint256 internal constant BOB = 60808;
 }
 
 library TestNetChainIds {
@@ -47,6 +48,7 @@ library TestNetChainIds {
   uint256 internal constant SONIC_BLAZE = 57054;
   uint256 internal constant MANTLE_SEPOLIA = 5003;
   uint256 internal constant SONEIUM_MINATO = 1946;
+  uint256 internal constant BOB_SEPOLIA = 808813;
 }
 
 library ChainHelpers {
@@ -100,6 +102,8 @@ library ChainHelpers {
       newFork = vm.createSelectFork(vm.rpcUrl('ink'));
     } else if (chainId == ChainIds.SONEIUM) {
       newFork = vm.createSelectFork(vm.rpcUrl('soneium'));
+    } else if (chainId == ChainIds.BOB) {
+      newFork = vm.createSelectFork(vm.rpcUrl('bob'));
     } else {
       revert UnknownChainId();
     }
@@ -144,6 +148,8 @@ library ChainHelpers {
       networkName = 'ink';
     } else if (chainId == ChainIds.SONEIUM) {
       networkName = 'soneium';
+    } else if (chainId == ChainIds.BOB) {
+      networkName = 'bob';
     }
     // testnets
     else if (chainId == TestNetChainIds.ETHEREUM_SEPOLIA) {
@@ -178,6 +184,8 @@ library ChainHelpers {
       networkName = 'mantle_sepolia';
     } else if (chainId == TestNetChainIds.SONEIUM_MINATO) {
       networkName = 'soneium_minato';
+    } else if (chainId == TestNetChainIds.BOB_SEPOLIA) {
+      networkName = 'bob_sepolia';
     } else {
       revert('chain id is not supported');
     }

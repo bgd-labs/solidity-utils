@@ -95,6 +95,10 @@ abstract contract SoneiumScript is WithChainIdValidation {
   constructor() WithChainIdValidation(ChainIds.SONEIUM) {}
 }
 
+abstract contract BobScript is WithChainIdValidation {
+  constructor() WithChainIdValidation(ChainIds.BOB) {}
+}
+
 abstract contract MantleScript is WithChainIdValidation {
   constructor() WithChainIdValidation(ChainIds.MANTLE) {}
 }
