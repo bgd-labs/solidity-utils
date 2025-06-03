@@ -60,6 +60,7 @@ zkEVM = "${RPC_ZKEVM}"
 zksync = "${RPC_ZKSYNC}"
 linea = "${RPC_LINEA}"
 soneium = "${RPC_SONEIUM}"
+bob = "${RPC_BOB}"
 
 [fuzz]
 no_zksync_reserved_addresses = true
