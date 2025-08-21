@@ -27,6 +27,7 @@ library ChainIds {
   uint256 internal constant INK = 57073;
   uint256 internal constant SONEIUM = 1868;
   uint256 internal constant BOB = 60808;
+  uint256 internal constant PLASMA = 9745;
 }
 
 library TestNetChainIds {
@@ -49,6 +50,7 @@ library TestNetChainIds {
   uint256 internal constant MANTLE_SEPOLIA = 5003;
   uint256 internal constant SONEIUM_MINATO = 1946;
   uint256 internal constant BOB_SEPOLIA = 808813;
+  uint256 internal constant PLASMA_TESTNET = 9746;
 }
 
 library ChainHelpers {
@@ -104,6 +106,8 @@ library ChainHelpers {
       newFork = vm.createSelectFork(vm.rpcUrl('soneium'));
     } else if (chainId == ChainIds.BOB) {
       newFork = vm.createSelectFork(vm.rpcUrl('bob'));
+    } else if (chainId == ChainIds.PLASMA) {
+      newFork = vm.createSelectFork(vm.rpcUrl('plasma'));
     } else {
       revert UnknownChainId();
     }
@@ -150,6 +154,8 @@ library ChainHelpers {
       networkName = 'soneium';
     } else if (chainId == ChainIds.BOB) {
       networkName = 'bob';
+    } else if (chainId == ChainIds.PLASMA) {
+      networkName = 'plasma';
     }
     // testnets
     else if (chainId == TestNetChainIds.ETHEREUM_SEPOLIA) {
@@ -186,6 +192,8 @@ library ChainHelpers {
       networkName = 'soneium_minato';
     } else if (chainId == TestNetChainIds.BOB_SEPOLIA) {
       networkName = 'bob_sepolia';
+    } else if (chainId == TestNetChainIds.PLASMA_TESTNET) {
+      networkName = 'plasma_testnet';
     } else {
       revert('chain id is not supported');
     }
