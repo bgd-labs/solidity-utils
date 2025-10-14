@@ -111,7 +111,7 @@ abstract contract PlasmaScript is WithChainIdValidation {
   constructor() WithChainIdValidation(ChainIds.PLASMA) {}
 }
 
-abstract contract XlayerScript is WithChainIdValidation {
+abstract contract XLayerScript is WithChainIdValidation {
   constructor() WithChainIdValidation(ChainIds.XLAYER) {}
 }
 
