@@ -29,6 +29,7 @@ library ChainIds {
   uint256 internal constant BOB = 60808;
   uint256 internal constant PLASMA = 9745;
   uint256 internal constant XLAYER = 196;
+  uint256 internal constant ANVIL = 31337;
 }
 
 library TestNetChainIds {
@@ -59,7 +60,7 @@ library ChainHelpers {
   error UnknownChainId();
 
   function selectChain(Vm vm, uint256 chainId) internal returns (uint256, uint256) {
-    uint256 previousFork = vm.activeFork();
+    uint256 previousFork = block.chainid != ChainIds.ANVIL ? vm.activeFork() : type(uint256).max;
     if (chainId == block.chainid) return (previousFork, previousFork);
     uint256 newFork;
     if (chainId == ChainIds.MAINNET) {
