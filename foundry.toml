@@ -62,6 +62,7 @@ linea = "${RPC_LINEA}"
 soneium = "${RPC_SONEIUM}"
 bob = "${RPC_BOB}"
 hyperevm = "${RPC_HYPEREVM}"
+xlayer = "${RPC_XLAYER}"
 
 [fuzz]
 no_zksync_reserved_addresses = true
