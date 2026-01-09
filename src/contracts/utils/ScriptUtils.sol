@@ -115,6 +115,10 @@ abstract contract XLayerScript is WithChainIdValidation {
   constructor() WithChainIdValidation(ChainIds.XLAYER) {}
 }
 
+abstract contract MegaEthScript is WithChainIdValidation {
+  constructor() WithChainIdValidation(ChainIds.MEGAETH) {}
+}
+
 library Create2Utils {
   // https://github.com/safe-global/safe-singleton-factory
   address public constant CREATE2_FACTORY = 0x914d7Fec6aaC8cd542e72Bca78B30650d45643d7;
