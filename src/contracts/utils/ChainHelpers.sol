@@ -30,6 +30,7 @@ library ChainIds {
   uint256 internal constant PLASMA = 9745;
   uint256 internal constant XLAYER = 196;
   uint256 internal constant ANVIL = 31337;
+  uint256 internal constant MEGAETH = 4326;
 }
 
 library TestNetChainIds {
@@ -54,6 +55,7 @@ library TestNetChainIds {
   uint256 internal constant BOB_SEPOLIA = 808813;
   uint256 internal constant PLASMA_TESTNET = 9746;
   uint256 internal constant XLAYER_TESTNET = 1952;
+  uint256 internal constant MEGAETH_TESTNET = 6342;
 }
 
 library ChainHelpers {
@@ -113,6 +115,8 @@ library ChainHelpers {
       newFork = vm.createSelectFork(vm.rpcUrl('plasma'));
     } else if (chainId == ChainIds.XLAYER) {
       newFork = vm.createSelectFork(vm.rpcUrl('xlayer'));
+    } else if (chainId == ChainIds.MEGAETH) {
+      newFork = vm.createSelectFork(vm.rpcUrl('megaeth'));
     } else {
       revert UnknownChainId();
     }
@@ -163,6 +167,8 @@ library ChainHelpers {
       networkName = 'plasma';
     } else if (chainId == ChainIds.XLAYER) {
       networkName = 'xlayer';
+    } else if (chainId == ChainIds.MEGAETH) {
+      networkName = 'megaeth';
     }
     // testnets
     else if (chainId == TestNetChainIds.ETHEREUM_SEPOLIA) {
@@ -203,6 +209,8 @@ library ChainHelpers {
       networkName = 'plasma_testnet';
     } else if (chainId == TestNetChainIds.XLAYER_TESTNET) {
       networkName = 'xlayer_testnet';
+    } else if (chainId == TestNetChainIds.MEGAETH_TESTNET) {
+      networkName = 'megaeth_testnet';
     } else {
       revert('chain id is not supported');
     }
