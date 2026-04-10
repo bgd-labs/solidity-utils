@@ -12,7 +12,7 @@ contract Rescuable721 is AbstractRescuable721 {
     ALLOWED = allowedAddress;
   }
 
-  function whoCanResque(address user) public view override returns (bool) {
+  function whoCanRescue(address user) public view override returns (bool) {
     return user == ALLOWED;
   }
 

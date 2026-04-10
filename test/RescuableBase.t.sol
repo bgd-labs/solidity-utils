@@ -15,7 +15,7 @@ contract Rescuable is RescuableBase {
     ALLOWED = allowedAddress;
   }
 
-  function whoCanResque(address user) public view override returns (bool) {
+  function whoCanRescue(address user) public view override returns (bool) {
     return user == ALLOWED;
   }
 

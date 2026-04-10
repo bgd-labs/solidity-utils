@@ -14,7 +14,7 @@ abstract contract PermissionlessRescuable is RescuableBase, IPermissionlessRescu
   /// @inheritdoc IPermissionlessRescuable
   function whoShouldReceiveFunds() public view virtual returns (address);
 
-  function whoCanResque(address user) public view override returns (bool) {
+  function whoCanRescue(address user) public view override returns (bool) {
     return true;
   }
 

@@ -9,15 +9,15 @@ import {IRescuableBase} from './interfaces/IRescuableBase.sol';
  * @title RescuableBase
  * @author BGD Labs
  * @notice Abstract contract providing emergency rescue functionality for ERC20 tokens and native ETH
- * accidentally sent to a contract. Implements access control via `whoCanResque` and
+ * accidentally sent to a contract. Implements access control via `whoCanRescue` and
  * rescue amount limits via `maxRescue`, both of which must be defined by inheriting contracts.
  */
 abstract contract RescuableBase is IRescuableBase {
   using SafeERC20 for IERC20;
 
   /// @notice modifier that checks that caller is allowed address
-  modifier onlyWhoCanResque() {
-    require(whoCanResque(msg.sender), OnlyAuthorizedUser(msg.sender));
+  modifier onlyWhoCanRescue() {
+    require(whoCanRescue(msg.sender), OnlyAuthorizedUser(msg.sender));
     _;
   }
 
@@ -25,19 +25,19 @@ abstract contract RescuableBase is IRescuableBase {
   function maxRescue(address erc20Token) public view virtual returns (uint256);
 
   /// @inheritdoc IRescuableBase
-  function whoCanResque(address user) public view virtual returns (bool);
+  function whoCanRescue(address user) public view virtual returns (bool);
 
   /// @inheritdoc IRescuableBase
   function emergencyTokenTransfer(
     address erc20Token,
     address to,
     uint256 amount
-  ) external onlyWhoCanResque {
+  ) external onlyWhoCanRescue {
     _emergencyTokenTransfer(erc20Token, to, amount);
   }
 
   /// @inheritdoc IRescuableBase
-  function emergencyEtherTransfer(address to, uint256 amount) external onlyWhoCanResque {
+  function emergencyEtherTransfer(address to, uint256 amount) external onlyWhoCanRescue {
     _emergencyEtherTransfer(to, amount);
   }
 

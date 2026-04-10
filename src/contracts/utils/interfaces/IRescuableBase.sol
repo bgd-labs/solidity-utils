@@ -51,7 +51,7 @@ interface IRescuableBase {
    * @param user address to check for rescue authorization
    * @return true if the user is allowed to rescue tokens, false otherwise
    */
-  function whoCanResque(address user) external view returns (bool);
+  function whoCanRescue(address user) external view returns (bool);
 
   /**
    * @notice method that defined the maximum amount rescuable for any given asset.

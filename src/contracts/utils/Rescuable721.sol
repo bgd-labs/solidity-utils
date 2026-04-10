@@ -15,7 +15,7 @@ abstract contract Rescuable721 is RescuableBase, IRescuable721 {
     address erc721Token,
     address to,
     uint256 tokenId
-  ) external virtual onlyWhoCanResque {
+  ) external virtual onlyWhoCanRescue {
     IERC721(erc721Token).transferFrom(address(this), to, tokenId);
 
     emit ERC721Rescued(msg.sender, erc721Token, to, tokenId);
