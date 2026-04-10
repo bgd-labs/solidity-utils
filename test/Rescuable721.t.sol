@@ -2,10 +2,8 @@
 pragma solidity ^0.8.0;
 
 import 'forge-std/Test.sol';
-import {Address} from 'openzeppelin-contracts/contracts/utils/Address.sol';
-import {MockERC721, ERC721} from './mocks/ERC721.sol';
+import {MockERC721} from './mocks/ERC721.sol';
 import {Rescuable721 as AbstractRescuable721} from '../src/contracts/utils/Rescuable721.sol';
-import {RescuableBase, IRescuableBase} from '../src/contracts/utils/RescuableBase.sol';
 
 contract Rescuable721 is AbstractRescuable721 {
   address public immutable ALLOWED;
@@ -14,13 +12,13 @@ contract Rescuable721 is AbstractRescuable721 {
     ALLOWED = allowedAddress;
   }
 
-  function whoCanRescue() public view override returns (address) {
-    return ALLOWED;
+  function whoCanResque(address user) public view override returns (bool) {
+    return user == ALLOWED;
   }
 
   function maxRescue(
     address
-  ) public pure override(RescuableBase, IRescuableBase) returns (uint256) {
+  ) public pure override returns (uint256) {
     return type(uint256).max;
   }
 }

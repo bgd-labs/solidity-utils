@@ -6,23 +6,20 @@ import 'forge-std/Test.sol';
 import {IERC20} from 'openzeppelin-contracts/contracts/token/ERC20/IERC20.sol';
 import {Address} from 'openzeppelin-contracts/contracts/utils/Address.sol';
 import {ERC20} from './mocks/ERC20.sol';
-import {Rescuable as AbstractRescuable, IRescuable} from '../src/contracts/utils/Rescuable.sol';
 import {RescuableBase, IRescuableBase} from '../src/contracts/utils/RescuableBase.sol';
 
-contract Rescuable is AbstractRescuable {
+contract Rescuable is RescuableBase {
   address public immutable ALLOWED;
 
   constructor(address allowedAddress) {
     ALLOWED = allowedAddress;
   }
 
-  function whoCanRescue() public view override returns (address) {
-    return ALLOWED;
+  function whoCanResque(address user) public view override returns (bool) {
+    return user == ALLOWED;
   }
 
-  function maxRescue(
-    address
-  ) public pure override(RescuableBase, IRescuableBase) returns (uint256) {
+  function maxRescue(address) public pure override returns (uint256) {
     return type(uint256).max;
   }
 
@@ -76,7 +73,7 @@ contract RescueTest is Test {
 
     address recipient = address(1230123519);
 
-    vm.expectRevert(abi.encodeWithSelector(IRescuable.OnlyRescueGuardian.selector));
+    vm.expectRevert(abi.encodeWithSelector(IRescuableBase.OnlyAuthorizedUser.selector, address(this)));
     tokensReceiver.emergencyEtherTransfer(recipient, 5 ether);
   }
 
@@ -109,7 +106,7 @@ contract RescueTest is Test {
 
     address recipient = address(1230123519);
 
-    vm.expectRevert(abi.encodeWithSelector(IRescuable.OnlyRescueGuardian.selector));
+    vm.expectRevert(abi.encodeWithSelector(IRescuableBase.OnlyAuthorizedUser.selector, address(this)));
     tokensReceiver.emergencyTokenTransfer(address(testToken), recipient, 3 ether);
   }
 }
