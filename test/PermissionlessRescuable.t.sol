@@ -23,9 +23,7 @@ contract PermissionlessRescuable is AbstractPermissionlessRescuable {
   /**
    * Mock implementation forcing 10 wei leftover
    */
-  function maxRescue(
-    address erc20
-  ) public view override returns (uint256) {
+  function maxRescue(address erc20) public view override returns (uint256) {
     if (erc20 == restrictedErc20) {
       uint256 balance = ERC20(erc20).balanceOf(address(this));
       return balance > 10 ? balance - 10 : 0;

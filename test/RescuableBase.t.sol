@@ -26,7 +26,7 @@ contract Rescuable is RescuableBase {
   receive() external payable {}
 }
 
-contract RescueTest is Test {
+contract RescuableBaseTest is Test {
   address public constant ALLOWED = address(1023579);
 
   IERC20 public testToken;
@@ -73,7 +73,9 @@ contract RescueTest is Test {
 
     address recipient = address(1230123519);
 
-    vm.expectRevert(abi.encodeWithSelector(IRescuableBase.OnlyAuthorizedUser.selector, address(this)));
+    vm.expectRevert(
+      abi.encodeWithSelector(IRescuableBase.OnlyAuthorizedUser.selector, address(this))
+    );
     tokensReceiver.emergencyEtherTransfer(recipient, 5 ether);
   }
 
@@ -106,7 +108,9 @@ contract RescueTest is Test {
 
     address recipient = address(1230123519);
 
-    vm.expectRevert(abi.encodeWithSelector(IRescuableBase.OnlyAuthorizedUser.selector, address(this)));
+    vm.expectRevert(
+      abi.encodeWithSelector(IRescuableBase.OnlyAuthorizedUser.selector, address(this))
+    );
     tokensReceiver.emergencyTokenTransfer(address(testToken), recipient, 3 ether);
   }
 }
