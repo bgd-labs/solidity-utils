@@ -16,9 +16,7 @@ contract Rescuable721 is AbstractRescuable721 {
     return user == ALLOWED;
   }
 
-  function maxRescue(
-    address
-  ) public pure override returns (uint256) {
+  function maxRescue(address) public pure override returns (uint256) {
     return type(uint256).max;
   }
 }
