@@ -5,6 +5,13 @@ import {IERC20} from 'openzeppelin-contracts/contracts/token/ERC20/IERC20.sol';
 import {SafeERC20} from 'openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol';
 import {IRescuableBase} from './interfaces/IRescuableBase.sol';
 
+/**
+ * @title RescuableBase
+ * @author BGD Labs
+ * @notice Abstract contract providing emergency rescue functionality for ERC20 tokens and native ETH
+ * accidentally sent to a contract. Implements access control via `whoCanResque` and
+ * rescue amount limits via `maxRescue`, both of which must be defined by inheriting contracts.
+ */
 abstract contract RescuableBase is IRescuableBase {
   using SafeERC20 for IERC20;
 
