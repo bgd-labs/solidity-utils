@@ -2,11 +2,9 @@
 pragma solidity ^0.8.0;
 
 import 'forge-std/Test.sol';
-import {IERC20} from 'openzeppelin-contracts/contracts/token/ERC20/IERC20.sol';
-import {Address} from 'openzeppelin-contracts/contracts/utils/Address.sol';
 import {ERC20} from './mocks/ERC20.sol';
-import {PermissionlessRescuable as AbstractPermissionlessRescuable, IPermissionlessRescuable} from '../src/contracts/utils/PermissionlessRescuable.sol';
-import {RescuableBase, IRescuableBase} from '../src/contracts/utils/RescuableBase.sol';
+import {PermissionlessRescuable as AbstractPermissionlessRescuable} from '../src/contracts/utils/PermissionlessRescuable.sol';
+import {IRescuableBase} from '../src/contracts/utils/interfaces/IRescuableBase.sol';
 
 // Concrete implementation of PermissionlessRescuable for testing
 contract PermissionlessRescuable is AbstractPermissionlessRescuable {
@@ -25,9 +23,7 @@ contract PermissionlessRescuable is AbstractPermissionlessRescuable {
   /**
    * Mock implementation forcing 10 wei leftover
    */
-  function maxRescue(
-    address erc20
-  ) public view override(RescuableBase, IRescuableBase) returns (uint256) {
+  function maxRescue(address erc20) public view override returns (uint256) {
     if (erc20 == restrictedErc20) {
       uint256 balance = ERC20(erc20).balanceOf(address(this));
       return balance > 10 ? balance - 10 : 0;

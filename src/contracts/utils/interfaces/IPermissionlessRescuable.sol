@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.8;
 
-import {IRescuableBase} from './IRescuableBase.sol';
-
 /**
  * @title IRescuable
  * @author BGD Labs
  * @notice interface containing the objects, events and methods definitions of the Rescuable contract
  */
-interface IPermissionlessRescuable is IRescuableBase {
+interface IPermissionlessRescuable {
+  error OnlyAuthorizedReceiver(address user);
   /**
    * @notice method called to rescue tokens sent erroneously to the contract. Only callable by owner
    * @param erc20Token address of the token to rescue
